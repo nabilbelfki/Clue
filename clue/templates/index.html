@@ -4,7 +4,7 @@
 <head>
     <title>Clue</title>
     <link rel="stylesheet" type="text/css" href="{% static 'clue/css/main.css' %}">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'clue/js/jquery.min.js' %}"></script>
     <script src="{% static 'clue/js/main.js' %}"></script>
 </head>
 <body data-murderer="{{ murderer }}" data-room="{{ room }}" data-weapon="{{ weapon }}">

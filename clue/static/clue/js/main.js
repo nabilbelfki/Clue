@@ -1,504 +1,1208 @@
 var turn = "miss-scarlet";
 
 const board = {
-    1: {
-        "DOWN": "2",
-        "RIGHT": "4",
-        "LEFT": "163"
-    }
-    , 2: {
-        "UP": "1",
-        "DOWN": "3",
-        "RIGHT": "5",
-        "LEFT": "164"
-    }
-    , 3: {
-        "UP": "2",
-        "RIGHT": "6",
-        "LEFT": "165"
-    }
-    , 4: {
-        "LEFT": "1",
-        "DOWN": "5",
-        "RIGHT":"7",
-        "UP": "dining-room"
-    }
-    , 5: {
-        "LEFT": "2",
-        "UP": "4",
-        "DOWN": "6",
-        "RIGHT": "8"
-    }
-    , 6: {
-        "LEFT": "3",
-        "UP": "5",
-        "RIGHT": "9",
-        "DOWN": "lounge"
-    }
-    , 7: ["4", "8", "118"]
-    , 8: ["5", "7", "9", "21"]
-    , 9: {"LEFT": "6", "UP": "8", "DOWN": "10", "RIGHT": "20"}
-    , 10: {
-        "UP": "9",
-        "DOWN": "11",
-        "RIGHT": "19"
-    }
-    , 11: {
-        "UP": "10",
-        "DOWN": "12",
-        "RIGHT": "18"
-    }
-    , 12: {
-        "UP": "11",
-        "DOWN": "13",
-        "RIGHT": "17"
-    }
-    , 13: {
-        "UP": "12",
-        "DOWN": "14",
-        "RIGHT": "16"
-    }
-    , 14: {
-        "UP": "13",
-        "RIGHT": "15",
-        "DOWN": "miss-scarlet-start"
-    }
-    , 15: {
-        "LEFT": "14",
-        "UP": "16"
-    }
-    , 16: {
-        "LEFT": "13",
-        "DOWN": "15",
-        "UP": "17"
-
-    }
-    , 17: {
-        "LEFT": "12",
-        "DOWN": "16",
-        "UP": "18"
-    }
-    , 18: {
-        "LEFT": "11",
-        "DOWN": "17",
-        "UP": "19"
-    }
-    , 19: {
-        "LEFT": "10",
-        "DOWN": "18",
-        "UP": "20"
-    }
-    , 20: {
-        "LEFT":"9",
-        "DOWN": "19",
-        "UP": "21"
-    }
-    , 21: ["8", "20", "22", "118"]
-    , 22: ["21", "23", "154"]
-    , 23: ["22", "24"]
-    , 24: ["23", "25", "hall"]
-    , 25: ["24", "26"]
-    , 26: ["25", "27"]
-    , 27: ["26", "28"]
-    , 28: ["27", "29", "48", "73"]
-    , 29: ["28", "30", "74"]
-    , 30: ["29", "31", "75"]
-    , 31: ["30", "32", "76"]
-    , 32: ["31", "33", "77"]
-    , 33: ["32", "34", "92"]
-    , 34: ["33", "35", "78"]
-    , 35: ["34", "36", "79"]
-    , 36: ["35", "37", "47", "80"]
-    , 37: ["36", "38", "81"]
-    , 38: ["37", "39", "47"]
-    , 39: ["38", "40", "46", "ballroom"]
-    , 40: ["39", "41", "45"]
-    , 41: ["40", "42", "44"]
-    , 42: ["41", "43", "162", "ballroom"]
-    , 43: ["42", "44", "161"]
-    , 44: ["41", "43", "45", "assumption"]
-    , 45: ["40", "44", "46", "assumption"]
-    , 46: ["39", "45", "47", "assumption"]
-    , 47: ["36", "38", "46"]
-    , 48: ["28", "49", "71"]
-    , 49: ["48", "50", "70"]
-    , 50: ["49", "51", "57"]
-    , 51: ["50", "52", "56"]
-    , 52: ["51", "53", "55"]
-    , 53: ["52", "54"]
-    , 54: ["53", "55"]
-    , 55: ["52", "54", "56"]
-    , 56: ["51", "55", "57"]
-    , 57: ["50", "56", "58", "70"]
-    , 58: ["57", "59", "69", "study"]
-    , 59: ["58", "60", "68"]
-    , 60: ["59", "61", "67"]
-    , 61: ["60", "62", "66"]
-    , 62: ["61", "63", "65"]
-    , 63: ["62", "64"]
-    , 64: ["63", "65", "professor-plum-start"]
-    , 65: ["62", "64", "66"]
-    , 66: ["61", "65", "67"]
-    , 67: ["60", "66", "68"]
-    , 68: ["59", "67", "69"]
-    , 69: ["58", "68", "70", "72"]
-    , 70: ["49", "57", "69", "71"]
-    , 71: ["48", "70", "72", "73"]
-    , 72: ["69", "71"]
-    , 73: ["28", "71", "74"]
-    , 74: ["29", "73", "75", "library"]
-    , 75: ["30", "74", "76"]
-    , 76: ["31", "75", "77", "117"]
-    , 77: ["32", "76", "92", "93"]
-    , 78: ["34", "79", "92", "95"]
-    , 79: ["35", "78", "80", "96"]
-    , 80: ["36", "79", "81", "97"]
-    , 81: ["37", "80", "82", "98"]
-    , 82: ["81", "83", "99"]
-    , 83: ["82", "84", "110", "ballroom"]
-    , 84: ["83", "85", "111"]
-    , 85: ["84", "86", "88"]
-    , 86: ["85", "87", "89"]
-    , 87: ["86", "88"]
-    , 88: ["85", "87", "111"]
-    , 89: ["86", "90"]
-    , 90: ["89", "91"]
-    , 91: ["90", "mr-green-start"]
-    , 92: ["33", "77", "78", "94"]
-    , 93: ["77", "94", "112", "117"]
-    , 94: ["92", "93", "95"]
-    , 95: ["78", "94", "96"]
-    , 96: ["79", "95", "97"]
-    , 97: ["80", "96", "98", "billiard-room"]
-    , 98: ["81", "97", "99"]
-    , 99: ["82", "98", "100", "110"]
-    , 100: ["99", "101", "109"]
-    , 101: ["100", "102", "108"]
-    , 102: ["101", "103", "107"]
-    , 103: ["102", "104", "106"]
-    , 104: ["103", "105", "mrs-peacock-start"]
-    , 105: ["104", "106"]
-    , 106: ["103", "105", "107"]
-    , 107: ["102", "106", "108"]
-    , 108: ["101", "107", "109"]
-    , 109: ["100", "108", "110", "conservatory"]
-    , 110: ["83", "99", "109", "111"]
-    , 111: ["84", "88", "110"]
-    , 112: ["93", "133"]
-    , 113: ["112", "114"]
-    , 114: ["113", "115"]
-    , 115: ["114", "116", "billiard-room"]
-    , 116: ["115"]
-    , 117: ["76", "93"]
-    , 118: ["7", "21", "119", "154"]
-    , 119: ["118", "120", "155"]
-    , 120: ["119", "121", "156"]
-    , 121: ["120", "122", "157"]
-    , 122: ["121", "123", "158", "dining-room"]
-    , 123: ["122", "124", "159"]
-    , 124: ["123", "125", "160"]
-    , 125: ["124", "126", "129", "161"]
-    , 126: ["125", "127", "130"]
-    , 127: ["126", "128", "131"]
-    , 128: ["127", "132"]
-    , 129: ["125", "130", "162"]
-    , 130: ["126", "129", "131", "152"]
-    , 131: ["127", "130", "132", "141"]
-    , 132: ["128", "131", "133", "140"]
-    , 133: ["132", "134", "139"]
-    , 134: ["133", "135", "138"]
-    , 135: ["134", "136"]
-    , 136: ["135", "137", "138"]
-    , 137: ["136"]
-    , 138: ["134", "136", "139"]
-    , 139: ["133", "138", "140"]
-    , 140: ["132", "139", "141", "kitchen"]
-    , 141: ["131", "140", "142", "152"]
-    , 142: ["141", "143", "153"]
-    , 143: ["142", "144", "151"]
-    , 144: ["143", "145", "150"]
-    , 145: ["144", "146"]
-    , 146: ["145", "147", "150"]
-    , 147: ["146", "148"]
-    , 148: ["147", "149"]
-    , 149: ["148", "mrs-white-start"]
-    , 150: ["144", "146", "151"]
-    , 151: ["143", "150", "153"]
-    , 152: ["130", "141", "153"]
-    , 153: ["142", "151", "152", "ballroom"]
-    , 154: ["22", "118", "155"]
-    , 155: ["119", "154", "156"]
-    , 156: ["120", "155", "157"]
-    , 157: ["121", "156", "158"]
-    , 158: ["122", "157", "159"]
-    , 159: ["123", "158", "160"]
-    , 160: ["124", "159", "161"]
-    , 161: ["43", "125", "160", "162"]
-    , 162: ["42", "129", "161"]
-    , 163: ["1", "164", "166"]
-    , 164: ["2", "163", "165", "167"]
-    , 165: ["3", "164", "168"]
-    , 166: ["163", "167", "169"]
-    , 167: ["164", "166", "168", "170"]
-    , 168: ["165", "167", "171"]
-    , 169: ["166", "170", "172"]
-    , 170: ["167", "169", "171", "173"]
-    , 171: ["168", "170", "174"]
-    , 172: ["169", "173"]
-    , 173: ["170", "172", "174", "colonel-mustard-start"]
-    , 174: ["171", "173"]
-    , "mrs-white-start": ["149"]
-    , "mr-green-start": ["91"]
-    , "mrs-peacock-start": ["104"]
-    , "professor-plum-start": ["64"]
-    , "miss-scarlet-start": {
-        "UP": "14"
-    }
-    , "colonel-mustard-start": ["173"]
-    , "study": ["58"]
-    , "lounge": {
-        "UP": "6"
-    }
-    , "library": ["74"]
-    , "kitchen": ["140"]
-    , "dining-room": {
-        "DOWN": "4",
-        "RIGHT": "122"
-    }
-    , "assumption": ["44", "45", "46"]
-    , "conservatory": ["109"]
-    , "billiard-room": ["97", "115"]
-    , "ballroom": ["39", "42", "83", "153"]
-    , "hall": ["24"]
-}
+  1: {
+    DOWN: "2",
+    RIGHT: "4",
+    LEFT: "163",
+  },
+  2: {
+    UP: "1",
+    DOWN: "3",
+    RIGHT: "5",
+    LEFT: "164",
+  },
+  3: {
+    UP: "2",
+    RIGHT: "6",
+    LEFT: "165",
+  },
+  4: {
+    LEFT: "1",
+    DOWN: "5",
+    RIGHT: "7",
+    UP: "dining-room",
+  },
+  5: {
+    LEFT: "2",
+    UP: "4",
+    DOWN: "6",
+    RIGHT: "8",
+  },
+  6: {
+    LEFT: "3",
+    UP: "5",
+    RIGHT: "9",
+    DOWN: "lounge",
+  },
+  7: {
+    LEFT: "4",
+    DOWN: "8",
+    RIGHT: "118",
+  },
+  8: {
+    LEFT: "5",
+    UP: "7",
+    DOWN: "9",
+    RIGHT: "21",
+  },
+  9: {
+    LEFT: "6",
+    UP: "8",
+    DOWN: "10",
+    RIGHT: "20",
+  },
+  10: {
+    UP: "9",
+    DOWN: "11",
+    RIGHT: "19",
+  },
+  11: {
+    UP: "10",
+    DOWN: "12",
+    RIGHT: "18",
+  },
+  12: {
+    UP: "11",
+    DOWN: "13",
+    RIGHT: "17",
+  },
+  13: {
+    UP: "12",
+    DOWN: "14",
+    RIGHT: "16",
+  },
+  14: {
+    UP: "13",
+    RIGHT: "15",
+    DOWN: "miss-scarlet-start",
+  },
+  15: {
+    LEFT: "14",
+    UP: "16",
+  },
+  16: {
+    LEFT: "13",
+    DOWN: "15",
+    UP: "17",
+  },
+  17: {
+    LEFT: "12",
+    DOWN: "16",
+    UP: "18",
+  },
+  18: {
+    LEFT: "11",
+    DOWN: "17",
+    UP: "19",
+  },
+  19: {
+    LEFT: "10",
+    DOWN: "18",
+    UP: "20",
+  },
+  20: {
+    LEFT: "9",
+    DOWN: "19",
+    UP: "21",
+  },
+  21: {
+    LEFT: "8",
+    DOWN: "20",
+    RIGHT: "22",
+    UP: "118",
+  },
+  22: {
+    LEFT: "21",
+    RIGHT: "23",
+    UP: "154",
+  },
+  23: {
+    LEFT: "22",
+    RIGHT: "24",
+  },
+  24: {
+    LEFT: "23",
+    RIGHT: "25",
+    DOWN: "hall",
+  },
+  25: {
+    LEFT: "24",
+    RIGHT: "26",
+  },
+  26: {
+    LEFT: "25",
+    RIGHT: "27",
+  },
+  27: {
+    LEFT: "26",
+    RIGHT: "28",
+  },
+  28: {
+    LEFT: "27",
+    UP: "29",
+    DOWN: "48",
+    RIGHT: "73",
+  },
+  29: {
+    DOWN: "28",
+    UP: "30",
+    RIGHT: "74",
+  },
+  30: {
+    DOWN: "29",
+    UP: "31",
+    RIGHT: "75",
+  },
+  31: {
+    DOWN: "30",
+    UP: "32",
+    RIGHT: "76",
+  },
+  32: {
+    DOWN: "31",
+    UP: "33",
+    RIGHT: "77",
+  },
+  33: {
+    DOWN: "32",
+    UP: "34",
+    RIGHT: "92",
+  },
+  34: {
+    DOWN: "33",
+    UP: "35",
+    RIGHT: "78",
+  },
+  35: {
+    DOWN: "34",
+    UP: "36",
+    RIGHT: "79",
+  },
+  36: {
+    DOWN: "35",
+    UP: "37",
+    LEFT: "47",
+    RIGHT: "80",
+  },
+  37: {
+    DOWN: "36",
+    LEFT: "38",
+    RIGHT: "81",
+  },
+  38: {
+    RIGHT: "37",
+    LEFT: "39",
+    DOWN: "47",
+  },
+  39: {
+    RIGHT: "38",
+    LEFT: "40",
+    DOWN: "46",
+    UP: "ballroom",
+  },
+  40: {
+    RIGHT: "39",
+    LEFT: "41",
+    DOWN: "45",
+  },
+  41: {
+    RIGHT: "40",
+    LEFT: "42",
+    DOWN: "44",
+  },
+  42: {
+    RIGHT: "41",
+    DOWN: "43",
+    LEFT: "162",
+    UP: "ballroom",
+  },
+  43: {
+    UP: "42",
+    RIGHT: "44",
+    LEFT: "161",
+  },
+  44: {
+    UP: "41",
+    LEFT: "43",
+    RIGHT: "45",
+    DOWN: "assumption",
+  },
+  45: {
+    UP: "40",
+    LEFT: "44",
+    RIGHT: "46",
+    DOWN: "assumption",
+  },
+  46: {
+    UP: "39",
+    LEFT: "45",
+    RIGHT: "47",
+    DOWN: "assumption",
+  },
+  47: {
+    RIGHT: "36",
+    UP: "38",
+    LEFT: "46",
+  },
+  48: {
+    UP: "28",
+    DOWN: "49",
+    RIGHT: "71",
+  },
+  49: {
+    UP: "48",
+    DOWN: "50",
+    RIGHT: "70",
+  },
+  50: {
+    UP: "49",
+    DOWN: "51",
+    RIGHT: "57",
+  },
+  51: {
+    UP: "50",
+    DOWN: "52",
+    RIGHT: "56",
+  },
+  52: {
+    UP: "51",
+    DOWN: "53",
+    RIGHT: "55",
+  },
+  53: {
+    UP: "52",
+    RIGHT: "54",
+  },
+  54: {
+    RIGHT: "53",
+    UP: "55",
+  },
+  55: {
+    LEFT: "52",
+    DOWN: "54",
+    UP: "56",
+  },
+  56: {
+    LEFT: "51",
+    DOWN: "55",
+    UP: "57",
+  },
+  57: {
+    LEFT: "50",
+    DOWN: "56",
+    RIGHT: "58",
+    UP: "70",
+  },
+  58: {
+    LEFT: "57",
+    RIGHT: "59",
+    UP: "69",
+    DOWN: "study",
+  },
+  59: {
+    LEFT: "58",
+    RIGHT: "60",
+    UP: "68",
+  },
+  60: {
+    LEFT: "59",
+    RIGHT: "61",
+    UP: "67",
+  },
+  61: {
+    LEFT: "60",
+    RIGHT: "62",
+    UP: "66",
+  },
+  62: {
+    LEFT: "61",
+    RIGHT: "63",
+    UP: "65",
+  },
+  63: {
+    LEFT: "62",
+    UP: "64",
+  },
+  64: {
+    DOWN: "63",
+    LEFT: "65",
+    RIGHT: "professor-plum-start",
+  },
+  65: {
+    DOWN: "62",
+    RIGHT: "64",
+    LEFT: "66",
+  },
+  66: {
+    DOWN: "61",
+    RIGHT: "65",
+    LEFT: "67",
+  },
+  67: {
+    DOWN: "60",
+    RIGHT: "66",
+    LEFT: "68",
+  },
+  68: {
+    DOWN: "59",
+    RIGHT: "67",
+    LEFT: "69",
+  },
+  69: {
+    DOWN: "58",
+    RIGHT: "68",
+    LEFT: "70",
+    UP: "72",
+  },
+  70: {
+    LEFT: "49",
+    DOWN: "57",
+    RIGHT: "69",
+    UP: "71",
+  },
+  71: {
+    LEFT: "48",
+    DOWN: "70",
+    RIGHT: "72",
+    UP: "73",
+  },
+  72: {
+    DOWN: "69",
+    LEFT: "71",
+  },
+  73: {
+    LEFT: "28",
+    DOWN: "71",
+    UP: "74",
+  },
+  74: {
+    LEFT: "29",
+    DOWN: "73",
+    UP: "75",
+    RIGHT: "library",
+  },
+  75: {
+    LEFT: "30",
+    DOWN: "74",
+    UP: "76",
+  },
+  76: {
+    LEFT: "31",
+    DOWN: "75",
+    UP: "77",
+    RIGHT: "117",
+  },
+  77: {
+    LEFT: "32",
+    DOWN: "76",
+    UP: "92",
+    RIGHT: "93",
+  },
+  78: {
+    LEFT: "34",
+    UP: "79",
+    DOWN: "92",
+    RIGHT: "95",
+  },
+  79: {
+    LEFT: "35",
+    DOWN: "78",
+    UP: "80",
+    RIGHT: "96",
+  },
+  80: {
+    LEFT: "36",
+    DOWN: "79",
+    UP: "81",
+    RIGHT: "97",
+  },
+  81: {
+    LEFT: "37",
+    DOWN: "80",
+    UP: "82",
+    RIGHT: "98",
+  },
+  82: {
+    DOWN: "81",
+    UP: "83",
+    RIGHT: "99",
+  },
+  83: {
+    DOWN: "82",
+    UP: "84",
+    RIGHT: "110",
+    LEFT: "ballroom",
+  },
+  84: {
+    DOWN: "83",
+    UP: "85",
+    RIGHT: "111",
+  },
+  85: {
+    DOWN: "84",
+    UP: "86",
+    RIGHT: "88",
+  },
+  86: {
+    DOWN: "85",
+    RIGHT: "87",
+    UP: "89",
+  },
+  87: {
+    LEFT: "86",
+    DOWN: "88",
+  },
+  88: {
+    LEFT: "85",
+    UP: "87",
+    DOWN: "111",
+  },
+  89: {
+    DOWN: "86",
+    LEFT: "90",
+  },
+  90: {
+    RIGHT: "89",
+    LEFT: "91",
+  },
+  91: {
+    RIGHT: "90",
+    UP: "mr-green-start",
+  },
+  92: {
+    LEFT: "33",
+    DOWN: "77",
+    UP: "78",
+    RIGHT: "94",
+  },
+  93: {
+    LEFT: "77",
+    UP: "94",
+    RIGHT: "112",
+    DOWN: "117",
+  },
+  94: {
+    LEFT: "92",
+    DOWN: "93",
+    UP: "95",
+  },
+  95: {
+    LEFT: "78",
+    DOWN: "94",
+    UP: "96",
+  },
+  96: {
+    LEFT: "79",
+    DOWN: "95",
+    UP: "97",
+  },
+  97: {
+    LEFT: "80",
+    DOWN: "96",
+    UP: "98",
+    RIGHT: "billiard-room",
+  },
+  98: {
+    LEFT: "81",
+    DOWN: "97",
+    UP: "99",
+  },
+  99: {
+    LEFT: "82",
+    DOWN: "98",
+    RIGHT: "100",
+    UP: "110",
+  },
+  100: {
+    LEFT: "99",
+    RIGHT: "101",
+    UP: "109",
+  },
+  101: {
+    LEFT: "100",
+    RIGHT: "102",
+    UP: "108",
+  },
+  102: {
+    LEFT: "101",
+    RIGHT: "103",
+    UP: "107",
+  },
+  103: {
+    LEFT: "102",
+    RIGHT: "104",
+    UP: "106",
+  },
+  104: {
+    LEFT: "103",
+    UP: "105",
+    RIGHT: "mrs-peacock-start",
+  },
+  105: {
+    DOWN: "104",
+    LEFT: "106",
+  },
+  106: {
+    DOWN: "103",
+    RIGHT: "105",
+    LEFT: "107",
+  },
+  107: {
+    DOWN: "102",
+    RIGHT: "106",
+    LEFT: "108",
+  },
+  108: {
+    DOWN: "101",
+    RIGHT: "107",
+    LEFT: "109",
+  },
+  109: {
+    DOWN: "100",
+    RIGHT: "108",
+    LEFT: "110",
+    UP: "conservatory",
+  },
+  110: {
+    LEFT: "83",
+    DOWN: "99",
+    RIGHT: "109",
+    UP: "111",
+  },
+  111: {
+    LEFT: "84",
+    UP: "88",
+    DOWN: "110",
+  },
+  112: {
+    LEFT: "93",
+    RIGHT: "113",
+  },
+  113: {
+    LEFT: "112",
+    RIGHT: "114",
+  },
+  114: {
+    LEFT: "113",
+    RIGHT: "115",
+  },
+  115: {
+    LEFT: "114",
+    RIGHT: "116",
+    UP: "billiard-room",
+  },
+  116: {
+    LEFT: "115",
+  },
+  117: {
+    LEFT: "76",
+    UP: "93",
+  },
+  118: {
+    LEFT: "7",
+    DOWN: "21",
+    UP: "119",
+    RIGHT: "154",
+  },
+  119: {
+    DOWN: "118",
+    UP: "120",
+    RIGHT: "155",
+  },
+  120: {
+    DOWN: "119",
+    UP: "121",
+    RIGHT: "156",
+  },
+  121: {
+    DOWN: "120",
+    UP: "122",
+    RIGHT: "157",
+  },
+  122: {
+    DOWN: "121",
+    UP: "123",
+    RIGHT: "158",
+    LEFT: "dining-room",
+  },
+  123: {
+    DOWN: "122",
+    UP: "124",
+    RIGHT: "159",
+  },
+  124: {
+    DOWN: "123",
+    UP: "125",
+    RIGHT: "160",
+  },
+  125: {
+    DOWN: "124",
+    LEFT: "126",
+    UP: "129",
+    RIGHT: "161",
+  },
+  126: {
+    RIGHT: "125",
+    LEFT: "127",
+    UP: "130",
+  },
+  127: {
+    RIGHT: "126",
+    LEFT: "128",
+    UP: "131",
+  },
+  128: {
+    RIGHT: "127",
+    UP: "132",
+  },
+  129: {
+    DOWN: "125",
+    LEFT: "130",
+    RIGHT: "162",
+  },
+  130: {
+    DOWN: "126",
+    RIGHT: "129",
+    LEFT: "131",
+    UP: "152",
+  },
+  131: {
+    DOWN: "127",
+    RIGHT: "130",
+    LEFT: "132",
+    UP: "141",
+  },
+  132: {
+    DOWN: "128",
+    RIGHT: "131",
+    LEFT: "133",
+    UP: "140",
+  },
+  133: {
+    RIGHT: "132",
+    LEFT: "134",
+    UP: "139",
+  },
+  134: {
+    RIGHT: "133",
+    LEFT: "135",
+    UP: "138",
+  },
+  135: {
+    RIGHT: "134",
+    UP: "136",
+  },
+  136: {
+    DOWN: "135",
+    LEFT: "137",
+    RIGHT: "138",
+  },
+  137: {
+    RIGHT: "136",
+  },
+  138: {
+    DOWN: "134",
+    LEFT: "136",
+    RIGHT: "139",
+  },
+  139: {
+    DOWN: "133",
+    LEFT: "138",
+    RIGHT: "140",
+  },
+  140: {
+    DOWN: "132",
+    LEFT: "139",
+    RIGHT: "141",
+    UP: "kitchen",
+  },
+  141: {
+    DOWN: "131",
+    LEFT: "140",
+    UP: "142",
+    RIGHT: "152",
+  },
+  142: {
+    DOWN: "141",
+    UP: "143",
+    RIGHT: "153",
+  },
+  143: {
+    DOWN: "142",
+    UP: "144",
+    RIGHT: "151",
+  },
+  144: {
+    DOWN: "143",
+    UP: "145",
+    RIGHT: "150",
+  },
+  145: {
+    DOWN: "144",
+    RIGHT: "146",
+  },
+  146: {
+    LEFT: "145",
+    UP: "147",
+    DOWN: "150",
+  },
+  147: {
+    DOWN: "146",
+    RIGHT: "148",
+  },
+  148: {
+    LEFT: "147",
+    RIGHT: "149",
+  },
+  149: {
+    LEFT: "148",
+    UP: "mrs-white-start",
+  },
+  150: {
+    LEFT: "144",
+    UP: "146",
+    DOWN: "151",
+  },
+  151: {
+    LEFT: "143",
+    UP: "150",
+    DOWN: "153",
+  },
+  152: {
+    DOWN: "130",
+    LEFT: "141",
+    UP: "153",
+  },
+  153: {
+    LEFT: "142",
+    UP: "151",
+    DOWN: "152",
+    RIGHT: "ballroom",
+  },
+  154: {
+    DOWN: "22",
+    LEFT: "118",
+    UP: "155",
+  },
+  155: {
+    LEFT: "119",
+    DOWN: "154",
+    UP: "156",
+  },
+  156: {
+    LEFT: "120",
+    DOWN: "155",
+    UP: "157",
+  },
+  157: {
+    LEFT: "121",
+    DOWN: "156",
+    UP: "158",
+  },
+  158: {
+    LEFT: "122",
+    DOWN: "157",
+    UP: "159",
+  },
+  159: {
+    LEFT: "123",
+    DOWN: "158",
+    UP: "160",
+  },
+  160: {
+    LEFT: "124",
+    DOWN: "159",
+    UP: "161",
+  },
+  161: {
+    RIGHT: "43",
+    LEFT: "125",
+    DOWN: "160",
+    UP: "162",
+  },
+  162: {
+    RIGHT: "42",
+    LEFT: "129",
+    DOWN: "161",
+  },
+  163: {
+    RIGHT: "1",
+    DOWN: "164",
+    LEFT: "166",
+  },
+  164: {
+    RIGHT: "2",
+    UP: "163",
+    DOWN: "165",
+    LEFT: "167",
+  },
+  165: {
+    RIGHT: "3",
+    UP: "164",
+    LEFT: "168",
+  },
+  166: {
+    RIGHT: "163",
+    DOWN: "167",
+    LEFT: "169",
+  },
+  167: {
+    RIGHT: "164",
+    UP: "166",
+    DOWN: "168",
+    LEFT: "170",
+  },
+  168: {
+    RIGHT: "165",
+    UP: "167",
+    LEFT: "171",
+  },
+  169: {
+    RIGHT: "166",
+    DOWN: "170",
+    LEFT: "172",
+  },
+  170: {
+    RIGHT: "167",
+    UP: "169",
+    DOWN: "171",
+    LEFT: "173",
+  },
+  171: {
+    RIGHT: "168",
+    UP: "170",
+    LEFT: "174",
+  },
+  172: {
+    RIGHT: "169",
+    DOWN: "173",
+  },
+  173: {
+    RIGHT: "170",
+    UP: "172",
+    DOWN: "174",
+    LEFT: "colonel-mustard-start",
+  },
+  174: {
+    RIGHT: "171",
+    UP: "173",
+  },
+  "mrs-white-start": {
+    DOWN: "149",
+  },
+  "mr-green-start": {
+    DOWN: "91",
+  },
+  "mrs-peacock-start": {
+    LEFT: "104",
+  },
+  "professor-plum-start": {
+    LEFT: "64",
+  },
+  "miss-scarlet-start": {
+    UP: "14",
+  },
+  "colonel-mustard-start": {
+    RIGHT: "173",
+  },
+  study: {
+    UP: "58",
+  },
+  lounge: {
+    UP: "6",
+  },
+  library: {
+    LEFT: "74",
+  },
+  kitchen: {
+    DOWN: "140",
+  },
+  "dining-room": {
+    DOWN: "4",
+    RIGHT: "122",
+  },
+  assumption: {
+    UP: "44",
+    UP: "45",
+    UP: "46",
+  },
+  conservatory: {
+    DOWN: "109",
+  },
+  "billiard-room": {
+    LEFT: "97",
+    DOWN: "115",
+  },
+  ballroom: {
+    DOWN: "39",
+    DOWN: "42",
+    RIGHT: "83",
+    LEFT: "153",
+  },
+  hall: {
+    UP: "24",
+  },
+};
 
 const characters = {
-    "miss-scarlet": "Miss Scarlet",
-    "mrs-white": "Mrs. White",
-    "mrs-peacock": "Mrs. Peacock",
-    "colonel-mustard": "Colonel Mustard",
-    "professor-plum": "Professor Plum",
-    "mr-green": "Mr. Green",
-}
+  "miss-scarlet": "Miss Scarlet",
+  "mrs-white": "Mrs. White",
+  "mrs-peacock": "Mrs. Peacock",
+  "colonel-mustard": "Colonel Mustard",
+  "professor-plum": "Professor Plum",
+  "mr-green": "Mr. Green",
+};
 
 const colors = {
-    "miss-scarlet": "#872427",
-    "mrs-white": "#FFFFFF",
-    "mrs-peacock": "#1A9D9F",
-    "colonel-mustard": "#C5A12F",
-    "professor-plum": "#6C3C89",
-    "mr-green": "#618547",
-}
+  "miss-scarlet": "#872427",
+  "mrs-white": "#FFFFFF",
+  "mrs-peacock": "#1A9D9F",
+  "colonel-mustard": "#C5A12F",
+  "professor-plum": "#6C3C89",
+  "mr-green": "#618547",
+};
 
 const players = {
-    "miss-scarlet": "miss-scarlet-start",
-    "mrs-white": "mrs-white-start",
-    "mrs-peacock": "mrs-peacock-start",
-    "colonel-mustard": "colonel-mustard-start",
-    "professor-plum": "professor-plum-start",
-    "mr-green": "mr-green-start",
-}
+  "miss-scarlet": "miss-scarlet-start",
+  "mrs-white": "mrs-white-start",
+  "mrs-peacock": "mrs-peacock-start",
+  "colonel-mustard": "colonel-mustard-start",
+  "professor-plum": "professor-plum-start",
+  "mr-green": "mr-green-start",
+};
+
+const rooms = {
+  study: {
+    width: 0,
+    height: 0,
+  },
+  lounge: {
+    width: 0,
+    height: 0,
+  },
+  library: {
+    width: 0,
+    height: 0,
+  },
+  kitchen: {
+    width: 0,
+    height: 0,
+  },
+  "dining-room": {
+    width: 0,
+    height: 0,
+  },
+  assumption: {
+    width: 0,
+    height: 0,
+  },
+  conservatory: {
+    width: 0,
+    height: 0,
+  },
+  "billiard-room": {
+    width: 0,
+    height: 0,
+  },
+  ballroom: {
+    width: 0,
+    height: 0,
+  },
+  hall: {
+    width: 0,
+    height: 0,
+  },
+};
 
 let previous = 0;
 $(document).ready(function () {
+  highlightPossibleMoves("miss-scarlet-start");
+  $(".room").each(function (event) {
+    let room = $(this).attr("id");
+    var bbox = document.getElementById(room).getBBox();
+    console.log("Width: " + bbox.width);
+    console.log("Height: " + bbox.height);
+    rooms[room]["height"] = bbox.height;
+    rooms[room]["width"] = bbox.width;
+  });
+  //   var billiardRoom = document.getElementById("billiard-room");
+  //   var bbox = billiardRoom.getBBox();
+  //   console.log("Width: " + bbox.width);
+  //   console.log("Height: " + bbox.height);
 
-    highlightPossibleMoves("miss-scarlet-start")
+  for (const slug in characters) {
+    // console.log(slug);
+    initialize(slug);
+  }
 
-    for (const slug in characters) {
-        // console.log(slug);
-        initialize(slug);
+  $(document).keydown(function (event) {
+    switch (event.which) {
+      case 37: // left arrow key
+        move(turn, "LEFT");
+        // Add your code here
+        break;
+      case 38: // up arrow key
+        move(turn, "UP");
+        // Add your code here
+        break;
+      case 39: // right arrow key
+        move(turn, "RIGHT");
+        // Add your code here
+        break;
+      case 40: // down arrow key
+        move(turn, "DOWN");
+        // Add your code here
+        break;
+      default:
+        return; // exit this handler for other keys
     }
+    event.preventDefault(); // prevent the default action (scroll / move caret)
+  });
 
-    $(document).keydown(function(event) {
-        switch(event.which) {
-            case 37: // left arrow key
-                move(turn, "LEFT");
-                // Add your code here
-                break;
-            case 38: // up arrow key
-                move(turn, "UP");
-                // Add your code here
-                break;
-            case 39: // right arrow key
-                move(turn, "RIGHT");
-                // Add your code here
-                break;
-            case 40: // down arrow key
-                move(turn, "DOWN");
-                // Add your code here
-                break;
-            default:
-                return; // exit this handler for other keys
-        }
-        event.preventDefault(); // prevent the default action (scroll / move caret)
-    });    
+  $(".choose-player").click(function (event) {
+    if (!$(this).hasClass("player-already-taken")) {
+      if ($(this).hasClass("my-chosen-player")) {
+        $(".choose-player").removeClass("my-chosen-player");
+      } else {
+        $(".choose-player").removeClass("my-chosen-player");
+        $(this).addClass("my-chosen-player");
+      }
+    }
+  });
 
-    $(".choose-player").click(function (event) {
-        if (!$(this).hasClass("player-already-taken")) {
-            if ($(this).hasClass("my-chosen-player")) {
-                $(".choose-player").removeClass("my-chosen-player");
-            } else {
-                $(".choose-player").removeClass("my-chosen-player");
-                $(this).addClass("my-chosen-player");
-            }
-        }
-    })
+  $(".choose-player").hover(
+    function (event) {
+      let slug = $(this).attr("id").replace("choose-", "");
 
-    $(".choose-player").hover(
-        function (event) {
-            let slug = $(this).attr("id").replace("choose-", "");
+      let text = "Choose " + characters[slug];
+      if ($(this).hasClass("player-already-taken")) {
+        let player = $(this).data("player");
+        text = player + " has chosen " + characters[slug];
+      }
+      let color = slug == "mrs-white" ? "#474747" : "#FFFFFF";
+      var tooltip = $(
+        '<div class="tooltip" style="background-color:' +
+          colors[slug] +
+          "; color:" +
+          color +
+          '">' +
+          text +
+          "</div>"
+      );
+      $("body").append(tooltip);
+      tooltip
+        .css({
+          top: event.pageY - tooltip.outerHeight() - 10,
+          left: event.pageX + 10,
+        })
+        .fadeIn("fast");
+    },
+    function () {
+      $(".tooltip").remove();
+    }
+  );
 
-            let text = "Choose " + characters[slug];
-            if ($(this).hasClass("player-already-taken")) {
-                let player = $(this).data("player");
-                text = player + " has chosen " + characters[slug];
-            }
-            let color = slug == "mrs-white" ? "#474747" : "#FFFFFF";
-            var tooltip = $('<div class="tooltip" style="background-color:' + colors[slug] + '; color:' + color + '">' + text + '</div>');
-            $("body").append(tooltip);
-            tooltip.css({ top: event.pageY - tooltip.outerHeight() - 10, left: event.pageX + 10 }).fadeIn("fast");
-        },
-        function () {
-            $(".tooltip").remove();
-        }
-    );
-
-    $(".choose-player").mousemove(function (event) {
-        $(".tooltip").css({ top: event.pageY - $(".tooltip").outerHeight() - 10, left: event.pageX + 10 });
+  $(".choose-player").mousemove(function (event) {
+    $(".tooltip").css({
+      top: event.pageY - $(".tooltip").outerHeight() - 10,
+      left: event.pageX + 10,
     });
+  });
 });
 
 function initialize(slug) {
-    var $startElement = $(".start." + slug);
-    var $playerElement = $("#" + slug);
+  var $startElement = $(".start." + slug);
+  var $playerElement = $("#" + slug);
 
-    var parentOffset = $startElement.parent().offset();
-    var startOffset = $startElement.offset();
-    var startWidth = $startElement.outerWidth();
-    var startHeight = $startElement.outerHeight();
+  var parentOffset = $startElement.parent().offset();
+  var startOffset = $startElement.offset();
+  var startWidth = $startElement.outerWidth();
+  var startHeight = $startElement.outerHeight();
 
-    var playerWidth = $playerElement.outerWidth();
-    var playerHeight = $playerElement.outerHeight();
+  var playerWidth = $playerElement.outerWidth();
+  var playerHeight = $playerElement.outerHeight();
 
-    var topPosition = startOffset.top - parentOffset.top + (startHeight / 2) - (playerHeight / 2);
-    var leftPosition = startOffset.left - parentOffset.left + (startWidth / 2) - (playerWidth / 2);
-    topPosition += 18;
-    leftPosition += 18;
-    $playerElement.css({
-        top: topPosition + 'px',
-        left: leftPosition + 'px'
-    });
+  var topPosition =
+    startOffset.top - parentOffset.top + startHeight / 2 - playerHeight / 2;
+  var leftPosition =
+    startOffset.left - parentOffset.left + startWidth / 2 - playerWidth / 2;
+  topPosition += 18;
+  leftPosition += 18;
+  $playerElement.css({
+    top: topPosition + "px",
+    left: leftPosition + "px",
+  });
 }
 
 function move(player, direction) {
-    if (board[players[player]].hasOwnProperty(direction)) {
-        let id = board[players[player]][direction];
-        position(player, id)
-        players[player] = id;
-        highlightPossibleMoves(id);
-    } else {
-        console.log("Can't go " + direction.toLowerCase());
-    }
+  if (board[players[player]].hasOwnProperty(direction)) {
+    let id = board[players[player]][direction];
+    position(player, id);
+    players[player] = id;
+    highlightPossibleMoves(id);
+  } else {
+    console.log("Can't go " + direction.toLowerCase());
+  }
 }
 
 function position(player, tile) {
-    const rooms = {
-        "study": {
-            width: 359.83,
-            height: 231.12
-        }, 
-        "lounge": {
-            width: 358.8,
-            height: 337.29
-        },
-        "library": {
-            width: 387.48,
-            height: 237.27
-        },
-        "kitchen": {
-            width: 306.57,
-            height: 316.13
-        },
-        "dining-room": {
-            width: 442.44,
-            height: 351.29
-        },
-        "assumption": {
-            width: 232.15,
-            height: 348.22
-        },
-        "conservatory": {
-            width: 307.93,
-            height: 264.92
-        },
-        "billiard-room": {
-            width: 319.54,
-            height: 249.56
-        },
-        "ballroom": {
-            width: 411.03,
-            height: 299.4
-        },
-        "hall": {
-            width: 289.5,
-            height: 369.38
-        }
-    }
+  const startingPositions = {
+    "mrs-white-start": true,
+    "mr-green-start": true,
+    "mrs-peacock-start": true,
+    "professor-plum-start": true,
+    "miss-scarlet-start": true,
+    "colonel-mustard-start": true,
+  };
 
-    const startingPositions = {
-        "mrs-white-start": true
-        , "mr-green-start": true
-        , "mrs-peacock-start": true
-        , "professor-plum-start": true
-        , "miss-scarlet-start": true
-        , "colonel-mustard-start": true
-    }
+  var $tileElement = $("#" + tile);
+  var $playerElement = $("#" + player);
 
-    var $tileElement = $("#" + tile);
-    var $playerElement = $("#" + player);
+  var parentOffset = $tileElement.parent().offset();
+  var startOffset = $tileElement.offset();
+  var startWidth = $tileElement.outerWidth();
+  var startHeight = $tileElement.outerHeight();
 
-    var parentOffset = $tileElement.parent().offset();
-    var startOffset = $tileElement.offset();
-    var startWidth = $tileElement.outerWidth();
-    var startHeight = $tileElement.outerHeight();
+  var playerWidth = $playerElement.outerWidth();
+  var playerHeight = $playerElement.outerHeight();
 
-    var playerWidth = $playerElement.outerWidth();
-    var playerHeight = $playerElement.outerHeight();
+  var topPosition =
+    startOffset.top - parentOffset.top + startHeight / 2 - playerHeight / 2;
+  var leftPosition =
+    startOffset.left - parentOffset.left + startWidth / 2 - playerWidth / 2;
 
-    var topPosition = startOffset.top - parentOffset.top + (startHeight / 2) - (playerHeight / 2);
-    var leftPosition = startOffset.left - parentOffset.left + (startWidth / 2) - (playerWidth / 2);
+  if (rooms.hasOwnProperty(tile)) {
+    console.log("Room");
+    console.log("Height: " + $tileElement.height());
+    console.log("Width: " + $tileElement.width());
+    topPosition += rooms[tile]["height"] / 2;
+    leftPosition += rooms[tile]["width"] / 2;
+  } else if (startingPositions.hasOwnProperty(tile)) {
+    console.log("not number");
+    topPosition += 18;
+    leftPosition += 18;
+  } else {
+    topPosition -= 8;
+    leftPosition -= 8;
+    console.log("number");
+  }
 
-    if (rooms.hasOwnProperty(tile)) {
-        console.log("Room")
-        console.log("Height: " + $tileElement.height())
-        console.log("Width: " + $tileElement.width())
-        topPosition += rooms[tile]["height"] / 2;
-        leftPosition += rooms[tile]["width"] / 2;
-    } else if (startingPositions.hasOwnProperty(tile)) {
-        console.log("not number")
-        topPosition += 18;
-        leftPosition += 18;
-    } else {
-        topPosition -= 8;
-        leftPosition -= 8;
-        console.log("number")
-    }
-    
-    $playerElement.css({
-        top: topPosition + 'px',
-        left: leftPosition + 'px'
-    });
+  $playerElement.css({
+    top: topPosition + "px",
+    left: leftPosition + "px",
+  });
 }
 
 function highlightPossibleMoves(id) {
-    console.log("ID: " + id);
-    const possibleMoves = board[id];
-    console.log(possibleMoves);
-    for (let i = 0; i < possibleMoves.length; i++) {
-        $("#" + possibleMoves[i]).css({
-            "stroke": "yellow",
-            "stroke-width": "8px",
-            "stroke-dasharray": "12"
-        });
-    }
+  console.log("ID: " + id);
+  const possibleMoves = board[id];
+  console.log(possibleMoves);
+  for (let i = 0; i < possibleMoves.length; i++) {
+    $("#" + possibleMoves[i]).css({
+      stroke: "yellow",
+      "stroke-width": "8px",
+      "stroke-dasharray": "12",
+    });
+  }
 }
