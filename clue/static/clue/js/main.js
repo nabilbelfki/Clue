@@ -1025,9 +1025,8 @@ const startingPositions = {
 };
 
 let previous = 0;
+let chosenPlayer = "";
 $(document).ready(function () {
-  highlightPossibleMoves("miss-scarlet-start");
-
   $(".room").each(function (event) {
     let room = $(this).attr("id");
     var bbox = document.getElementById(room).getBBox();
@@ -1065,6 +1064,29 @@ $(document).ready(function () {
     }
     event.preventDefault(); // prevent the default action (scroll / move caret)
   });
+
+  $("#choose-player-button").click(function(event) {
+    let isPlayerChosen = false;
+    $(".choose-player").each(function(event) {
+        if ($(this).hasClass("my-chosen-player")) {
+            isPlayerChosen = true;
+            chosenPlayer = $(this).attr("id").replace("choose-", "");
+            return false; // Exit the loop
+        }
+    });
+
+    if (isPlayerChosen) {
+        $("#player-selection").hide();
+        $("#boardgame").css("display", "flex");
+
+    } else {
+        // Handle the case where no player is chosen
+        alert("Please choose a player.");
+    }
+});
+
+
+
 
   $(".choose-player").click(function (event) {
     if (!$(this).hasClass("player-already-taken")) {
@@ -1108,6 +1130,7 @@ $(document).ready(function () {
       $(".tooltip").remove();
     }
   );
+
 
   $(".choose-player").mousemove(function (event) {
     $(".tooltip").css({
@@ -1153,7 +1176,7 @@ function position(player, tile) {
 }
 
 function highlightPossibleMoves(id) {
-  //   console.log("ID: " + id);
+    console.log("ID: " + id);
   const possibleMoves = board[id];
   //   console.log(possibleMoves);
   for (let i = 0; i < possibleMoves.length; i++) {
