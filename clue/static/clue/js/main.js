@@ -275,7 +275,7 @@ const board = {
     RIGHT: "54",
   },
   54: {
-    RIGHT: "53",
+    LEFT: "53",
     UP: "55",
   },
   55: {
@@ -1015,25 +1015,31 @@ const rooms = {
   },
 };
 
+const startingPositions = {
+  "mrs-white-start": true,
+  "mr-green-start": true,
+  "mrs-peacock-start": true,
+  "professor-plum-start": true,
+  "miss-scarlet-start": true,
+  "colonel-mustard-start": true,
+};
+
 let previous = 0;
 $(document).ready(function () {
   highlightPossibleMoves("miss-scarlet-start");
+
   $(".room").each(function (event) {
     let room = $(this).attr("id");
     var bbox = document.getElementById(room).getBBox();
-    console.log("Width: " + bbox.width);
-    console.log("Height: " + bbox.height);
+    // console.log("Width: " + bbox.width);
+    // console.log("Height: " + bbox.height);
     rooms[room]["height"] = bbox.height;
     rooms[room]["width"] = bbox.width;
   });
-  //   var billiardRoom = document.getElementById("billiard-room");
-  //   var bbox = billiardRoom.getBBox();
-  //   console.log("Width: " + bbox.width);
-  //   console.log("Height: " + bbox.height);
 
   for (const slug in characters) {
     // console.log(slug);
-    initialize(slug);
+    position("#" + slug, ".start." + slug);
   }
 
   $(document).keydown(function (event) {
@@ -1111,34 +1117,10 @@ $(document).ready(function () {
   });
 });
 
-function initialize(slug) {
-  var $startElement = $(".start." + slug);
-  var $playerElement = $("#" + slug);
-
-  var parentOffset = $startElement.parent().offset();
-  var startOffset = $startElement.offset();
-  var startWidth = $startElement.outerWidth();
-  var startHeight = $startElement.outerHeight();
-
-  var playerWidth = $playerElement.outerWidth();
-  var playerHeight = $playerElement.outerHeight();
-
-  var topPosition =
-    startOffset.top - parentOffset.top + startHeight / 2 - playerHeight / 2;
-  var leftPosition =
-    startOffset.left - parentOffset.left + startWidth / 2 - playerWidth / 2;
-  topPosition += 18;
-  leftPosition += 18;
-  $playerElement.css({
-    top: topPosition + "px",
-    left: leftPosition + "px",
-  });
-}
-
 function move(player, direction) {
   if (board[players[player]].hasOwnProperty(direction)) {
     let id = board[players[player]][direction];
-    position(player, id);
+    position("#" + player, "#" + id);
     players[player] = id;
     highlightPossibleMoves(id);
   } else {
@@ -1147,57 +1129,33 @@ function move(player, direction) {
 }
 
 function position(player, tile) {
-  const startingPositions = {
-    "mrs-white-start": true,
-    "mr-green-start": true,
-    "mrs-peacock-start": true,
-    "professor-plum-start": true,
-    "miss-scarlet-start": true,
-    "colonel-mustard-start": true,
-  };
+  console.log(tile);
+  var $pathElement = $(tile);
+  console.log(player);
+  var $playerElement = $(player);
 
-  var $tileElement = $("#" + tile);
-  var $playerElement = $("#" + player);
+  var bbox = $pathElement[0].getBBox(); // Get the bounding box of the path
 
-  var parentOffset = $tileElement.parent().offset();
-  var startOffset = $tileElement.offset();
-  var startWidth = $tileElement.outerWidth();
-  var startHeight = $tileElement.outerHeight();
+  var x = bbox.x;
+  var y = bbox.y;
 
-  var playerWidth = $playerElement.outerWidth();
-  var playerHeight = $playerElement.outerHeight();
-
-  var topPosition =
-    startOffset.top - parentOffset.top + startHeight / 2 - playerHeight / 2;
-  var leftPosition =
-    startOffset.left - parentOffset.left + startWidth / 2 - playerWidth / 2;
-
+  // Check if the pathId corresponds to a room
   if (rooms.hasOwnProperty(tile)) {
-    console.log("Room");
-    console.log("Height: " + $tileElement.height());
-    console.log("Width: " + $tileElement.width());
-    topPosition += rooms[tile]["height"] / 2;
-    leftPosition += rooms[tile]["width"] / 2;
-  } else if (startingPositions.hasOwnProperty(tile)) {
-    console.log("not number");
-    topPosition += 18;
-    leftPosition += 18;
-  } else {
-    topPosition -= 8;
-    leftPosition -= 8;
-    console.log("number");
+    var roomHeight = rooms[tile]["height"];
+    var roomWidth = rooms[tile]["width"];
+    x += roomWidth / 2 - bbox.width / 2;
+    y += roomHeight / 2 - bbox.height / 2;
   }
 
-  $playerElement.css({
-    top: topPosition + "px",
-    left: leftPosition + "px",
-  });
+  // Set the position of the foreignObject
+  $playerElement.attr("x", x);
+  $playerElement.attr("y", y);
 }
 
 function highlightPossibleMoves(id) {
-  console.log("ID: " + id);
+  //   console.log("ID: " + id);
   const possibleMoves = board[id];
-  console.log(possibleMoves);
+  //   console.log(possibleMoves);
   for (let i = 0; i < possibleMoves.length; i++) {
     $("#" + possibleMoves[i]).css({
       stroke: "yellow",
