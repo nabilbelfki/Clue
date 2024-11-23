@@ -89,7 +89,7 @@ function timer() {
           const randomIndex = Math.floor(Math.random() * availablePlayers.length);
           chosenPlayer = availablePlayers[randomIndex];
         }
-
+        showMyCards();
         $("#player-selection").hide();
         $("#boardgame").css("display", "flex");
       }

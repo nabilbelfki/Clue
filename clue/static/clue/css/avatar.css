@@ -1,0 +1,30 @@
+#avatar {
+    position: absolute;
+    bottom: 0;
+    left: -200px;
+    width: 400px;
+    height: 260px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #872427;
+    border-radius: 25px;
+    padding: 20px;
+    opacity: 0.9;
+}
+
+.avatar-picture:not(#miss-scarlet-avatar) {
+    display: none;
+}
+
+.avatar-picture img{
+    width: 200px;
+    border-radius: 25px;
+}
+
+#avatar-name {
+    color: #FFFFFF;
+    font-size: 60px;
+    font-weight: 600;
+}

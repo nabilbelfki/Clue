@@ -1,5 +1,3 @@
-var turn = "miss-scarlet";
-
 const board = {
   1: {
     DOWN: "2",
@@ -972,6 +970,15 @@ const players = {
   "mr-green": "mr-green-start",
 };
 
+const gamePlayers = {
+    "colonel-mustard": "NABIL",
+    "professor-plum": "LAYLA",
+    "mrs-white": "KRISTALLIA",
+    "mr-green": "GERASIMOS",
+    "miss-scarlet": "SANDY",
+    "mrs-peacock": "SUNNY",
+}
+
 const rooms = {
   study: {
     width: 0,
@@ -1024,6 +1031,10 @@ const startingPositions = {
   "colonel-mustard-start": true,
 };
 
+var turn = 0;
+var moves = 0;
+const rotation = ["miss-scarlet", "mrs-white", "colonel-mustard", "mr-green", "mrs-peacock", "professor-plum"];
+
 let previous = 0;
 let chosenPlayer = "";
 $(document).ready(function () {
@@ -1036,27 +1047,28 @@ $(document).ready(function () {
     rooms[room]["width"] = bbox.width;
   });
 
-  for (const slug in characters) {
-    // console.log(slug);
-    position("#" + slug, ".start." + slug);
-  }
+    $("#gameplay").on("load", function() { 
+        for (const slug in characters) { 
+            position("#" + slug, ".start." + slug); 
+        } 
+    });
 
   $(document).keydown(function (event) {
     switch (event.which) {
       case 37: // left arrow key
-        move(turn, "LEFT");
+        move(rotation[turn], "LEFT");
         // Add your code here
         break;
       case 38: // up arrow key
-        move(turn, "UP");
+        move(rotation[turn], "UP");
         // Add your code here
         break;
       case 39: // right arrow key
-        move(turn, "RIGHT");
+        move(rotation[turn], "RIGHT");
         // Add your code here
         break;
       case 40: // down arrow key
-        move(turn, "DOWN");
+        move(rotation[turn], "DOWN");
         // Add your code here
         break;
       default:
@@ -1074,8 +1086,9 @@ $(document).ready(function () {
             return false; // Exit the loop
         }
     });
-
+    
     if (isPlayerChosen) {
+        showMyCards();
         $("#player-selection").hide();
         $("#boardgame").css("display", "flex");
 
@@ -1141,20 +1154,32 @@ $(document).ready(function () {
 });
 
 function move(player, direction) {
-  if (board[players[player]].hasOwnProperty(direction)) {
-    let id = board[players[player]][direction];
-    position("#" + player, "#" + id);
-    players[player] = id;
-    highlightPossibleMoves(id);
-  } else {
-    console.log("Can't go " + direction.toLowerCase());
-  }
+  if (moves > 0) {
+      if (board[players[player]].hasOwnProperty(direction)) {
+        let id = board[players[player]][direction];
+        for (const playerName in players) {
+            console.log(players[playerName])
+            if (id == players[playerName]) {
+                console.log(playerBlocking)
+                return;
+            }
+        }
+        position("#" + player, "#" + id);
+        players[player] = id;
+        highlightPossibleMoves(id);
+        moves--;
+        $("#moves").text(moves);
+        if (moves == 0) {
+            changeTurn();
+        }
+      } else {
+        console.log("Can't go " + direction.toLowerCase());
+      }
+  }  
 }
 
 function position(player, tile) {
-  console.log(tile);
   var $pathElement = $(tile);
-  console.log(player);
   var $playerElement = $(player);
 
   var bbox = $pathElement[0].getBBox(); // Get the bounding box of the path
@@ -1186,4 +1211,29 @@ function highlightPossibleMoves(id) {
       "stroke-dasharray": "12",
     });
   }
+}
+
+function changeTurn() {
+    $("#moves").hide();
+    $("#dice-text").text("ROLL DICE");
+    $("#six-cube, #four-cube").fadeIn();
+    $("#dice-roll").addClass("rollable");
+    let previousCharacter = rotation[turn];
+    if (turn == rotation.length - 1) {
+        turn = 0;
+    } else {
+        turn++;
+    }
+    let character = rotation[turn];
+    let name = gamePlayers[character];
+    $("#" + previousCharacter + "-avatar").hide();
+    $("#" + character + "-avatar").show();
+    $("#avatar-name").text(name);
+
+    $("#avatar").css("background-color", colors[character]);
+    if (character == "mrs-white") {
+        $("#avatar-name").css("color","#474747");
+    } else {
+        $("#avatar-name").css("color","#FFFFFF");
+    }
 }

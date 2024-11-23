@@ -1,0 +1,72 @@
+#cards img {
+    display: none;
+    height: 300px;
+    cursor: pointer;
+}
+
+#cards {
+    position: absolute;
+    bottom: -250px;
+    left: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+#shown-card {
+    position: fixed; /* Use fixed positioning to keep it centered even when scrolling */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust the position to be exactly centered */
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5); /* Add a shadow for better visibility */
+    border-radius: 25px;
+    padding: 50px; /* Add some padding for better spacing */
+    z-index: 1000; /* Ensure it appears above other elements */
+    background-color: #5060B8;
+    gap: 25px;
+}
+
+#card-shown {
+    height: 530px;
+    width: 700px;
+    background-color: #F0F0F0;
+    /* border-radius: 25px; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#shown-title {
+    font-size: 50px;
+    font-weight: 600;
+    color: #FFFFFF;
+}
+
+#card-shown img {
+    display: none;
+    height: 80%;
+    width: auto;
+}
+
+#card-shown #mrs-white-shown-card {
+    display: block;
+}
+
+#close-shown {
+    background-color: #FFFFFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #5060B8;
+    cursor: pointer;
+    border-radius: 10px;
+    width: 200px;
+    height: 70px;
+    font-weight: 600;
+    font-size: 32px;
+}

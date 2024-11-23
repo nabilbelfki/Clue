@@ -1,6 +1,5 @@
-@keyframes rainbow { 0% { background-color: #FF4B4B; } 2% { background-color: #FF6B4B; } 4% { background-color: #FF7F4B; } 6% { background-color: #FF9F4B; } 8% { background-color: #FFBF4B; } 10% { background-color: #FFDF4B; } 12% { background-color: #FFFF4B; } 14% { background-color: #DFFF4B; } 16% { background-color: #BFFF4B; } 18% { background-color: #9FFF4B; } 20% { background-color: #7FFF4B; } 22% { background-color: #5FFF4B; } 24% { background-color: #4BFF4B; } 26% { background-color: #4BFF6B; } 28% { background-color: #4BFF8B; } 30% { background-color: #4BFFAB; } 32% { background-color: #4BFFCB; } 34% { background-color: #4BFFEB; } 36% { background-color: #4BFFFF; } 38% { background-color: #4BDFEB; } 40% { background-color: #4BBFEB; } 42% { background-color: #4B9FEB; } 44% { background-color: #4B7FEB; } 46% { background-color: #4B5FEB; } 48% { background-color: #4B4BFF; } 50% { background-color: #6B4BFF; } 52% { background-color: #8B4BFF; } 54% { background-color: #AB4BFF; } 56% { background-color: #CB4BFF; } 58% { background-color: #EB4BFF; } 60% { background-color: #FF4BFF; } 62% { background-color: #FF4BDF; } 64% { background-color: #FF4BBF; } 66% { background-color: #FF4B9F; } 68% { background-color: #FF4B7F; } 70% { background-color: #FF4B5F; } 72% { background-color: #FF4B4B; } 74% { background-color: #FF6B4B; } 76% { background-color: #FF7F4B; } 78% { background-color: #FF9F4B; } 80% { background-color: #FFBF4B; } 82% { background-color: #FFDF4B; } 84% { background-color: #FFFF4B; } 86% { background-color: #DFFF4B; } 88% { background-color: #BFFF4B; } 90% { background-color: #9FFF4B; } 92% { background-color: #7FFF4B; } 94% { background-color: #5FFF4B; } 96% { background-color: #4BFF4B; } 98% { background-color: #4BFF6B; } 100% { background-color: #4BFF8B; } }
 #start-menu {
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -228,6 +227,11 @@ font-size: 44;
 .exit svg {
     height: 100%;
     width: 100%;
+}
+
+.edit svg,
+.save svg,
+.exit svg {
     cursor: pointer;
 }
 

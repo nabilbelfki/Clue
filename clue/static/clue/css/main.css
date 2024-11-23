@@ -1,5 +1,19 @@
 @import url('player-selection.css');
 @import url('game.css');
+@import url('dice.css');
+@import url('avatar.css');
+@import url('cards.css');
+@import url('suggestions.css');
+@import url('detective-notes.css');
+@keyframes rainbow { 0% { background-color: #FF4B4B; } 2% { background-color: #FF6B4B; } 4% { background-color: #FF7F4B; } 6% { background-color: #FF9F4B; } 8% { background-color: #FFBF4B; } 10% { background-color: #FFDF4B; } 12% { background-color: #FFFF4B; } 14% { background-color: #DFFF4B; } 16% { background-color: #BFFF4B; } 18% { background-color: #9FFF4B; } 20% { background-color: #7FFF4B; } 22% { background-color: #5FFF4B; } 24% { background-color: #4BFF4B; } 26% { background-color: #4BFF6B; } 28% { background-color: #4BFF8B; } 30% { background-color: #4BFFAB; } 32% { background-color: #4BFFCB; } 34% { background-color: #4BFFEB; } 36% { background-color: #4BFFFF; } 38% { background-color: #4BDFEB; } 40% { background-color: #4BBFEB; } 42% { background-color: #4B9FEB; } 44% { background-color: #4B7FEB; } 46% { background-color: #4B5FEB; } 48% { background-color: #4B4BFF; } 50% { background-color: #6B4BFF; } 52% { background-color: #8B4BFF; } 54% { background-color: #AB4BFF; } 56% { background-color: #CB4BFF; } 58% { background-color: #EB4BFF; } 60% { background-color: #FF4BFF; } 62% { background-color: #FF4BDF; } 64% { background-color: #FF4BBF; } 66% { background-color: #FF4B9F; } 68% { background-color: #FF4B7F; } 70% { background-color: #FF4B5F; } 72% { background-color: #FF4B4B; } 74% { background-color: #FF6B4B; } 76% { background-color: #FF7F4B; } 78% { background-color: #FF9F4B; } 80% { background-color: #FFBF4B; } 82% { background-color: #FFDF4B; } 84% { background-color: #FFFF4B; } 86% { background-color: #DFFF4B; } 88% { background-color: #BFFF4B; } 90% { background-color: #9FFF4B; } 92% { background-color: #7FFF4B; } 94% { background-color: #5FFF4B; } 96% { background-color: #4BFF4B; } 98% { background-color: #4BFF6B; } 100% { background-color: #4BFF8B; } }
+@keyframes rainbow-border { 0% { border-color: #FF4B4B; } 2% { border-color: #FF6B4B; } 4% { border-color: #FF7F4B; } 6% { border-color: #FF9F4B; } 8% { border-color: #FFBF4B; } 10% { border-color: #FFDF4B; } 12% { border-color: #FFFF4B; } 14% { border-color: #DFFF4B; } 16% { border-color: #BFFF4B; } 18% { border-color: #9FFF4B; } 20% { border-color: #7FFF4B; } 22% { border-color: #5FFF4B; } 24% { border-color: #4BFF4B; } 26% { border-color: #4BFF6B; } 28% { border-color: #4BFF8B; } 30% { border-color: #4BFFAB; } 32% { border-color: #4BFFCB; } 34% { border-color: #4BFFEB; } 36% { border-color: #4BFFFF; } 38% { border-color: #4BDFEB; } 40% { border-color: #4BBFEB; } 42% { border-color: #4B9FEB; } 44% { border-color: #4B7FEB; } 46% { border-color: #4B5FEB; } 48% { border-color: #4B4BFF; } 50% { border-color: #6B4BFF; } 52% { border-color: #8B4BFF; } 54% { border-color: #AB4BFF; } 56% { border-color: #CB4BFF; } 58% { border-color: #EB4BFF; } 60% { border-color: #FF4BFF; } 62% { border-color: #FF4BDF; } 64% { border-color: #FF4BBF; } 66% { border-color: #FF4B9F; } 68% { border-color: #FF4B7F; } 70% { border-color: #FF4B5F; } 72% { border-color: #FF4B4B; } 74% { border-color: #FF6B4B; } 76% { border-color: #FF7F4B; } 78% { border-color: #FF9F4B; } 80% { border-color: #FFBF4B; } 82% { border-color: #FFDF4B; } 84% { border-color: #FFFF4B; } 86% { border-color: #DFFF4B; } 88% { border-color: #BFFF4B; } 90% { border-color: #9FFF4B; } 92% { border-color: #7FFF4B; } 94% { border-color: #5FFF4B; } 96% { border-color: #4BFF4B; } 98% { border-color: #4BFF6B; } 100% { border-color: #4BFF8B; } }
+@keyframes rainbow-color { 0% { color: #FF4B4B; } 2% { color: #FF6B4B; } 4% { color: #FF7F4B; } 6% { color: #FF9F4B; } 8% { color: #FFBF4B; } 10% { color: #FFDF4B; } 12% { color: #FFFF4B; } 14% { color: #DFFF4B; } 16% { color: #BFFF4B; } 18% { color: #9FFF4B; } 20% { color: #7FFF4B; } 22% { color: #5FFF4B; } 24% { color: #4BFF4B; } 26% { color: #4BFF6B; } 28% { color: #4BFF8B; } 30% { color: #4BFFAB; } 32% { color: #4BFFCB; } 34% { color: #4BFFEB; } 36% { color: #4BFFFF; } 38% { color: #4BDFEB; } 40% { color: #4BBFEB; } 42% { color: #4B9FEB; } 44% { color: #4B7FEB; } 46% { color: #4B5FEB; } 48% { color: #4B4BFF; } 50% { color: #6B4BFF; } 52% { color: #8B4BFF; } 54% { color: #AB4BFF; } 56% { color: #CB4BFF; } 58% { color: #EB4BFF; } 60% { color: #FF4BFF; } 62% { color: #FF4BDF; } 64% { color: #FF4BBF; } 66% { color: #FF4B9F; } 68% { color: #FF4B7F; } 70% { color: #FF4B5F; } 72% { color: #FF4B4B; } 74% { color: #FF6B4B; } 76% { color: #FF7F4B; } 78% { color: #FF9F4B; } 80% { color: #FFBF4B; } 82% { color: #FFDF4B; } 84% { color: #FFFF4B; } 86% { color: #DFFF4B; } 88% { color: #BFFF4B; } 90% { color: #9FFF4B; } 92% { color: #7FFF4B; } 94% { color: #5FFF4B; } 96% { color: #4BFF4B; } 98% { color: #4BFF6B; } 100% { color: #4BFF8B; } }
+@keyframes dash {
+    to {
+        background-position: 100% 0%, 0% 100%, 0% 0%, 100% 100%;
+    }
+}
+
 
 * {
     box-sizing: border-box;
@@ -15,13 +29,14 @@ body {
     align-items: center;
     height: 100vh;
     width: 100%;
+    overflow-y: hidden;
 }
 
 #boardgame {
     position: relative;
     height: 100%;
     /* padding: 20px; */
-    display: flex;
+    display: none;
 }
 
 #board {
@@ -69,56 +84,9 @@ body {
     background-color: #C5A12F;
 }
 
-#dice-roll {
-    position: absolute;
-    bottom: 0;
-    right: -200px;
-    width: 300px;
-    height: 170px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 25px;
-    padding: 5px;
+.unselectable {
+    user-select: none; /* Standard syntax */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
 }
-
-#dice {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#dice-roll p {
-    font-weight: 600;
-    color: #474747;
-    font-size: 30px;
-    margin: 0;
-}
-
-#six-cube {
-    height: 100px;
-    width: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#four-cube {
-    height: 100px;
-    width: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* #six-cube svg {
-    height: 100%;
-    width: 100%;
-}
-
-#four-cube svg {
-    height: 100%;
-    width: 100%;
-} */
