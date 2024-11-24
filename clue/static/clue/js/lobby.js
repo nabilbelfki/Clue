@@ -14,6 +14,11 @@ $(document).ready(function () {
       }
   });
 
+  $("#lobby > div > input").on("input", function () {
+    var inputVal = $(this).val().toUpperCase().replace(/[^A-Z0-9 ]/g, '').slice(0, 25);
+    $(this).val(inputVal);
+  });
+
   $(".edit").click(function(event) {
     const $player = $(this).parent();
     $player.find("input").attr("readonly", false);
@@ -24,32 +29,28 @@ $(document).ready(function () {
 
   $(".save").click(function(event) {
     const $player = $(this).parent();
-    $player.find("input").attr("readonly", true);
+    const $input = $player.find("input");
+    $input.attr("readonly", true);
+    let newName = $input.val();
+    renamePlayer(newName);
     $player.find(".edit").css("display", "flex");
     $(this).hide();
   });
 
   $("#action-button").click(function(event) {
-    
+    $("#arcade")[0].play();
     if ($(this).data("action") == "create") {
-      let code = generateRandomCode()
-      $("#code-input input").val(code);
-      $("#lobby").css("display", "flex");
-      $("#code-input input").attr("readonly", true);
-      $("#action-button-inner").text("START GAME");
-      $(this).data("action", "start");
+      createGame();
     } else if ($(this).data("action") == "start") {
       $("#start-menu").hide()
       $("#player-selection").css("display","flex");
       timer()
     } else if ($(this).data("action") == "join") {
-      if ($(this).closest("#lobby").find("#code-input input").length < 4) {
+      let code = $("#code-input input").val();
+      if (code.length < 4) {
         $("#code-validator").css("display", "flex");
       } else {
-        $("#lobby").css("display", "flex");
-        $("#code-input input").attr("readonly", true);
-        $("#action-button-inner").text("START GAME");
-        $(this).data("action", "start");
+        joinGame(code);
       }
     }
   });
@@ -92,6 +93,97 @@ function timer() {
         showMyCards();
         $("#player-selection").hide();
         $("#boardgame").css("display", "flex");
+      }
+  });
+}
+
+
+function createGame() {
+  $.ajax({
+    url: '/game/create/',
+    type: 'POST',
+    data: {
+        csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val()
+    },
+    success: function(response) {
+        let code = response.game_code;
+        let playerID = response.player_id;
+        let players = JSON.parse(response.players);
+        setupLobby(code, playerID, players);
+    },
+    error: function(xhr, status, error) {
+        console.error("Error generating code and creating game:", error);
+    }
+});
+}
+
+function joinGame(code) {
+  $.ajax({
+    url: '/game/join/',
+    type: 'POST',
+    data: {
+        csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+        code: code
+    },
+    success: function(response) {
+        let playerID = response.player_id;
+        let players = JSON.parse(response.players);
+        setupLobby(code, playerID, players);
+    },
+    error: function(xhr, status, error) {
+        console.error("Error generating code and creating game:", error);
+    }
+});
+}
+
+function setupLobby(code, currentPlayerID, players) {
+  let currentPlayerIndex;
+  players.forEach(function(player, index) {
+    if (player.ID == currentPlayerID) currentPlayerIndex = index;
+    $("#lobby > div").eq(index).find("input").val(player.Name);
+  });
+  let currentPlayer = $("#lobby > div").eq(currentPlayerIndex);
+  currentPlayer.find(".edit").show();
+  if (currentPlayerIndex != 1) currentPlayer.find(".exit").show();
+  $("#code-input input").val(code);
+  $("#lobby").css("display", "flex");
+  $("#code-input input").attr("readonly", true);
+  $("#action-button-inner").text("START GAME");
+  $(this).data("action", "start");
+
+  // Establish WebSocket connection
+  const lobbySocket = new WebSocket(`ws://${window.location.host}/ws/lobby/${code}/`);
+
+  lobbySocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    if (data.action === 'PlayerAdded') {
+      const players = JSON.parse(data.players);
+      // Update the lobby UI with the new players
+      players.forEach(function(player, index) {
+        $("#lobby > div").eq(index).find("input").val(player.Name);
+      });
+    }
+  };
+
+  lobbySocket.onclose = function(e) {
+    console.error('Lobby socket closed unexpectedly');
+  };
+}
+
+
+function renamePlayer(name) {
+  $.ajax({
+      url: '/player/',
+      type: 'POST',
+      data: {
+          csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+          name: name
+      },
+      success: function(response) {
+          console.log(response);
+      },
+      error: function(xhr, status, error) {
+          console.error("Error generating code and creating game:", error);
       }
   });
 }

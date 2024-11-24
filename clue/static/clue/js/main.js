@@ -1038,6 +1038,33 @@ const rotation = ["miss-scarlet", "mrs-white", "colonel-mustard", "mr-green", "m
 let previous = 0;
 let chosenPlayer = "";
 $(document).ready(function () {
+
+  function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+              const cookie = cookies[i].trim();
+              // Does this cookie string begin with the name we want?
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+  }
+
+  const csrftoken = getCookie('csrftoken');
+
+  $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+          if (!/^(GET|HEAD|OPTIONS|TRACE)$/.test(settings.type) && !this.crossDomain) {
+              xhr.setRequestHeader("X-CSRFToken", csrftoken);
+          }
+      }
+  });
+
   $(".room").each(function (event) {
     let room = $(this).attr("id");
     var bbox = document.getElementById(room).getBBox();
@@ -1047,11 +1074,11 @@ $(document).ready(function () {
     rooms[room]["width"] = bbox.width;
   });
 
-    $("#gameplay").on("load", function() { 
-        for (const slug in characters) { 
-            position("#" + slug, ".start." + slug); 
-        } 
-    });
+  $("#gameplay").on("load", function() { 
+      for (const slug in characters) { 
+          position("#" + slug, ".start." + slug); 
+      } 
+  });
 
   $(document).keydown(function (event) {
     switch (event.which) {
@@ -1097,9 +1124,6 @@ $(document).ready(function () {
         alert("Please choose a player.");
     }
 });
-
-
-
 
   $(".choose-player").click(function (event) {
     if (!$(this).hasClass("player-already-taken")) {

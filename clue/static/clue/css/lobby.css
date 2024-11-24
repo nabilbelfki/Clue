@@ -202,6 +202,7 @@ font-size: 44;
     padding: 5px;
     height: 50px;
     width: 50px;
+    display: none;
 }
 
 .save {
@@ -219,6 +220,7 @@ font-size: 44;
     padding: 5px;
     height: 50px;
     width: 50px;
+    display: none;
 }
 
 #admin svg,

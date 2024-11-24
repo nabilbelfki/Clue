@@ -1,4 +1,43 @@
 import random
+import string
+from django.db import connection
+
+def generate_random_code(): 
+    return ''.join(random.choices(string.ascii_uppercase, k=4))
+
+def create_game(code, suspect, weapon, room):
+    with connection.cursor() as cursor:
+        cursor.callproc('createGame', [code, suspect, weapon, room])
+        result = cursor.fetchone()
+        if result is None:
+            raise ValueError("Stored procedure did not return any result")
+        game_id = result[0]
+    return game_id
+
+def get_game(code):
+    with connection.cursor() as cursor:
+        cursor.callproc('getGame', [code])
+        result = cursor.fetchone()
+        if result is None:
+            raise ValueError("Game not found")
+        game_id = result[0]
+    return game_id
+
+def create_player(game_id, is_admin):
+    with connection.cursor() as cursor:
+        cursor.callproc('addPlayer', [game_id, is_admin])
+        result = cursor.fetchone()
+        if result is None:
+            raise ValueError("Player not added")
+        player_id = result[0]
+        player_name = result[1]
+        players = result[2]
+    return player_id, player_name, players
+
+def rename_player(id, name):
+    with connection.cursor() as cursor:
+        cursor.callproc('renamePlayer', [id, name])
+    return
 
 colors = {
     "Chef White": "#FFFFFF"
@@ -18,7 +57,3 @@ def generate_clue():
     murderer = random.choice(murderers)
     room = random.choice(rooms)
     return weapon, murderer, room
-
-# Example usage
-weapon, murderer, room = generate_clue()
-print(f"The murder was committed by {murderer} in the {room} with a {weapon}.")
