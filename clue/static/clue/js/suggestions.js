@@ -41,10 +41,12 @@ $(document).ready(function(event) {
 
     $("#choose").click(function(event){
         if ($("#suggest").attr("data-page") == "confirmation") {
-            suggest("suggested");
-            $("#suggest").fadeOut(function(event) {
-                $("#suggested").fadeIn();
-            })
+            makeSuggestion()
+            $("#suggest").fadeOut();
+            // suggest("suggested");
+            // $("#suggest").fadeOut(function(event) {
+            //     $("#suggested").fadeIn();
+            // })
         } else {
             select($("#suggest").attr("data-page"));
         }
@@ -156,4 +158,23 @@ function suggest(view) {
     $(`#suspect-${view} .${view}-text`).text(suspectText);
     $(`#weapon-${view} .${view}-text`).text(weaponText);
     $(`#room-${view} .${view}-text`).text(roomText);
+}
+
+function makeSuggestion() {
+    $.ajax({
+        url: '/suggest/',
+        type: 'POST',
+        data: {
+            csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+            suspect: $("#suspect").attr("data-choice"),
+            weapon: $("#weapon").attr("data-choice"),
+            room: $("#room").attr("data-choice")
+        },
+        success: function(response) {
+            console.log(response);
+        },
+        error: function(xhr, status, error) {
+            console.error("Error generating code and creating game:", error);
+        }
+    });
 }

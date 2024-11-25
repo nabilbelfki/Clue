@@ -14,4 +14,5 @@ urlpatterns = [
     path('cards/get/', views.get_cards, name='get_cards'),
     path('roll/', views.roll_dice, name='roll_dice'),
     path('move/', views.move, name='move'),
+    path('suggest/', views.suggest, name='suggest'),
 ]

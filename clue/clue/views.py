@@ -2,11 +2,13 @@ import json
 import random
 import traceback
 from .board import board
+from .rooms import rooms
+from .suggestions import suggestions
 from django.shortcuts import render
 from django.http import JsonResponse
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from .utils import create_game, generate_random_code, get_game, create_player, generate_clue, rename_player, show_players, insert_card, show_cards, select_player, insert_die, get_position, get_turn, insert_move
+from .utils import create_game, generate_random_code, get_game, create_player, generate_clue, rename_player, show_players, insert_card, show_cards, select_player, insert_die, get_position, get_turn, insert_move, change_turn, make_suggestion
 
 def create_lobby(request):
     if request.method == 'POST':
@@ -16,8 +18,8 @@ def create_lobby(request):
         request.session['game_id'] = game_id
         request.session['game_code'] = code
         request.session['suspect'] = murderer
-        request.session['weapon'] = murderer
-        request.session['room'] = murderer
+        request.session['weapon'] = weapon
+        request.session['room'] = room
         player_id, player_name, players = create_player(game_id, "True")
         request.session['player_id'] = player_id
         request.session['player_name'] = player_name
@@ -114,7 +116,14 @@ def start_game(request):
                 ["dining-room", "Dining Room", "Room"],
                 ["lounge", "Lounge", "Room"]
             ]
-            
+
+            suspect = request.POST.get('suspect')
+            weapon = request.POST.get('weapon')
+            room = request.POST.get('room')
+
+            # Filter out the cards that match the suspect, weapon, and room
+            cards = [card for card in cards if card[1] not in [suspect, weapon, room]]
+
             # Shuffle the cards
             random.shuffle(cards)
             
@@ -277,17 +286,59 @@ def move(request):
         
         if status:
 
+            if position.isdigit(): 
+                position = int(position)
+
             if direction in board[position]:
                 insert_move(turn_id, board[position][direction])
+
+                moves -= 1
+
+                request.session['moves'] = moves
+
+                if moves == 0 and board[position][direction] not in rooms:
+                    change_turn(game_id)
 
                 # Send the message to the group using the helper function
                 send_group_message(
                     f'lobby_{code}',  # Group name
                     'Move', # Action
-                    {'ID': player_id,'Position': board[position][direction]}
+                    {'ID': player_id,'Position': board[position][direction], 'Moves': moves}
                 )
             
                 return JsonResponse({'Status': True})
+        else:         
+            return JsonResponse({'Status': False, 'Reason': 'Not Your Turn'})
+        
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+def suggest(request):
+    if request.method == 'POST': 
+        game_id = request.session.get('game_id')
+        code = request.session.get('game_code')
+        player_id = request.session.get('player_id')
+
+        suspect = request.POST.get('suspect')
+        weapon = request.POST.get('weapon')
+        room = request.POST.get('room')
+
+        if not player_id: 
+            return JsonResponse({'error': 'Player ID not found in session'}, status=400)
+        
+        turn_id = get_turn(game_id)
+
+        status, player_to_show_card = make_suggestion(game_id, turn_id, player_id, suspect, weapon, room)
+
+        if status:
+
+            # Send the message to the group using the helper function
+            send_group_message(
+                f'lobby_{code}',  # Group name
+                'Suggestion', # Action
+                {'ID': player_id, 'Suspect': suggestions[suspect], 'Weapon': suggestions[weapon], 'Room': suggestions[room], 'Shower': player_to_show_card}
+            )
+        
+            return JsonResponse({'Status': True})
         else:         
             return JsonResponse({'Status': False, 'Reason': 'Not Your Turn'})
         

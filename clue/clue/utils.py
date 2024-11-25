@@ -110,6 +110,22 @@ def insert_move(turn_id, position_id):
         cursor.callproc('addMove', [turn_id, position_id])
     return
 
+def change_turn(game_id):
+    with connection.cursor() as cursor:
+        cursor.callproc('changeTurn', [game_id])
+    return
+
+def make_suggestion(game_id, turn_id, player_id, suspect, weapon, room):
+    with connection.cursor() as cursor:
+        cursor.callproc('makeSuggestion', [game_id, turn_id, player_id, suspect, weapon, room])
+        result = cursor.fetchone()
+        if result is None:
+            raise ValueError("Suggestion didn't work")
+        
+        status = result[0]
+        player_id = result[1]
+    return status == "True", player_id
+
 colors = {
     "Chef White": "#FFFFFF"
     , "Mayor Green": "#618547"

@@ -215,6 +215,31 @@ function setupLobby(code, currentPlayerID, players) {
         if (action == 'Move') {
           playerMovedTo(body.ID, body.Position);
         }
+
+        if (action == 'Suggestion') {
+          let playerID = body.ID;
+          let slug, name;
+          playersOfLobby.forEach(function(player) {
+            if (player['id'] == playerID) {
+              slug = player['character'];
+              name = player['name'];
+            }
+          });
+          $("#suggested-title").text(name + " SUGGESTED");
+          $("#suggested").css("background-color", colors[slug])
+          $(".suggested-label").css("color", colors[slug])
+          let suspect = body.Suspect;
+          let weapon = body.Weapon;
+          let room = body.Room;
+          $("#suspect").attr("data-choice", suspect.Slug);
+          $("#weapon").attr("data-choice", weapon.Slug);
+          $("#room").attr("data-choice", room.Slug);
+          $("#suspect").attr("data-text", suspect.Name.toUpperCase());
+          $("#weapon").attr("data-text", weapon.Name.toUpperCase());
+          $("#room").attr("data-text", room.Name.toUpperCase());
+          suggest("suggested");
+          $("#suggested").fadeIn();
+        }
     } catch (err) {
         console.error("Error processing WebSocket message:", err);
     }

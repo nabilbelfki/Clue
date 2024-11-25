@@ -232,8 +232,10 @@ function changeTurn() {
     }
     let character = rotation[turn];
     changeAvatar(character)
-
+    console.log("Chosen Player ",chosenPlayer)
+    console.log("Turn ",rotation[turn])
     if (chosenPlayer == rotation[turn]) {
+      myTurnToSelectPlayer = true;
       $("#dice-roll div, #dice-roll p").css("opacity", "1");   
       $("#dice-roll").css("cursor", "pointer");
     } else {
