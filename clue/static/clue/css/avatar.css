@@ -1,8 +1,8 @@
 #avatar {
     position: absolute;
-    bottom: 0;
+    bottom: 70px;
     left: -200px;
-    width: 400px;
+    min-width: 400px;
     height: 260px;
     display: flex;
     justify-content: center;

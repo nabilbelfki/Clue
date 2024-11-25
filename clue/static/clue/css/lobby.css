@@ -67,7 +67,7 @@ font-size: 44;
     /* height: 90px;
     width: 300px; */
     padding: 10px;
-    cursor: pointer;
+    
 }
 
 #action-button-inner {
@@ -85,8 +85,13 @@ font-size: 44;
     width: 350px;
 }
 
-#action-button:hover {
+#action-button:not(.is-not-admin):hover {
     background-color: #686868;
+    cursor: pointer;
+}
+
+#action-button.is-not-admin:hover {
+    cursor: not-allowed;
 }
 
 #lobby {

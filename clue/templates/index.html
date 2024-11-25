@@ -6,12 +6,14 @@
     <title>Clue</title>
     <link rel="stylesheet" type="text/css" href="{% static 'clue/css/main.css' %}">
     <script src="{% static 'clue/js/jquery.min.js' %}"></script>
+    <script src="{% static 'clue/js/board.js' %}"></script>
     <script src="{% static 'clue/js/main.js' %}"></script>
     <script src="{% static 'clue/js/lobby.js' %}"></script>
     <script src="{% static 'clue/js/dice.js' %}"></script>
     <script src="{% static 'clue/js/cards.js' %}"></script>
     <script src="{% static 'clue/js/detective-notes.js' %}"></script>
     <script src="{% static 'clue/js/suggestions.js' %}"></script>
+    <script src="{% static 'clue/js/player-selection.js' %}"></script>
 </head>
 <body data-murderer="{{ murderer }}" data-room="{{ room }}" data-weapon="{{ weapon }}">
     <audio id="arcade" src="{% static 'clue/sounds/arcade.wav' %}" type="audio/wav"></audio>
@@ -1355,7 +1357,7 @@
     </div>
     <div id="player-selection">
         <div id="players">
-            <div id="choose-miss-scarlet" class="choose-player player-already-taken" data-player="Layla">
+            <div id="choose-miss-scarlet" class="choose-player">
                 <img id="board" src="{% static 'clue/images/Players/miss-scarlet.png' %}" alt="Miss Scarlet">
             </div>
             <div id="choose-mr-green" class="choose-player">

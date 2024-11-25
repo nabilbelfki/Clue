@@ -1,16 +1,17 @@
+# clue/clue/asgi.py
 import os
 from django.core.asgi import get_asgi_application
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
-from .routing import websocket_urlpatterns
+from clue import routing
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mygame.settings')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "clue.settings")
 
 application = ProtocolTypeRouter({
-    "http": get_asgi_application(),
+    "http": get_asgi_application(),  # Handle HTTP traffic with Django
     "websocket": AuthMiddlewareStack(
         URLRouter(
-            websocket_urlpatterns
+            routing.websocket_urlpatterns  # Handle WebSocket traffic with Django Channels
         )
     ),
 })

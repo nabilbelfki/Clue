@@ -55,11 +55,18 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'clue.wsgi.application' 
-ASGI_APPLICATION = 'clue.asgi.application' 
+WSGI_APPLICATION = 'clue.wsgi.application'
+ASGI_APPLICATION = 'clue.asgi.application'
 
-# Configure the channel layer 
-CHANNEL_LAYERS = { 'default': { 'BACKEND': 'channels.layers.InMemoryChannelLayer', }, }
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],  # Redis host and port
+        },
+    },
+}
+
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

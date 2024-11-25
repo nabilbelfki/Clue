@@ -65,7 +65,7 @@
     height: 60px;
     width: 260px;
     font-weight: 600;
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     cursor: pointer;

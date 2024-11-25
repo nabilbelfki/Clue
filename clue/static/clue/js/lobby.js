@@ -1,4 +1,6 @@
-
+var playersOfLobby = [];
+var myPlayerID;
+var myPlayerName;
 $(document).ready(function () {
   $("input").on("input", function() { this.value = this.value.toUpperCase(); });
   $("#code-input > input").on("input", function () {
@@ -7,10 +9,10 @@ $(document).ready(function () {
 
       if (inputVal) {
           $("#action-button-inner").text("JOIN GAME");
-          $("#action-button").data("action", "join");
+          $("#action-button").attr("data-action", "join");
       } else {
           $("#action-button-inner").text("CREATE GAME");
-          $("#action-button").data("action", "create");
+          $("#action-button").attr("data-action", "create");
       }
   });
 
@@ -38,18 +40,22 @@ $(document).ready(function () {
   });
 
   $("#action-button").click(function(event) {
-    $("#arcade")[0].play();
-    if ($(this).data("action") == "create") {
+    const action = $(this).attr("data-action");
+    if (action == "create") {
+      $("#arcade")[0].play();
       createGame();
-    } else if ($(this).data("action") == "start") {
-      $("#start-menu").hide()
-      $("#player-selection").css("display","flex");
-      timer()
-    } else if ($(this).data("action") == "join") {
+      $(this).attr("data-action", "start");
+    } else if (action == "start") {
+      if (!$(this).hasClass("is-not-admin")) {
+        startGame()
+      }
+    } else if (action == "join") {
       let code = $("#code-input input").val();
       if (code.length < 4) {
         $("#code-validator").css("display", "flex");
       } else {
+        $("#arcade")[0].play();
+        $(this).attr("data-action", "start");
         joinGame(code);
       }
     }
@@ -103,13 +109,14 @@ function createGame() {
     url: '/game/create/',
     type: 'POST',
     data: {
-        csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val()
+      csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val()
     },
     success: function(response) {
-        let code = response.game_code;
-        let playerID = response.player_id;
-        let players = JSON.parse(response.players);
-        setupLobby(code, playerID, players);
+      let code = response.game_code;
+      myPlayerID = response.player_id;
+      myPlayerName = response.player_name
+      let players = JSON.parse(response.players);
+        setupLobby(code, myPlayerID, players);
     },
     error: function(xhr, status, error) {
         console.error("Error generating code and creating game:", error);
@@ -126,9 +133,11 @@ function joinGame(code) {
         code: code
     },
     success: function(response) {
-        let playerID = response.player_id;
+        myPlayerID = response.player_id;
+        myPlayerName = response.player_name
         let players = JSON.parse(response.players);
-        setupLobby(code, playerID, players);
+        $("#action-button").addClass("is-not-admin");
+        setupLobby(code, myPlayerID, players);
     },
     error: function(xhr, status, error) {
         console.error("Error generating code and creating game:", error);
@@ -138,10 +147,14 @@ function joinGame(code) {
 
 function setupLobby(code, currentPlayerID, players) {
   let currentPlayerIndex;
+
   players.forEach(function(player, index) {
     if (player.ID == currentPlayerID) currentPlayerIndex = index;
-    $("#lobby > div").eq(index).find("input").val(player.Name);
+    const $playerElement = $("#lobby > div").eq(index);  
+    $playerElement.attr("data-id", player.ID)
+    $playerElement.find("input").val(player.Name);
   });
+
   let currentPlayer = $("#lobby > div").eq(currentPlayerIndex);
   currentPlayer.find(".edit").show();
   if (currentPlayerIndex != 1) currentPlayer.find(".exit").show();
@@ -151,25 +164,87 @@ function setupLobby(code, currentPlayerID, players) {
   $("#action-button-inner").text("START GAME");
   $(this).data("action", "start");
 
+  console.log(code)
   // Establish WebSocket connection
-  const lobbySocket = new WebSocket(`ws://${window.location.host}/ws/lobby/${code}/`);
+  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const lobbySocket = new WebSocket(`${protocol}//${window.location.hostname}:8001/ws/lobby/${code}/`);
+
+  lobbySocket.onopen = function(e) {
+    console.log('WebSocket connection opened:', e);
+  };
 
   lobbySocket.onmessage = function(e) {
-    const data = JSON.parse(e.data);
-    if (data.action === 'PlayerAdded') {
-      const players = JSON.parse(data.players);
-      // Update the lobby UI with the new players
-      players.forEach(function(player, index) {
-        $("#lobby > div").eq(index).find("input").val(player.Name);
-      });
+    try {
+        const data = JSON.parse(e.data);
+        const action = data.Action;
+        const body = data.Body;
+        console.log("Received WebSocket message:", data);  // Log to see the message content
+
+        if (action === 'PlayerAdded') {
+          console.log("PlayerAdded")
+          console.log(body);
+          const players = body.Players;
+          updatePlayerList(players)
+        }
+
+        if (action === 'PlayerNameUpdated') {
+          const id = body.ID;
+          const newName = body.PlayerName;
+          updatePlayerName(id, newName)
+        }
+
+        if (action === 'GameStarted') {
+          playersOfLobby = body.Players;
+          getCards()
+        }
+
+        if (action == 'PlayerChosen') {
+          showSelectedPlayer(body.ID, body.Name, body.Slug);
+          if (body.Next == null) {
+            startPlaying();
+          }else if (body.Next == myPlayerID) {
+            myTurnToSelectPlayer = true;
+            $("#choose-player-button").css("display","flex");
+          }
+        }
+
+        if (action == 'DiceRoll') {
+          showDiceRoll(body.ID, body.Dice);
+        }
+
+        if (action == 'Move') {
+          playerMovedTo(body.ID, body.Position);
+        }
+    } catch (err) {
+        console.error("Error processing WebSocket message:", err);
     }
   };
 
+  lobbySocket.onerror = function(e) {
+    console.error('WebSocket error:', e);
+  };
+
   lobbySocket.onclose = function(e) {
-    console.error('Lobby socket closed unexpectedly');
+    console.error('Lobby socket closed unexpectedly:', e);
   };
 }
 
+function updatePlayerList(players) {
+  console.log(players);
+  players.forEach(function(player, index) {
+    const $playerElement = $("#lobby > div").eq(index);  
+    $playerElement.attr("data-id", player.ID)
+    $playerElement.find("input").val(player.Name);
+  });
+}
+
+function updatePlayerName(id, name) {
+  $("#lobby > div").each(function(event) {
+    const $playerElement = $(this);  
+    if ($playerElement.attr("data-id") == id)
+    $playerElement.find("input").val(name);
+  });
+}
 
 function renamePlayer(name) {
   $.ajax({
@@ -180,7 +255,49 @@ function renamePlayer(name) {
           name: name
       },
       success: function(response) {
+          myPlayerName = name;
           console.log(response);
+      },
+      error: function(xhr, status, error) {
+          console.error("Error generating code and creating game:", error);
+      }
+  });
+}
+
+function startGame() {
+  $.ajax({
+    url: '/game/start/',
+    type: 'POST',
+    data: {
+        csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+    },
+    success: function(response) {
+        console.log(response);
+        $("#start-menu").hide()
+        $("#player-selection").css("display","flex");
+        myTurnToSelectPlayer = true;
+        $("#choose-player-button").css("display","flex");
+        timer();
+    },
+    error: function(xhr, status, error) {
+        console.error("Error generating code and creating game:", error);
+    }
+});
+}
+
+function getCards() {
+  $.ajax({
+      url: '/cards/get/',
+      type: 'POST',
+      data: {
+          csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+      },
+      success: function(response) {
+          console.log(response.Cards);
+          myCards = response.Cards;
+          $("#start-menu").hide()
+          $("#player-selection").css("display","flex");
+          timer();
       },
       error: function(xhr, status, error) {
           console.error("Error generating code and creating game:", error);

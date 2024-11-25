@@ -56,8 +56,10 @@ $(document).ready(function(event) {
     });
 
     $("#suggestion").click(function(event){
-        expandDetectiveNotes()
-        $("#suggest").css("display", "flex");
+        if (chosenPlayer == rotation[turn] && rooms.hasOwnProperty(players[rotation[turn]])) { 
+            expandDetectiveNotes()
+            $("#suggest").css("display", "flex");
+        }
     });
 });
 

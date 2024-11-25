@@ -34,9 +34,80 @@ def create_player(game_id, is_admin):
         players = result[2]
     return player_id, player_name, players
 
+def show_players(game_id):
+    with connection.cursor() as cursor:
+        cursor.callproc('getPlayers', [game_id])
+        result = cursor.fetchall()  # Fetch all rows returned by the procedure
+        
+        if not result:
+            raise ValueError("No players found for this game.")
+        
+    return result
+
 def rename_player(id, name):
     with connection.cursor() as cursor:
         cursor.callproc('renamePlayer', [id, name])
+    return
+
+def insert_card(player_id, slug, card_name, type):
+    with connection.cursor() as cursor:
+        cursor.callproc('addCard', [player_id, slug, card_name, type])
+    return
+
+def show_cards(player_id):
+    with connection.cursor() as cursor:
+        cursor.callproc('getCards', [player_id])
+        result = cursor.fetchall()  # Fetch all rows returned by the procedure
+        
+        if not result:
+            raise ValueError("No players found for this game.")
+        
+    return result
+
+def select_player(player_id, game_id, character):
+    with connection.cursor() as cursor:
+        cursor.callproc('choosePlayer', [player_id, game_id, character])
+        result = cursor.fetchone()
+        if result is None:
+            raise ValueError("Player not added")
+        status = result[0]
+        next_player = result[1]
+    return status == "True", next_player
+
+def insert_die(game_id, player_id, dice_roll):
+    with connection.cursor() as cursor:
+        cursor.callproc('rollDice', [game_id, player_id, dice_roll])
+        result = cursor.fetchone()
+        if result is None:
+            raise ValueError("Player not added")
+        
+        status = result[0]
+    return status == "True"
+
+def get_position(game_id, player_id, turn_id):
+    with connection.cursor() as cursor:
+        cursor.callproc('getPosition', [game_id, player_id, turn_id])
+        result = cursor.fetchone()
+        if result is None:
+            raise ValueError("Position Not Found")
+        
+        status = result[0]
+        position = result[1]
+    return status == "True", position
+
+def get_turn(game_id):
+    with connection.cursor() as cursor:
+        cursor.callproc('getTurn', [game_id])
+        result = cursor.fetchone()
+        if result is None:
+            raise ValueError("Player not added")
+        
+        turn = result[0]
+    return turn
+
+def insert_move(turn_id, position_id):
+    with connection.cursor() as cursor:
+        cursor.callproc('addMove', [turn_id, position_id])
     return
 
 colors = {

@@ -1,8 +1,7 @@
-const playerCards = {};
+var myCards = {};
 let cards = ["miss-scarlet", "mrs-white", "colonel-mustard", "mrs-peacock", "professor-plum", "mr-green", "wrench", "revolver", "lead-pipe", "candlestick", "rope", "knife", "ballroom", "hall", "conservatory", "kitchen", "billiard-room", "study", "library", "dining-room", "lounge"];
 
 $(document).ready(function() {
-    dealCards();
 
     $("#close-shown").click(function(event) {
         $("#shown-card").fadeOut();
@@ -21,39 +20,12 @@ $(document).ready(function() {
     
 });
 
-function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-}
-
-function dealCards() {
-    let currentPlayer = 0;
-    // Shuffle the cards array
-    shuffle(cards);
-
-    for (let i = 0; i < cards.length; i++) {
-        let card = cards[i];
-        if (!playerCards.hasOwnProperty(rotation[currentPlayer])) {
-            playerCards[rotation[currentPlayer]] = [];
-        }
-        playerCards[rotation[currentPlayer]].push(card);
-        if (currentPlayer == rotation.length - 1) {
-            currentPlayer = 0;
-        } else {
-            currentPlayer++;
-        }
-    }
-}
-
 function showMyCards() {
-    let myCards = playerCards[chosenPlayer];
-    console.log(chosenPlayer);
     console.log(myCards);
     myCards.forEach(function(card) {
-        $("#"+card+"-card").show();
-        markDetectiveNotes(card, colors[chosenPlayer]);
+        let slug = card["slug"];
+        $("#"+slug+"-card").show();
+        markDetectiveNotes(slug, colors[chosenPlayer]);
     })
 }
 
