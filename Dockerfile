@@ -18,14 +18,16 @@ WORKDIR /app
 # Clone the repository (replace <your-repo-url> with your actual repository URL)
 RUN git clone https://github.com/nabilbelfki/Clue.git .
 
+# Set the working directory to the cloned repository
+WORKDIR /app/clue
+
 # Install Python dependencies
 RUN python3 -m venv venv
 RUN . venv/bin/activate && pip install --upgrade pip && pip install daphne
 # RUN . venv/bin/activate && pip install -r requirements.txt  # Uncomment this line when you have requirements.txt
 
 # Copy the start script
-COPY start.sh /app/start.sh
-RUN chmod +x /app/start.sh
+RUN chmod +x ./start.sh
 
 # Expose the ports that Django and Daphne will run on
 EXPOSE 8000 8001
@@ -34,4 +36,4 @@ EXPOSE 8000 8001
 RUN service redis-server start
 
 # Command to run the application
-CMD ["/app/start.sh"]
+CMD ["./start.sh"]
