@@ -1,7 +1,6 @@
-
 #secret-passage {
     position: absolute;
-    bottom: 200px;
+    bottom: 240px;
     right: 50px;
     width: 300px;
     height: 50px;
@@ -22,7 +21,7 @@
 
 #suggestion {
     position: absolute;
-    bottom: 250px;
+    bottom: 290px;
     left: 50px;
     width: 300px;
     height: 50px;
@@ -41,19 +40,27 @@
 }
 
 #suggest {
-    position: fixed; /* Use fixed positioning to keep it centered even when scrolling */
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Adjust the position to be exactly centered */
+    position: fixed;
+    /* Use fixed positioning to keep it centered even when scrolling */
+    top: 50%;
+    /* Center vertically */
+    left: 50%;
+    /* Center horizontally */
+    transform: translate(-50%, -50%);
+    /* Adjust the position to be exactly centered */
     display: none;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5); /* Add a shadow for better visibility */
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+    /* Add a shadow for better visibility */
     border-radius: 25px;
-    background-color: white; /* Add a background color for better visibility */
-    padding: 20px; /* Add some padding for better spacing */
-    z-index: 1000; /* Ensure it appears above other elements */
+    background-color: white;
+    /* Add a background color for better visibility */
+    padding: 20px;
+    /* Add some padding for better spacing */
+    z-index: 1000;
+    /* Ensure it appears above other elements */
     width: 1000px;
     height: 1000px;
     background-color: #FFFFFF;
@@ -107,20 +114,20 @@
 
 #choices .suspect-selected,
 #choices .weapon-selected,
-#choices .room-selected { 
-    border: solid 5px #044210; 
+#choices .room-selected {
+    border: solid 5px #044210;
 }
 
-#suspects-choice { 
-    display: grid; 
+#suspects-choice {
+    display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr);
     gap: 10px;
     padding: 10px;
 }
 
-#suspects-choice > div,
-#weapons-choice > div { 
+#suspects-choice>div,
+#weapons-choice>div {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -134,12 +141,12 @@
 }
 
 #suspects-choice img,
-#weapons-choice img { 
+#weapons-choice img {
     height: 100px;
     width: auto;
 }
 
-#rooms-choice img { 
+#rooms-choice img {
     height: 65px;
     width: auto;
 }
@@ -160,7 +167,7 @@
     padding: 10px;
 }
 
-#rooms-choice > div { 
+#rooms-choice>div {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -221,10 +228,10 @@
 }
 
 .page-selected {
-    background: linear-gradient(90deg, #044210 50%, transparent 50%), 
-                linear-gradient(90deg, #044210 50%, transparent 50%), 
-                linear-gradient(0deg, #044210 50%, transparent 50%), 
-                linear-gradient(0deg, #044210 50%, transparent 50%);
+    background: linear-gradient(90deg, #044210 50%, transparent 50%),
+        linear-gradient(90deg, #044210 50%, transparent 50%),
+        linear-gradient(0deg, #044210 50%, transparent 50%),
+        linear-gradient(0deg, #044210 50%, transparent 50%);
     background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
     background-size: 16px 4px, 16px 4px, 4px 16px, 4px 16px;
     background-position: 0% 0%, 100% 100%, 0% 100%, 100% 0px;
@@ -311,19 +318,27 @@
 }
 
 #suggested {
-    position: fixed; /* Use fixed positioning to keep it centered even when scrolling */
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Adjust the position to be exactly centered */
+    position: fixed;
+    /* Use fixed positioning to keep it centered even when scrolling */
+    top: 50%;
+    /* Center vertically */
+    left: 50%;
+    /* Center horizontally */
+    transform: translate(-50%, -50%);
+    /* Adjust the position to be exactly centered */
     display: none;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5); /* Add a shadow for better visibility */
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+    /* Add a shadow for better visibility */
     border-radius: 25px;
-    background-color: #C5A12F; /* Add a background color for better visibility */
-    padding: 20px; /* Add some padding for better spacing */
-    z-index: 1000; /* Ensure it appears above other elements */
+    background-color: #C5A12F;
+    /* Add a background color for better visibility */
+    padding: 20px;
+    /* Add some padding for better spacing */
+    z-index: 1000;
+    /* Ensure it appears above other elements */
     width: 800px;
     /* height: 600px; */
     padding: 50px;

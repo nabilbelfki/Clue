@@ -14,7 +14,7 @@ $(document).ready(function() {
         },
         function() {
             // On mouse leave
-            $(this).stop().animate({ bottom: "-250px" }, 300); // Slide down
+            $(this).stop().animate({ bottom: "-150px" }, 300); // Slide down
         }
     );
     

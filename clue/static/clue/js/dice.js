@@ -66,8 +66,8 @@ function rollDice(playerID, Dice) {
 
                 $("#dice-roll").removeClass("scale-center");
                 $("#dice-roll").animate({ 
-                    right: '-200px', 
-                    bottom: '80px'
+                    right: '50px', 
+                    bottom: '60px'
                 }, 1000, function() { $("#dice-roll").removeClass("scale-center"); });
             }); 
         }, 3000); // 5000 milliseconds = 5 second

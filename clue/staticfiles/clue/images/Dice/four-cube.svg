@@ -1,0 +1,22 @@
+<svg width="139" height="137" viewBox="0 0 139 137" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_47_25)">
+<path d="M60.0605 17.444L59.0431 17.4804C59.3804 17.4429 59.7204 17.4319 60.0605 17.444L78.8421 16.7732C80.492 16.7732 84.5697 17.4096 87.6809 19.9552C90.7922 22.5008 114.905 46.9431 126.572 58.8461C129.4 62.3816 133.219 71.4326 125.865 79.3522C118.511 87.2718 97.8161 107.636 88.388 116.829C86.8559 118.361 82.6496 119.99 77.7814 120.364C73.1852 120.718 63.4035 119.422 59.3966 119.657C61.1644 119.304 65.2656 118.031 67.5283 115.768L103.944 79.3522C109.955 73.3418 110.308 64.503 103.944 58.139C98.5629 52.7576 78.6063 32.3296 67.1748 20.6624C65.8052 19.2927 62.9285 17.5463 60.0605 17.444Z" fill="#F3F3F3"/>
+<rect x="57.9824" y="10.0557" width="82" height="82" rx="15" transform="rotate(45 57.9824 10.0557)" fill="white"/>
+<circle cx="58.2832" cy="40.0987" r="6.58549" transform="rotate(45 58.2832 40.0987)" fill="#CA5050"/>
+<circle cx="86.2227" cy="68.0384" r="6.58549" transform="rotate(45 86.2227 68.0384)" fill="#CA5050"/>
+<circle cx="30.0425" cy="68.3389" r="6.58549" transform="rotate(45 30.0425 68.3389)" fill="#CA5050"/>
+<circle cx="57.9824" cy="96.2786" r="6.58549" transform="rotate(45 57.9824 96.2786)" fill="#CA5050"/>
+</g>
+<defs>
+<filter id="filter0_d_47_25" x="6.21289" y="16.2688" width="131.908" height="112.157" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="4" dy="4"/>
+<feGaussianBlur stdDeviation="2"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_47_25"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_47_25" result="shape"/>
+</filter>
+</defs>
+</svg>

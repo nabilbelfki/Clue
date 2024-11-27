@@ -283,8 +283,8 @@ function startPlaying() {
   $("#player-selection").hide();
   // $("#boardgame").css("display", "flex");
   $(
-    "#boardgame, #suggestion, #avatar, #dice-roll, #secret-passage, #secret-passage, #detective-notes"
-  ).css("display", "css");
+    "#boardgame, #suggestion, #avatar, #dice-roll, #secret-passage, #secret-passage, #detective-notes, #cards"
+  ).css("display", "flex");
 }
 
 function changeAvatar(slug) {
