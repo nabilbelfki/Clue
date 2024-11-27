@@ -191,7 +191,7 @@ function position(player, tile) {
   var $playerElement = $(player);
 
   var bbox = $pathElement[0].getBBox(); // Get the bounding box of the path
-
+  $("#move-sound")[0].play();
   var x = bbox.x;
   var y = bbox.y;
 

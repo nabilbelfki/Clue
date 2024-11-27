@@ -39,7 +39,8 @@ function rollDice(playerID, Dice) {
         $("#dice-1 ." + firstDie + "-die").show();
         $("#dice-2 ." + secondDie + "-die").show(); 
     } 
-   // Call roll function multiple times within 3-5 seconds 
+   // Call roll function multiple times within 3-5 seconds
+   $("#dice-roll-sound")[0].play();
    const interval = setInterval(roll, 100); // Roll every 100 milliseconds 
    // Stop rolling after 3-5 seconds 
    setTimeout(function() { 
