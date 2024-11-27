@@ -5,8 +5,9 @@
     flex-direction: column;
     /* height: 60vh; */
     background-color: #FF4B4B;
-    width: 700px;
-    border-radius: 25px;
+    width: 100vw;
+    height: 100vh;
+    /* border-radiuds: 25px; */
     gap: 20px;
     padding: 40px;
     animation: rainbow 20s infinite;
@@ -102,7 +103,7 @@ font-size: 44;
     gap: 5px;
     padding: 5px;
     background-color: #979797;
-    width: 100%;
+    width: 600px;
     border-radius: 10px;
 }
 
@@ -252,4 +253,35 @@ font-size: 44;
 .exit:hover path,
 .save:hover g {
     fill: #D9D9D9;
+}
+
+@media (max-height:1000px) {
+    #logo {
+        height: 100px;
+    }
+
+    #code-label {
+        font-size: 30px;
+    }
+
+    input {
+        height: 40px;
+    }
+
+    #code {
+        gap:3px;
+    }
+
+    #admin,
+    .number,
+    .edit,
+    .exit,
+    .save  {
+        height: 35px;
+        width: 35px;
+    }
+    
+    #action-button-inner {
+        font-size: 26px;
+    }
 }

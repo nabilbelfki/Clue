@@ -1,10 +1,12 @@
 #avatar {
     position: absolute;
-    bottom: 70px;
-    left: -200px;
-    min-width: 400px;
-    height: 260px;
-    display: flex;
+    bottom: 20px;
+    /* left: -200px; */
+    left: 50px;
+    min-width: 300px;
+    /* height: 260px; */
+    /* padding: 20px 40px 20px 40px; */
+    display: none;
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -27,4 +29,25 @@
     color: #FFFFFF;
     font-size: 60px;
     font-weight: 600;
+}
+
+@media (max-height:1000px) {
+    /* #avatar {
+        height: 150px;
+        left: px;
+        bottom: 20px;
+    } */
+
+    /* .avatar-picture img {
+        width: 140px;
+        border-radius: 5px;
+    }
+
+    #suggestion {
+        bottom: 180px;
+        left: -380px;
+        width: 200px;
+        height: 40px;
+        font-size: 26px;
+    } */
 }

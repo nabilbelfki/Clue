@@ -1,0 +1,2 @@
+ C:\Users\NabilBelfki\AppData\Roaming\Python\Python312\Scripts\daphne.exe -b 0.0.0.0 -p 8001 clue.asgi:application
+python manage.py runserver
