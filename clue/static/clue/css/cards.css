@@ -40,8 +40,8 @@
 }
 
 #card-shown {
-    height: 530px;
-    width: 700px;
+    height: 330px;
+    width: 500px;
     background-color: #F0F0F0;
     /* border-radius: 25px; */
     display: flex;
@@ -50,12 +50,18 @@
 }
 
 #shown-title {
-    font-size: 50px;
+    font-size: 30px;
     font-weight: 600;
     color: #FFFFFF;
 }
 
 #card-shown img {
+    display: none;
+    height: 80%;
+    width: auto;
+}
+
+#card-shown svg {
     display: none;
     height: 80%;
     width: auto;
@@ -76,5 +82,18 @@
     width: 200px;
     height: 70px;
     font-weight: 600;
-    font-size: 32px;
+    font-size: 25px;
+}
+
+.card-selected {
+    background: linear-gradient(90deg, #044210 50%, transparent 50%),
+        linear-gradient(90deg, #FFFC68 50%, transparent 50%),
+        linear-gradient(0deg, #FFFC68 50%, transparent 50%),
+        linear-gradient(0deg, #FFFC68 50%, transparent 50%);
+    background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+    background-size: 32px 8px, 32px 8px, 8px 32px, 8px 32px;
+    background-position: 0% 0%, 100% 100%, 0% 100%, 100% 0px;
+    border-radius: 25px;
+    padding: 5px;
+    animation: dash 5s linear infinite;
 }

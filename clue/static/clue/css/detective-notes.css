@@ -2,8 +2,8 @@
     position: absolute;
     /* bottom: 260px; */
     right: 0px;
-    width: 300px;
-    height: 80%;
+    width: 275px;
+    height: 650px;
     display: none;
     justify-content: center;
     align-items: center;
@@ -34,35 +34,98 @@
 }
 
 #suspects {
-    position: absolute; 
-    top: -80px; 
+    position: absolute;
+    top: 0px;
     right: 8px;
 }
 
+.folder-contents {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.folder-label {
+    position: absolute;
+    z-index: 100;
+    color: #044210;
+    font-size: 16px;
+}
+
+#suspects .folder-label {
+    top: 5px;
+    left: 26px;
+}
+
+#suspects-checkboxes,
+#weapons-checkboxes,
+#rooms-checkboxes {
+    position: absolute;
+    top: 30px;
+    left: 25px;
+    width: 190px;
+    z-index: 150;
+    /* background-color: pink; */
+    height: 100%;
+    display: flex;
+    gap: 2px;
+    flex-direction: column;
+}
+
+.check {
+    width: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.checkbox svg {
+    height: 20px;
+    width: 20px;
+}
+
+.checkbox-label {
+    font-size: 15px;
+    color: #044210;
+    width: 80%;
+    margin-top: 2px;
+}
+
+#weapons .folder-label {
+    top: 5px;
+    left: 30px;
+}
+
+#rooms .folder-label {
+    top: 5px;
+    left: 40px;
+}
+
 #weapons {
-    position: absolute; 
-    top: 120px; 
+    position: absolute;
+    top: 165px;
     right: 5px;
 }
 
 #rooms {
-    position: absolute; 
-    top: 330px; 
+    position: absolute;
+    top: 330px;
     right: 5px;
 }
 
 #detective-note-logo {
-    position: absolute; 
-    bottom: -90px;
+    position: absolute;
+    bottom: -100px;
     left: calc(50% - 75px);
 }
 
-#detective-note-logo svg{
+#detective-note-logo svg {
     width: 150px;
 }
 
 .checkbox {
-    display: none;
+    display: flex;
+    align-items: center;
 }
 
 #expand-or-collapse {
@@ -70,6 +133,7 @@
     left: 0;
     position: absolute;
 }
+
 #expand-or-collapse svg {
     height: 30px;
 }

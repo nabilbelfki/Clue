@@ -239,9 +239,11 @@ function changeTurn() {
   if (chosenPlayer == rotation[turn]) {
     myTurnToSelectPlayer = true;
     $("#dice-roll div, #dice-roll p").css("opacity", "1");
+    $("#six-cube, #four-cube").css("opacity", "1");
     $("#dice-roll").css("cursor", "pointer");
   } else {
     $("#dice-roll div, #dice-roll p").css("opacity", "0.6");
+    $("#six-cube, #four-cube").css("opacity", "0.6");
     $("#dice-roll").css("cursor", "default");
   }
 
@@ -285,6 +287,7 @@ function startPlaying() {
   $(
     "#boardgame, #suggestion, #avatar, #dice-roll, #secret-passage, #secret-passage, #detective-notes, #cards"
   ).css("display", "flex");
+  $("#spooky-sound")[0].play();
 }
 
 function changeAvatar(slug) {

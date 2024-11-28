@@ -148,11 +148,15 @@ function joinGame(code) {
       code: code,
     },
     success: function (response) {
-      myPlayerID = response.player_id;
-      myPlayerName = response.player_name;
-      let players = JSON.parse(response.players);
-      $("#action-button").addClass("is-not-admin");
-      setupLobby(code, myPlayerID, players);
+      if (response.Status) {
+        myPlayerID = response.player_id;
+        myPlayerName = response.player_name;
+        let players = JSON.parse(response.players);
+        $("#action-button").addClass("is-not-admin");
+        setupLobby(code, myPlayerID, players);
+      } else {
+        alert(response.Message);
+      }
     },
     error: function (xhr, status, error) {
       console.error("Error generating code and creating game:", error);
@@ -245,6 +249,7 @@ function setupLobby(code, currentPlayerID, players) {
         $("#suggested-title").text(name + " SUGGESTED");
         $("#suggested").css("background-color", colors[slug]);
         $(".suggested-label").css("color", colors[slug]);
+        $("#show-card").css("color", colors[slug]);
         let suspect = body.Suspect;
         let weapon = body.Weapon;
         let room = body.Room;
@@ -255,7 +260,56 @@ function setupLobby(code, currentPlayerID, players) {
         $("#weapon").attr("data-text", weapon.Name.toUpperCase());
         $("#room").attr("data-text", room.Name.toUpperCase());
         suggest("suggested");
+        if (body.Shower == myPlayerID) {
+          isChoosingCard = true;
+          $("#show-card").css("display", "flex");
+        } else {
+          $("#show-card").hide();
+        }
+        $("#suggested").css("display", "flex");
         $("#suggested").fadeIn();
+      }
+
+      if (action == "Assumption") {
+        let playerID = body.ID;
+        let slug, name;
+        playersOfLobby.forEach(function (player) {
+          if (player["id"] == playerID) {
+            slug = player["character"];
+            name = player["name"];
+          }
+        });
+        $("#suggested-title").text(name + " SUGGESTED");
+        $("#suggested").css("background-color", colors[slug]);
+        $(".suggested-label").css("color", colors[slug]);
+        let suspect = body.Suspect;
+        let weapon = body.Weapon;
+        let room = body.Room;
+        $("#suspect").attr("data-choice", suspect.Slug);
+        $("#weapon").attr("data-choice", weapon.Slug);
+        $("#room").attr("data-choice", room.Slug);
+        $("#suspect").attr("data-text", suspect.Name.toUpperCase());
+        $("#weapon").attr("data-text", weapon.Name.toUpperCase());
+        $("#room").attr("data-text", room.Name.toUpperCase());
+        suggest("suggested");
+        $("#suggested").css("display", "flex");
+        $("#suggested").fadeIn();
+
+        setTimeout(function() {
+          $("#suggested").fadeOut();
+          if (body.Correct) {
+              wonGame(body.ID);
+          } else {
+              lostGame(body.ID);
+          }
+        }, 3000); // 3000 milliseconds = 3 seconds
+      }
+
+      if (action == "CardShown") {
+        let card = body.Card;
+        let showerID = body.ID;
+        let suggestedID = body.SuggestedPlayer;
+        showSuggestedCardPopup(card, suggestedID, showerID);
       }
     } catch (err) {
       console.error("Error processing WebSocket message:", err);
@@ -345,4 +399,69 @@ function getCards() {
       console.error("Error generating code and creating game:", error);
     },
   });
+}
+
+function wonGame(playerID) {
+  let slug;
+  let playerName;
+  playersOfLobby.forEach(function(player) {
+    if (player.id == playerID) {
+      slug = player.character;
+      playerName = player.name;
+    }
+  });
+
+  let resultText = "THE WINNER IS";
+
+  if (chosenPlayer == slug) {
+    resultText = "YOU WON"
+  }
+
+  $("#won-or-lost-text").text("THE WINNER IS").css("color", "#474747");
+  $("#won-or-lost").css({
+    "background-color": "#FF4B4B",
+    "animation": "rainbow 20s infinite"
+  });
+
+  $(".result-picture").each(function(event) {
+    if ($(this).attr("id").replace("-result", "") == slug) {
+      $(this).css("display", "flex");
+    } else {
+      $(this).hide();
+    }
+  });
+  $("#won-or-lost-name").text(playerName);
+  $("#won-or-lost").css("display", "flex");
+  $("#won-or-lost").fadeIn();
+}
+
+function lostGame (playerID) {
+  let slug;
+  let playerName;
+  playersOfLobby.forEach(function(player) {
+    if (player.id == playerID) {
+      slug = player.character;
+      playerName = player.name;
+    }
+  });
+
+  let resultText = "THIS PLAYER LOST";
+
+  if (chosenPlayer == slug) {
+    resultText = "YOU LOST"
+  }
+
+  $("#won-or-lost-text").text(resultText).css("color", "#FF0000");
+  $("#won-or-lost").css("background-color", "#000000");
+
+  $(".result-picture").each(function(event) {
+    if ($(this).attr("id").replace("-result", "") == slug) {
+      $(this).css("display", "flex");
+    } else {
+      $(this).hide();
+    }
+  });
+  $("#won-or-lost-name").text(playerName);
+  $("#won-or-lost").css("display", "flex");
+  $("#won-or-lost").fadeIn();
 }

@@ -126,6 +126,27 @@ def make_suggestion(game_id, turn_id, player_id, suspect, weapon, room):
         player_id = result[1]
     return status == "True", player_id
 
+def assume(game_id, player_id, suspect, weapon, room):
+    with connection.cursor() as cursor:
+        cursor.callproc('makeAssumption', [game_id, player_id, suspect, weapon, room])
+        result = cursor.fetchone()
+        if result is None:
+            raise ValueError("Suggestion didn't work")
+        
+        status = result[0]
+    return status
+
+def shown_card(game_id, player_id, card):
+    with connection.cursor() as cursor:
+        cursor.callproc('showCard', [game_id, player_id, card])
+        result = cursor.fetchone()
+        if result is None:
+            raise ValueError("Couldn't show card")
+        
+        status = result[0]
+        suggested_player = result[1]
+    return status, suggested_player
+
 colors = {
     "Chef White": "#FFFFFF"
     , "Mayor Green": "#618547"
@@ -135,9 +156,9 @@ colors = {
     , "Colonel Mustard": "#C5A12F"
 }
 
-murder_weapons = ["Candlestick", "Knife", "Lead Pipe", "Revolver", "Rope", "Wrench"]
-murderers = ["Chef White", "Mayor Green", "Solicitor Peacock", "Professor Plum", "Miss Scarlett", "Colonel Mustard"]
-rooms = ["Kitchen", "Ballroom", "Conservartory", "Billiard Room", "Library", "Study", "Hall", "Lounge", "Dining Room"]
+murder_weapons = ["candlestick", "knife", "lead-pipe", "revolver", "rope", "wrench"]
+murderers = ["mrs-white", "mr-green", "mrs-peacock", "professor-plum", "miss-scarlet", "colonel-mustard"]
+rooms = ["kitchen", "ballroom", "conservartory", "billiard-room", "library", "study", "hall", "lounge", "dining-room"]
 
 def generate_clue():
     weapon = random.choice(murder_weapons)

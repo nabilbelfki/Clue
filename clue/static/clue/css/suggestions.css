@@ -16,7 +16,6 @@
     padding: 5px;
     /* animation: rainbow 20s infinite; */
     opacity: 0.6;
-    cursor: pointer;
 }
 
 #suggestion {
@@ -61,8 +60,8 @@
     /* Add some padding for better spacing */
     z-index: 1000;
     /* Ensure it appears above other elements */
-    width: 1000px;
-    height: 1000px;
+    width: 700px;
+    height: 550px;
     background-color: #FFFFFF;
     gap: 25px;
 }
@@ -93,7 +92,7 @@
 .value {
     background-color: #F0F0F0;
     border-radius: 15px;
-    height: 70px;
+    height: 50px;
     width: 170px;
     display: flex;
     justify-content: center;
@@ -106,8 +105,8 @@
 }
 
 #choices {
-    height: 530px;
-    width: 700px;
+    /* height: 530px; */
+    /* width: 700px; */
     background-color: #F0F0F0;
     border-radius: 25px;
 }
@@ -122,6 +121,7 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr);
+    width: 100%;
     gap: 10px;
     padding: 10px;
 }
@@ -133,7 +133,7 @@
     align-items: center;
     flex-direction: column;
     gap: 10px;
-    height: 250px;
+    height: 150px;
     background-color: #FFFFFF;
     border-radius: 15px;
     border: solid 5px transparent;
@@ -155,6 +155,7 @@
     display: none;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr);
+    width: 100%;
     gap: 10px;
     padding: 10px;
 }
@@ -165,6 +166,7 @@
     grid-template-rows: repeat(3, 1fr);
     gap: 10px;
     padding: 10px;
+    width: 100%;
 }
 
 #rooms-choice>div {
@@ -173,8 +175,8 @@
     align-items: center;
     flex-direction: column;
     gap: 10px;
-    height: 175px;
-    width: 260px;
+    height: 115px;
+    width: 200px;
     background-color: #FFFFFF;
     border-radius: 15px;
     border: solid 5px transparent;
@@ -182,7 +184,7 @@
 }
 
 .choice-text {
-    font-size: 30px;
+    font-size: 20px;
     font-weight: 600;
     display: flex;
     justify-content: center;
@@ -207,7 +209,7 @@
     font-size: 32px;
     border-radius: 10px;
     width: 200px;
-    height: 70px;
+    height: 50px;
     cursor: pointer;
 }
 
@@ -220,7 +222,7 @@
     align-items: center;
     border-radius: 10px;
     width: 200px;
-    height: 70px;
+    height: 50px;
     color: #044210;
     font-weight: 600;
     font-size: 32px;
@@ -251,14 +253,15 @@
 }
 
 #confirmation {
-    height: 360px;
-    width: 700px;
+    /* height: 360px;
+    width: 700px; */
     background-color: #F0F0F0;
     border-radius: 25px;
     display: none;
     justify-content: center;
     align-items: center;
     gap: 15px;
+    padding: 15px;
 }
 
 #suspect-chosen,
@@ -346,7 +349,7 @@
 }
 
 #suggested-title {
-    font-size: 66px;
+    font-size: 46px;
     font-weight: 700;
     color: #FFFFFF;
     text-align: center;
@@ -356,14 +359,15 @@
 }
 
 #selected-options {
-    height: 360px;
-    width: 700px;
+    /* height: 360px;
+    width: 700px; */
     background-color: #F0F0F0;
     border-radius: 25px;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 15px;
+    padding: 15px;
 }
 
 #suspect-suggested,
@@ -422,11 +426,15 @@
     display: block;
 }
 
-
-@media (max-height:1000px) {
-    #choices {
-        height: 330px;
-    }
-
-
+#show-card {
+    background-color: #FFFFFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    font-size: 32px;
+    border-radius: 10px;
+    width: 200px;
+    height: 50px;
+    cursor: pointer;
 }
