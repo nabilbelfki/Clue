@@ -17,10 +17,14 @@ $(document).ready(function() {
 
     $diceRoll.click(function(event) {
         if (chosenPlayer == rotation[turn]) { 
-            if ($(this).hasClass("rollable")) {
-                $("#dice-roll").css("cursor", "default");
-                $(this).removeClass("rollable");
-                getDiceRoll()
+            if ($("#dice-text").text() == "END TURN") {
+                nextTurn();
+            } else {
+                if ($(this).hasClass("rollable")) {
+                    $("#dice-roll").css("cursor", "default");
+                    $(this).removeClass("rollable");
+                    getDiceRoll()
+                }
             }
         }
     });

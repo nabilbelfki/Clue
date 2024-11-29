@@ -100,5 +100,6 @@ function showSuggestedCardPopup(card, suggestedID, showerID) {
     $('#suggested').fadeOut(function(event) {
         $('#shown-card').css("display", "flex");
         $('#shown-card').fadeIn();
+        changeTurn();
     });
 }

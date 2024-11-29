@@ -302,7 +302,7 @@ function setupLobby(code, currentPlayerID, players) {
           } else {
               lostGame(body.ID);
           }
-        }, 3000); // 3000 milliseconds = 3 seconds
+        }, 5000); // 3000 milliseconds = 3 seconds
       }
 
       if (action == "CardShown") {
@@ -310,6 +310,10 @@ function setupLobby(code, currentPlayerID, players) {
         let showerID = body.ID;
         let suggestedID = body.SuggestedPlayer;
         showSuggestedCardPopup(card, suggestedID, showerID);
+      }
+
+      if (action == "TurnEnded") {
+        changeTurn();
       }
     } catch (err) {
       console.error("Error processing WebSocket message:", err);
@@ -464,4 +468,26 @@ function lostGame (playerID) {
   $("#won-or-lost-name").text(playerName);
   $("#won-or-lost").css("display", "flex");
   $("#won-or-lost").fadeIn();
+  if (rotation.length < 3) {
+    setTimeout(function() {
+      rotation = rotation.filter(item => item !== slug);
+      $("#won-or-lost").fadeOut();
+    }, 3000);
+  }
+}
+
+function nextTurn() {
+  $.ajax({
+    url: "/game/next/",
+    type: "POST",
+    data: {
+      csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+    },
+    success: function (response) {
+      console.log(response);
+    },
+    error: function (xhr, status, error) {
+      console.error("Error generating code and creating game:", error);
+    },
+  });
 }

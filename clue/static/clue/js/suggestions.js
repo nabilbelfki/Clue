@@ -65,6 +65,10 @@ $(document).ready(function(event) {
 
     $("#suggestion").click(function(event){
         if (chosenPlayer == rotation[turn] && rooms.hasOwnProperty(players[rotation[turn]])) {
+            $("#selections").css("display", "flex");
+            changeSuggestionPage("suspects")
+            $("#confirmation-title").hide();
+            $("#confirmation").hide();
             if (players[rotation[turn]] == "assumption") {
                 $("#suggest").attr("data-type", "assumption");
             } else {
@@ -99,11 +103,8 @@ function changeSuggestionPage(page) {
     $("#weapon .value").removeClass("page-selected");
     $("#room .value").removeClass("page-selected");
 
-    // $("#choices").height("530px");
-    // $("#choices").width("700px");
-    
-    // $("#suggest").height("550px");
-    // $("#suggest").width("700px");
+    $("#suggest").css("height", "");
+    $("#suggest").css("width", "");
 
     if (page == "suspects") {
         $("#suspects-choice").css("display","grid");
@@ -116,6 +117,7 @@ function changeSuggestionPage(page) {
         $("#weapon .value").addClass("page-selected");
     }
     if (page == "rooms") {
+        $("#suggest").height("600px");
         // Custom Height and Width for Rooms
         // $("#choices").height("570px");
         // $("#choices").width("820px");
@@ -130,8 +132,7 @@ function changeSuggestionPage(page) {
 
         // Custom Height and Width for Rooms
         $("#choices, #selections").fadeOut(function(event) {
-            $("#suggest").height("700px");
-            $("#suggest").width("800px");
+
             $("#confirmation").css("display","flex");
             $("#confirmation, #confirmation-title").fadeIn();
         });

@@ -127,7 +127,7 @@ def start_game(request):
             room = request.session.get('room')
             
             # Filter out the cards that match the suspect, weapon, and room
-            cards = [card for card in cards if card[1] not in [suspect, weapon, room]]
+            cards = [card for card in cards if card[0] not in [suspect, weapon, room]]
 
             # Shuffle the cards
             random.shuffle(cards)
@@ -336,6 +336,8 @@ def suggest(request):
 
         if status:
 
+            change_turn(game_id)
+
             # Send the message to the group using the helper function
             send_group_message(
                 f'lobby_{code}',  # Group name
@@ -366,6 +368,8 @@ def assumption(request):
 
         if result == "Not Turn":
             return JsonResponse({'Status': False, 'Reason': 'Not Your Turn'})
+
+        change_turn(game_id)
 
         # Send the message to the group using the helper function
         send_group_message(
@@ -403,6 +407,28 @@ def show_card(request):
             f'lobby_{code}',  # Group name
             'CardShown', # Action
             {'ID': player_id, 'SuggestedPlayer': suggested_player, 'Card': card}
+        )
+        
+        return JsonResponse({'Status': True})
+        
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+def next_turn(request):
+    if request.method == 'POST': 
+        game_id = request.session.get('game_id')
+        code = request.session.get('game_code')
+        player_id = request.session.get('player_id')
+
+        if not player_id: 
+            return JsonResponse({'error': 'Player ID not found in session'}, status=400)
+        
+        change_turn(game_id)
+
+        # Send the message to the group using the helper function
+        send_group_message(
+            f'lobby_{code}',  # Group name
+            'TurnEnded', # Action
+            {'ID': player_id}
         )
         
         return JsonResponse({'Status': True})

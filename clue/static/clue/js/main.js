@@ -223,6 +223,7 @@ function highlightPossibleMoves(id) {
 
 function changeTurn() {
   $("#moves").hide();
+  $("#dice-text").text("MOVES");
   $("#dice-text").text("ROLL DICE");
   $("#six-cube, #four-cube").fadeIn();
   $("#dice-roll").addClass("rollable");
@@ -349,6 +350,11 @@ function playerMovedTo(playerID, id) {
   moves--;
   $("#moves").text(moves);
   if (moves == 0) {
-    changeTurn();
+    if (!rooms.hasOwnProperty(rotation[turn])) {
+      changeTurn();
+    } else {
+      $("#moves").hide();
+      $("#dice-text").text("END TURN");
+    }
   }
 }
