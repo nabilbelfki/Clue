@@ -12,7 +12,7 @@ SECRET_KEY = 'django-insecure-7xora1rg(dxj!wb#dpkrneg@*#y##klu7x3$(i7pr$m147_br(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['18.222.100.95']
 
 # Application definition
 
@@ -77,7 +77,7 @@ DATABASES = {
         'NAME': 'Clue',
         'USER': 'clue',
         'PASSWORD': 'Myfriendisdn1!',
-        'HOST': '18.223.99.235',
+        'HOST': '18.222.100.95',
         'PORT': '3306',
     }
 }
@@ -122,7 +122,6 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
