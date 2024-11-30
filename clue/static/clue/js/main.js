@@ -26,13 +26,13 @@ const players = {
 };
 
 const gamePlayers = {
-    "colonel-mustard": "NABIL",
-    "professor-plum": "LAYLA",
-    "mrs-white": "KRISTALLIA",
-    "mr-green": "GERASIMOS",
-    "miss-scarlet": "SANDY",
-    "mrs-peacock": "SUNNY",
-}
+  "colonel-mustard": "NABIL",
+  "professor-plum": "LAYLA",
+  "mrs-white": "KRISTALLIA",
+  "mr-green": "GERASIMOS",
+  "miss-scarlet": "SANDY",
+  "mrs-peacock": "SUNNY",
+};
 
 const rooms = {
   study: {
@@ -95,31 +95,33 @@ let chosenPlayer = "";
 
 let myTurnToSelectPlayer = false;
 $(document).ready(function () {
-
   function getCookie(name) {
-      let cookieValue = null;
-      if (document.cookie && document.cookie !== '') {
-          const cookies = document.cookie.split(';');
-          for (let i = 0; i < cookies.length; i++) {
-              const cookie = cookies[i].trim();
-              // Does this cookie string begin with the name we want?
-              if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                  break;
-              }
-          }
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        // Does this cookie string begin with the name we want?
+        if (cookie.substring(0, name.length + 1) === name + "=") {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
       }
-      return cookieValue;
+    }
+    return cookieValue;
   }
 
-  const csrftoken = getCookie('csrftoken');
+  const csrftoken = getCookie("csrftoken");
 
   $.ajaxSetup({
-      beforeSend: function(xhr, settings) {
-          if (!/^(GET|HEAD|OPTIONS|TRACE)$/.test(settings.type) && !this.crossDomain) {
-              xhr.setRequestHeader("X-CSRFToken", csrftoken);
-          }
+    beforeSend: function (xhr, settings) {
+      if (
+        !/^(GET|HEAD|OPTIONS|TRACE)$/.test(settings.type) &&
+        !this.crossDomain
+      ) {
+        xhr.setRequestHeader("X-CSRFToken", csrftoken);
       }
+    },
   });
 
   $(".room").each(function (event) {
@@ -131,10 +133,10 @@ $(document).ready(function () {
     rooms[room]["width"] = bbox.width;
   });
 
-  $("#gameplay").on("load", function() { 
-      for (const slug in characters) { 
-          position("#" + slug, ".start." + slug); 
-      } 
+  $("#gameplay").on("load", function () {
+    for (const slug in characters) {
+      position("#" + slug, ".start." + slug);
+    }
   });
 
   $(document).keydown(function (event) {
@@ -164,24 +166,24 @@ $(document).ready(function () {
 
 function move(player, direction) {
   if (moves > 0 && chosenPlayer == rotation[turn]) {
-      if (board[players[player]].hasOwnProperty(direction)) {
-        let id = board[players[player]][direction];
-        let blocked = false;
-        for (const playerName in players) {
-            console.log(players[playerName])
-            if (id == players[playerName]) {
-                console.log(playerBlocking)
-                blocked = true;
-                break;
-            }
+    if (board[players[player]].hasOwnProperty(direction)) {
+      let id = board[players[player]][direction];
+      let blocked = false;
+      for (const playerName in players) {
+        console.log(players[playerName]);
+        if (id == players[playerName]) {
+          console.log(playerBlocking);
+          blocked = true;
+          break;
         }
-        if (!blocked) {
-          movePlayer(direction);
-        }
-      } else {
-        console.log("Can't go " + direction.toLowerCase());
       }
-  }  
+      if (!blocked) {
+        movePlayer(direction);
+      }
+    } else {
+      console.log("Can't go " + direction.toLowerCase());
+    }
+  }
 }
 
 function position(player, tile) {
@@ -189,7 +191,7 @@ function position(player, tile) {
   var $playerElement = $(player);
 
   var bbox = $pathElement[0].getBBox(); // Get the bounding box of the path
-
+  $("#move-sound")[0].play();
   var x = bbox.x;
   var y = bbox.y;
 
@@ -207,7 +209,7 @@ function position(player, tile) {
 }
 
 function highlightPossibleMoves(id) {
-    console.log("ID: " + id);
+  console.log("ID: " + id);
   const possibleMoves = board[id];
   //   console.log(possibleMoves);
   for (let i = 0; i < possibleMoves.length; i++) {
@@ -220,123 +222,139 @@ function highlightPossibleMoves(id) {
 }
 
 function changeTurn() {
-    $("#moves").hide();
-    $("#dice-text").text("ROLL DICE");
-    $("#six-cube, #four-cube").fadeIn();
-    $("#dice-roll").addClass("rollable");
-    
-    if (turn == rotation.length - 1) {
-        turn = 0;
-    } else {
-        turn++;
-    }
-    let character = rotation[turn];
-    changeAvatar(character)
-    console.log("Chosen Player ",chosenPlayer)
-    console.log("Turn ",rotation[turn])
-    if (chosenPlayer == rotation[turn]) {
-      myTurnToSelectPlayer = true;
-      $("#dice-roll div, #dice-roll p").css("opacity", "1");   
-      $("#dice-roll").css("cursor", "pointer");
-    } else {
-      $("#dice-roll div, #dice-roll p").css("opacity", "0.6");
-      $("#dice-roll").css("cursor", "default");
-    }
+  $("#moves").hide();
+  $("#dice-text").text("MOVES");
+  $("#dice-text").text("ROLL DICE");
+  $("#six-cube, #four-cube").fadeIn();
+  $("#dice-roll").addClass("rollable");
 
-    if (chosenPlayer == rotation[turn] && rooms.hasOwnProperty(players[rotation[turn]])) { 
-      $("#suggestion").css({
-        "opacity": "1",
-        "cursor": "pointer"
-      });
-    } else {
-      $("#suggestion").css({
-        "opacity": "0.6",
-        "cursor": "default"
-      });
-    }
+  if (turn == rotation.length - 1) {
+    turn = 0;
+  } else {
+    turn++;
+  }
+  let character = rotation[turn];
+  changeAvatar(character);
+  console.log("Chosen Player ", chosenPlayer);
+  console.log("Turn ", rotation[turn]);
+  if (chosenPlayer == rotation[turn]) {
+    myTurnToSelectPlayer = true;
+    $("#dice-roll div, #dice-roll p").css("opacity", "1");
+    $("#six-cube, #four-cube").css("opacity", "1");
+    $("#dice-roll").css("cursor", "pointer");
+  } else {
+    $("#dice-roll div, #dice-roll p").css("opacity", "0.6");
+    $("#six-cube, #four-cube").css("opacity", "0.6");
+    $("#dice-roll").css("cursor", "default");
+  }
+
+  if (
+    chosenPlayer == rotation[turn] &&
+    rooms.hasOwnProperty(players[rotation[turn]])
+  ) {
+    $("#suggestion").css({
+      opacity: "1",
+      cursor: "pointer",
+    });
+  } else {
+    $("#suggestion").css({
+      opacity: "0.6",
+      cursor: "default",
+    });
+  }
 }
 
 function startPlaying() {
   turn = 0;
 
-  playersOfLobby.forEach(function(player) {
-    rotation.push(player['character']);
+  playersOfLobby.forEach(function (player) {
+    rotation.push(player["character"]);
   });
 
   let character = rotation[turn];
-  
+
   changeAvatar(character);
 
   if (chosenPlayer == rotation[turn]) {
-    $("#dice-roll div, #dice-roll p").css("opacity", "1");  
-    $("#dice-roll").css("cursor", "pointer"); 
+    $("#dice-roll div, #dice-roll p").css("opacity", "1");
+    $("#dice-roll").css("cursor", "pointer");
   } else {
     $("#dice-roll div, #dice-roll p").css("opacity", "0.6");
     $("#dice-roll").css("cursor", "default");
   }
 
   $("#player-selection").hide();
-  $("#boardgame").css("display", "flex");
+  // $("#boardgame").css("display", "flex");
+  $(
+    "#boardgame, #suggestion, #avatar, #dice-roll, #secret-passage, #secret-passage, #detective-notes, #cards"
+  ).css("display", "flex");
+  $("#spooky-sound")[0].play();
 }
 
 function changeAvatar(slug) {
   let name;
-  playersOfLobby.forEach(function(player) {
-    if (player['character'] == slug)
-    name = player['name'];
+  playersOfLobby.forEach(function (player) {
+    if (player["character"] == slug) name = player["name"];
   });
   $(".avatar-picture").hide();
-  
+
   $("#" + slug + "-avatar").show();
   $("#avatar-name").text(name);
   $("#avatar").css("background-color", colors[slug]);
   if (slug == "mrs-white") {
-      $("#avatar-name").css("color","#474747");
+    $("#avatar-name").css("color", "#474747");
   } else {
-      $("#avatar-name").css("color","#FFFFFF");
+    $("#avatar-name").css("color", "#FFFFFF");
   }
 }
 
 function movePlayer(direction) {
   $.ajax({
-    url: '/move/',
-    type: 'POST',
+    url: "/move/",
+    type: "POST",
     data: {
-        csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
-        direction: direction
+      csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+      direction: direction,
     },
-    success: function(response) {
-        console.log(response);
+    success: function (response) {
+      console.log(response);
     },
-    error: function(xhr, status, error) {
-        console.error("Error generating code and creating game:", error);
-    }
-});
+    error: function (xhr, status, error) {
+      console.error("Error generating code and creating game:", error);
+    },
+  });
 }
 
 function playerMovedTo(playerID, id) {
   let slug;
-  playersOfLobby.forEach(function(player) {
-    if (player['id'] == playerID)
-    slug = player['character'];
+  playersOfLobby.forEach(function (player) {
+    if (player["id"] == playerID) slug = player["character"];
   });
   position("#" + slug, "#" + id);
   players[slug] = id;
-  if (chosenPlayer == rotation[turn] && rooms.hasOwnProperty(players[rotation[turn]])) {
+  if (
+    chosenPlayer == rotation[turn] &&
+    rooms.hasOwnProperty(players[rotation[turn]])
+  ) {
     $("#suggestion").css({
-      "opacity": "1",
-      "cursor": "pointer"
+      opacity: "1",
+      cursor: "pointer",
     });
   } else {
     $("#suggestion").css({
-      "opacity": "0.6",
-      "cursor": "default"
+      opacity: "0.6",
+      cursor: "default",
     });
   }
   highlightPossibleMoves(id);
   moves--;
   $("#moves").text(moves);
   if (moves == 0) {
+    if (!rooms.hasOwnProperty(rotation[turn])) {
       changeTurn();
+    } else {
+      $("#moves").hide();
+      $("#dice-text").text("END TURN");
+    }
   }
 }

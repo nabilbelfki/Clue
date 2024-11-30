@@ -1,0 +1,55 @@
+#won-or-lost {
+    position: fixed;
+    /* Use fixed positioning to keep it centered even when scrolling */
+    top: 50%;
+    /* Center vertically */
+    left: 50%;
+    /* Center horizontally */
+    transform: translate(-50%, -50%);
+    /* Adjust the position to be exactly centered */
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+    /* Add a shadow for better visibility */
+    border-radius: 25px;
+    background-color: white;
+    /* Add a background color for better visibility */
+    padding: 20px;
+    /* Add some padding for better spacing */
+    z-index: 1000;
+    /* Ensure it appears above other elements */
+    width: 700px;
+    height: 550px;
+    background-color: #FFFFFF;
+    gap: 25px;
+}
+
+#won-or-lost-logo svg {
+    height: 100px;
+}
+
+#won-or-lost-result {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#won-or-lost-text {
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.result-picture img {
+    height: 200px;
+    border-radius: 25px;
+}
+
+#won-or-lost-name {
+    font-size: 32px;
+    font-weight: 600;
+    color: #FFFFFF;
+}

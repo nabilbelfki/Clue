@@ -1,40 +1,47 @@
 #cards img {
     display: none;
-    height: 300px;
+    height: 200px;
     cursor: pointer;
 }
 
 #cards {
     position: absolute;
-    bottom: -280px;
+    bottom: -150px;
     left: 0;
     width: 100%;
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 10000;
 }
 
 #shown-card {
-    position: fixed; /* Use fixed positioning to keep it centered even when scrolling */
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Adjust the position to be exactly centered */
+    position: fixed;
+    /* Use fixed positioning to keep it centered even when scrolling */
+    top: 50%;
+    /* Center vertically */
+    left: 50%;
+    /* Center horizontally */
+    transform: translate(-50%, -50%);
+    /* Adjust the position to be exactly centered */
     display: none;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5); /* Add a shadow for better visibility */
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+    /* Add a shadow for better visibility */
     border-radius: 25px;
-    padding: 50px; /* Add some padding for better spacing */
-    z-index: 1000; /* Ensure it appears above other elements */
+    padding: 50px;
+    /* Add some padding for better spacing */
+    z-index: 1000;
+    /* Ensure it appears above other elements */
     background-color: #5060B8;
     gap: 25px;
 }
 
 #card-shown {
-    height: 530px;
-    width: 700px;
+    height: 330px;
+    width: 500px;
     background-color: #F0F0F0;
     /* border-radius: 25px; */
     display: flex;
@@ -43,12 +50,18 @@
 }
 
 #shown-title {
-    font-size: 50px;
+    font-size: 30px;
     font-weight: 600;
     color: #FFFFFF;
 }
 
 #card-shown img {
+    display: none;
+    height: 80%;
+    width: auto;
+}
+
+#card-shown svg {
     display: none;
     height: 80%;
     width: auto;
@@ -69,5 +82,18 @@
     width: 200px;
     height: 70px;
     font-weight: 600;
-    font-size: 32px;
+    font-size: 25px;
+}
+
+.card-selected {
+    background: linear-gradient(90deg, #044210 50%, transparent 50%),
+        linear-gradient(90deg, #FFFC68 50%, transparent 50%),
+        linear-gradient(0deg, #FFFC68 50%, transparent 50%),
+        linear-gradient(0deg, #FFFC68 50%, transparent 50%);
+    background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+    background-size: 32px 8px, 32px 8px, 8px 32px, 8px 32px;
+    background-position: 0% 0%, 100% 100%, 0% 100%, 100% 0px;
+    border-radius: 25px;
+    padding: 5px;
+    animation: dash 5s linear infinite;
 }

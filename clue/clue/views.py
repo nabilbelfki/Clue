@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from .utils import create_game, generate_random_code, get_game, create_player, generate_clue, rename_player, show_players, insert_card, show_cards, select_player, insert_die, get_position, get_turn, insert_move, change_turn, make_suggestion
+from .utils import create_game, generate_random_code, get_game, create_player, generate_clue, rename_player, show_players, insert_card, show_cards, select_player, insert_die, get_position, get_turn, insert_move, change_turn, make_suggestion, assume, shown_card
 
 def create_lobby(request):
     if request.method == 'POST':
@@ -21,6 +21,7 @@ def create_lobby(request):
         request.session['weapon'] = weapon
         request.session['room'] = room
         player_id, player_name, players = create_player(game_id, "True")
+
         request.session['player_id'] = player_id
         request.session['player_name'] = player_name
         request.session['is_admin'] = True
@@ -45,6 +46,10 @@ def join_lobby(request):
         request.session['game_id'] = game_id
         request.session['game_code'] = code
         player_id, player_name, players = create_player(game_id, "False")
+
+        if player_id is None:
+            return JsonResponse({'Status': False, 'Message': player_name})
+
         request.session['player_id'] = player_id
         request.session['player_name'] = player_name
         request.session['is_admin'] = False
@@ -57,7 +62,7 @@ def join_lobby(request):
             {'Players': json.loads(players)}
         )
 
-        return JsonResponse({'game_id': game_id, 'game_code': code, 'player_id': player_id, 'player_name': player_name, 'players': players})
+        return JsonResponse({'Status': True, 'game_id': game_id, 'game_code': code, 'player_id': player_id, 'player_name': player_name, 'players': players})
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 def home(request):
@@ -117,12 +122,12 @@ def start_game(request):
                 ["lounge", "Lounge", "Room"]
             ]
 
-            suspect = request.POST.get('suspect')
-            weapon = request.POST.get('weapon')
-            room = request.POST.get('room')
-
+            suspect = request.session.get('suspect')
+            weapon = request.session.get('weapon') 
+            room = request.session.get('room')
+            
             # Filter out the cards that match the suspect, weapon, and room
-            cards = [card for card in cards if card[1] not in [suspect, weapon, room]]
+            cards = [card for card in cards if card[0] not in [suspect, weapon, room]]
 
             # Shuffle the cards
             random.shuffle(cards)
@@ -331,6 +336,8 @@ def suggest(request):
 
         if status:
 
+            change_turn(game_id)
+
             # Send the message to the group using the helper function
             send_group_message(
                 f'lobby_{code}',  # Group name
@@ -344,6 +351,89 @@ def suggest(request):
         
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
+def assumption(request):
+    if request.method == 'POST': 
+        game_id = request.session.get('game_id')
+        code = request.session.get('game_code')
+        player_id = request.session.get('player_id')
+
+        suspect = request.POST.get('suspect')
+        weapon = request.POST.get('weapon')
+        room = request.POST.get('room')
+
+        if not player_id: 
+            return JsonResponse({'error': 'Player ID not found in session'}, status=400)
+        
+        result = assume(game_id, player_id, suspect, weapon, room)
+
+        if result == "Not Turn":
+            return JsonResponse({'Status': False, 'Reason': 'Not Your Turn'})
+
+        change_turn(game_id)
+
+        # Send the message to the group using the helper function
+        send_group_message(
+            f'lobby_{code}',  # Group name
+            'Assumption', # Action
+            {'ID': player_id, 'Suspect': suggestions[suspect], 'Weapon': suggestions[weapon], 'Room': suggestions[room], 'Correct': result == "True"}
+        )
+        
+        return JsonResponse({'Status': True, 'Correct': result})
+        
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+def show_card(request):
+    if request.method == 'POST': 
+        game_id = request.session.get('game_id')
+        code = request.session.get('game_code')
+        player_id = request.session.get('player_id')
+
+        card = request.POST.get('card')
+
+        if not player_id: 
+            return JsonResponse({'error': 'Player ID not found in session'}, status=400)
+        
+        status, suggested_player = shown_card(game_id, player_id, card)
+
+        if status == "Not Turn":
+            return JsonResponse({'Status': False, 'Reason': 'Not your turn'})
+        if status == "No Show":
+            return JsonResponse({'Status': False, 'Reason': 'No one can show a card'})
+        if status == "Already Shown":
+            return JsonResponse({'Status': False, 'Reason': 'Card has already been shown'})
+
+        # Send the message to the group using the helper function
+        send_group_message(
+            f'lobby_{code}',  # Group name
+            'CardShown', # Action
+            {'ID': player_id, 'SuggestedPlayer': suggested_player, 'Card': card}
+        )
+        
+        return JsonResponse({'Status': True})
+        
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+def next_turn(request):
+    if request.method == 'POST': 
+        game_id = request.session.get('game_id')
+        code = request.session.get('game_code')
+        player_id = request.session.get('player_id')
+
+        if not player_id: 
+            return JsonResponse({'error': 'Player ID not found in session'}, status=400)
+        
+        change_turn(game_id)
+
+        # Send the message to the group using the helper function
+        send_group_message(
+            f'lobby_{code}',  # Group name
+            'TurnEnded', # Action
+            {'ID': player_id}
+        )
+        
+        return JsonResponse({'Status': True})
+        
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 # Helper function to send a message to a WebSocket group
 def send_group_message(group_name, action, body):
