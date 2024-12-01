@@ -68,3 +68,8 @@ Redis server is running and accessible.
 All dependencies are installed correctly.
 Ports 8000 and 8001 are open and not blocked by any firewall.
 Feel free to reach out if you need further assistance!
+
+# Play the Game
+I have the game hosted on a server, if you want to access it and play it you can go to this website:
+
+`http://18.222.100.95/`
