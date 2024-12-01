@@ -27,8 +27,14 @@ $(document).ready(function() {
 
 
     $("#show-card").click(function(event) {
-        let card = $(".card-selected").attr("id").replace("-card","");
-        showSuggestedCard(card);
+        let card;
+        $("#cards img").each(function(event) {
+            if ($(this).hasClass("card-selected")) {
+                card = $(this).attr("id").replace("-card","");
+            }
+        })
+        if (card) showSuggestedCard(card);
+        else alert("Please select a card");
     });
     
 });
