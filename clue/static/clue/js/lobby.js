@@ -268,6 +268,12 @@ function setupLobby(code, currentPlayerID, players) {
         }
         $("#suggested").css("display", "flex");
         $("#suggested").fadeIn();
+        if (!body.Shower) {
+          setTimeout(function() {
+            $("#suggested").fadeOut();
+            changeTurn();
+          }, 3000);
+        }        
       }
 
       if (action == "Assumption") {
