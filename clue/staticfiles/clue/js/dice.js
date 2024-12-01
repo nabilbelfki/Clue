@@ -17,10 +17,14 @@ $(document).ready(function() {
 
     $diceRoll.click(function(event) {
         if (chosenPlayer == rotation[turn]) { 
-            if ($(this).hasClass("rollable")) {
-                $("#dice-roll").css("cursor", "default");
-                $(this).removeClass("rollable");
-                getDiceRoll()
+            if ($("#dice-text").text() == "END TURN") {
+                nextTurn();
+            } else {
+                if ($(this).hasClass("rollable")) {
+                    $("#dice-roll").css("cursor", "default");
+                    $(this).removeClass("rollable");
+                    getDiceRoll()
+                }
             }
         }
     });
@@ -39,7 +43,8 @@ function rollDice(playerID, Dice) {
         $("#dice-1 ." + firstDie + "-die").show();
         $("#dice-2 ." + secondDie + "-die").show(); 
     } 
-   // Call roll function multiple times within 3-5 seconds 
+   // Call roll function multiple times within 3-5 seconds
+   $("#dice-roll-sound")[0].play();
    const interval = setInterval(roll, 100); // Roll every 100 milliseconds 
    // Stop rolling after 3-5 seconds 
    setTimeout(function() { 
@@ -66,8 +71,8 @@ function rollDice(playerID, Dice) {
 
                 $("#dice-roll").removeClass("scale-center");
                 $("#dice-roll").animate({ 
-                    right: '-200px', 
-                    bottom: '80px'
+                    right: '50px', 
+                    bottom: '60px'
                 }, 1000, function() { $("#dice-roll").removeClass("scale-center"); });
             }); 
         }, 3000); // 5000 milliseconds = 5 second

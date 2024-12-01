@@ -19,11 +19,13 @@ $(document).ready(function(event) {
     });
 
     $("#rooms-choice > div").click(function(event) {
-        if ($(this).hasClass("room-selected")) {
-            $(this).removeClass("room-selected");
-        } else {
-            $("#rooms-choice > div").removeClass("room-selected");
-            $(this).addClass("room-selected");
+        if ($("#suggest").attr("data-type") == "assumption") {
+            if ($(this).hasClass("room-selected")) {
+                $(this).removeClass("room-selected");
+            } else {
+                $("#rooms-choice > div").removeClass("room-selected");
+                $(this).addClass("room-selected");
+            }
         }
     });
 
@@ -41,7 +43,11 @@ $(document).ready(function(event) {
 
     $("#choose").click(function(event){
         if ($("#suggest").attr("data-page") == "confirmation") {
-            makeSuggestion()
+            if ($("#suggest").attr("data-type") == "assumption") {
+                makeAssumption();
+            } else {
+                makeSuggestion()
+            }
             $("#suggest").fadeOut();
             // suggest("suggested");
             // $("#suggest").fadeOut(function(event) {
@@ -58,8 +64,28 @@ $(document).ready(function(event) {
     });
 
     $("#suggestion").click(function(event){
-        if (chosenPlayer == rotation[turn] && rooms.hasOwnProperty(players[rotation[turn]])) { 
-            expandDetectiveNotes()
+        if (chosenPlayer == rotation[turn] && rooms.hasOwnProperty(players[rotation[turn]])) {
+            $("#selections").css("display", "flex");
+            changeSuggestionPage("suspects")
+            $("#confirmation-title").hide();
+            $("#confirmation").hide();
+            if (players[rotation[turn]] == "assumption") {
+                $("#suggest").attr("data-type", "assumption");
+            } else {
+                $("#suggest").attr("data-type", "suggestion");
+            }
+            clearSuggestionPopup();
+            expandDetectiveNotes();
+            let room = players[rotation[turn]];
+            $(`#rooms-choice > div`).each(function(event) {
+                if ($(this).attr("id").replace("-choice","") == room) {
+                    let selectedText = $(this).find(".choice-text").text();
+                    $(`#room .value`).text(selectedText);
+                    $(`#room`).attr("data-text", selectedText);
+                    $(`#room`).attr("data-choice", room);
+                    $(this).addClass("room-selected");
+                }
+            });
             $("#suggest").css("display", "flex");
         }
     });
@@ -77,11 +103,8 @@ function changeSuggestionPage(page) {
     $("#weapon .value").removeClass("page-selected");
     $("#room .value").removeClass("page-selected");
 
-    $("#choices").height("530px");
-    $("#choices").width("700px");
-    
-    $("#suggest").height("1000px");
-    $("#suggest").width("1000px");
+    $("#suggest").css("height", "");
+    $("#suggest").css("width", "");
 
     if (page == "suspects") {
         $("#suspects-choice").css("display","grid");
@@ -94,9 +117,10 @@ function changeSuggestionPage(page) {
         $("#weapon .value").addClass("page-selected");
     }
     if (page == "rooms") {
+        $("#suggest").height("600px");
         // Custom Height and Width for Rooms
-        $("#choices").height("570px");
-        $("#choices").width("820px");
+        // $("#choices").height("570px");
+        // $("#choices").width("820px");
 
         $("#rooms-choice").css("display","grid");
         $("#suggest").attr("data-page", "room");
@@ -108,8 +132,7 @@ function changeSuggestionPage(page) {
 
         // Custom Height and Width for Rooms
         $("#choices, #selections").fadeOut(function(event) {
-            $("#suggest").height("700px");
-            $("#suggest").width("800px");
+
             $("#confirmation").css("display","flex");
             $("#confirmation, #confirmation-title").fadeIn();
         });
@@ -176,5 +199,33 @@ function makeSuggestion() {
         error: function(xhr, status, error) {
             console.error("Error generating code and creating game:", error);
         }
+    });
+}
+
+function makeAssumption() {
+    $.ajax({
+        url: '/assume/',
+        type: 'POST',
+        data: {
+            csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+            suspect: $("#suspect").attr("data-choice"),
+            weapon: $("#weapon").attr("data-choice"),
+            room: $("#room").attr("data-choice")
+        },
+        success: function(response) {
+            console.log(response);
+        },
+        error: function(xhr, status, error) {
+            console.error("Error generating code and creating game:", error);
+        }
+    });
+}
+
+function clearSuggestionPopup() {
+    ["suspect", "weapon", "room"].forEach(function(option) {
+        $(`#${option}s-choice > div`).removeClass(`${option}-selected`);
+        $(`#${option} .value`).text("");
+        $(`#${option}`).attr("data-text", "");
+        $(`#${option}`).attr("data-choice", "");
     });
 }
