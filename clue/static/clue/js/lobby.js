@@ -316,7 +316,7 @@ function setupLobby(code, currentPlayerID, players) {
           } else {
               lostGame(body.ID);
           }
-        }, 5000); // 3000 milliseconds = 3 seconds
+        }, 3000); // 3000 milliseconds = 3 seconds
       }
 
       if (action == "CardShown") {
@@ -453,7 +453,7 @@ function wonGame(playerID) {
   $("#won-or-lost").fadeIn();
 }
 
-function lostGame (playerID) {
+function lostGame(playerID) {
   let slug;
   let playerName;
   playersOfLobby.forEach(function(player) {
@@ -482,7 +482,7 @@ function lostGame (playerID) {
   $("#won-or-lost-name").text(playerName);
   $("#won-or-lost").css("display", "flex");
   $("#won-or-lost").fadeIn();
-  if (rotation.length < 3) {
+  if (rotation.length > 2) {
     setTimeout(function() {
       rotation = rotation.filter(item => item !== slug);
       $("#won-or-lost").fadeOut();
