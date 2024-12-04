@@ -1,14 +1,19 @@
 $(document).ready(function() {
     $("#collapse").click(function() {
+        $("#pop-sound")[0].play();
         collapseDetectiveNotes();
     });
 
     $("#expand").click(function() {
+        $("#pop-sound")[0].play();
         expandDetectiveNotes();
     });
 })
 
 function markDetectiveNotes(id, color) {
+    if (color == "#FFFFFF") {
+        color = "#474747"
+    }
     $(`#${id}-checkbox`).css("fill", color);
     $(`#${id}-checkbox`).show();
 }

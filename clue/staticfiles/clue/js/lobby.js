@@ -176,7 +176,7 @@ function setupLobby(code, currentPlayerID, players) {
 
   let currentPlayer = $("#lobby > div").eq(currentPlayerIndex);
   currentPlayer.find(".edit").show();
-  if (currentPlayerIndex != 1) currentPlayer.find(".exit").show();
+  if (currentPlayerIndex != 0) currentPlayer.find(".exit").show();
   $("#code-input input").val(code);
   $("#lobby").css("display", "flex");
   $("#code-input input").attr("readonly", true);
@@ -246,9 +246,17 @@ function setupLobby(code, currentPlayerID, players) {
             name = player["name"];
           }
         });
+        if (colors[slug] == "#FFFFFF") {
+          $("#suggested-title").css("color", "#474747");
+          $(".suggested-label").css("color", "#474747");
+          $("#show-card").css("background-color", "#474747");
+        } else {
+          $("#suggested-title").css("color", "#FFFFFF");
+          $(".suggested-label").css("color", colors[slug]);
+          $("#show-card").css("background-color", "#FFFFFF");
+        }
         $("#suggested-title").text(name + " SUGGESTED");
         $("#suggested").css("background-color", colors[slug]);
-        $(".suggested-label").css("color", colors[slug]);
         $("#show-card").css("color", colors[slug]);
         let suspect = body.Suspect;
         let weapon = body.Weapon;

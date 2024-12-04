@@ -18,9 +18,11 @@ $(document).ready(function() {
     $diceRoll.click(function(event) {
         if (chosenPlayer == rotation[turn]) { 
             if ($("#dice-text").text() == "END TURN") {
+                $("#pop-sound")[0].play();
                 nextTurn();
             } else {
                 if ($(this).hasClass("rollable")) {
+                    $("#pop-sound")[0].play();
                     $("#dice-roll").css("cursor", "default");
                     $(this).removeClass("rollable");
                     getDiceRoll()
