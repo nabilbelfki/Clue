@@ -17,7 +17,10 @@
     <script src="{% static 'clue/js/detective-notes.js' %}"></script>
     <script src="{% static 'clue/js/suggestions.js' %}"></script>
     <script src="{% static 'clue/js/player-selection.js' %}"></script>
+    <!-- Link to the SVG favicon -->
     <link rel="icon" href="{% static 'clue/images/favicon.svg' %}" type="image/svg+xml">
+    <!-- Fallback to the ICO favicon -->
+    <link rel="icon" href="{% static 'clue/images/favicon.ico' %}" type="image/x-icon">
 </head>
 
 <body data-murderer="{{ murderer }}" data-room="{{ room }}" data-weapon="{{ weapon }}">
