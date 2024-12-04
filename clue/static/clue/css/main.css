@@ -714,6 +714,7 @@ body {
 }
 
 #legend {
+    display: none;
     position: absolute;
     top: 0px;
     left: calc(50% - 200px);

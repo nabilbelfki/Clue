@@ -85,7 +85,7 @@ function showSuggestedCardPopup(card, suggestedID, showerID) {
             showerColor = colors[player.character];
         }
     });
-    $("no-show").hide();
+    $("#no-show").hide();
     $("#card-shown img").hide();
     $("#shown-card").css("background-color", showerColor);
     if (showerColor == "#FFFFFF") {
