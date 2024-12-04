@@ -90,10 +90,13 @@ function showSuggestedCardPopup(card, suggestedID, showerID) {
     $("#shown-card").css("background-color", showerColor);
     if (showerColor == "#FFFFFF") {
         $("#shown-title").css("color","#474747");
+        $("#close-shown").css("color", "#FFFFFF");
+        $("#close-shown").css("background-color", "#474747");
     } else {
         $("#shown-title").css("color","#FFFFFF");
+        $("#close-shown").css("color", showerColor);
+        $("#close-shown").css("background-color", "#FFFFFF");
     }
-    $("#close-shown").css("color", showerColor);
     let title = showerName+ " SHOWED " + suggestedName;
     if (myPlayerID == suggestedID) {
         title = showerName + " SHOWED YOU";
