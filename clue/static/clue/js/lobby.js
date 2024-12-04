@@ -316,7 +316,7 @@ function setupLobby(code, currentPlayerID, players) {
           } else {
               lostGame(body.ID);
           }
-        }, 5000); // 3000 milliseconds = 3 seconds
+        }, 3000); // 3000 milliseconds = 3 seconds
       }
 
       if (action == "CardShown") {
@@ -453,7 +453,7 @@ function wonGame(playerID) {
   $("#won-or-lost").fadeIn();
 }
 
-function lostGame (playerID) {
+function lostGame(playerID) {
   let slug;
   let playerName;
   playersOfLobby.forEach(function(player) {
