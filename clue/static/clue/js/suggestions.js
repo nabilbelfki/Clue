@@ -176,7 +176,7 @@ function suggest(view) {
     let suspectText = $("#suspect").attr("data-text");
     let weaponText = $("#weapon").attr("data-text");
     let roomText = $("#room").attr("data-text");
-
+    roomText = roomText == "CONSERVATORY" ? "CON- SERVATORY" : roomText
     $(`.${view}-value img`).hide();
     
     $(`#${suspect}-${view}`).show();

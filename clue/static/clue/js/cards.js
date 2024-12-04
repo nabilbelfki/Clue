@@ -113,7 +113,7 @@ function showSuggestedCardPopup(card, suggestedID, showerID) {
             $("#close-shown").css("background-color", "#FFFFFF");
         }
     } else {
-        $("no-show").show();
+        $("#no-show").show();
     }
 
     $("#shown-title").text(title);

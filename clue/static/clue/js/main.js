@@ -354,6 +354,7 @@ function playerMovedTo(playerID, id) {
       changeTurn();
     } else {
       $("#moves").hide();
+      $("#dice-roll").css("cursor", "pointer");
       $("#dice-text").text("END TURN");
     }
   }
