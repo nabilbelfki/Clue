@@ -482,7 +482,7 @@ function lostGame (playerID) {
   $("#won-or-lost-name").text(playerName);
   $("#won-or-lost").css("display", "flex");
   $("#won-or-lost").fadeIn();
-  if (rotation.length < 3) {
+  if (rotation.length > 2) {
     setTimeout(function() {
       rotation = rotation.filter(item => item !== slug);
       $("#won-or-lost").fadeOut();
