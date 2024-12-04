@@ -5,6 +5,8 @@
 
 <head>
     <title>Clue</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'clue/css/main.css' %}">
     <script src="{% static 'clue/js/jquery.min.js' %}"></script>
     <script src="{% static 'clue/js/board.js' %}"></script>
@@ -15,6 +17,7 @@
     <script src="{% static 'clue/js/detective-notes.js' %}"></script>
     <script src="{% static 'clue/js/suggestions.js' %}"></script>
     <script src="{% static 'clue/js/player-selection.js' %}"></script>
+    <link rel="icon" href="{% static 'clue/images/favicon.svg' %}" type="image/svg+xml">
 </head>
 
 <body data-murderer="{{ murderer }}" data-room="{{ room }}" data-weapon="{{ weapon }}">
