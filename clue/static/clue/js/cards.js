@@ -85,8 +85,14 @@ function showSuggestedCardPopup(card, suggestedID, showerID) {
             showerColor = colors[player.character];
         }
     });
+    $("no-show").hide();
     $("#card-shown img").hide();
     $("#shown-card").css("background-color", showerColor);
+    if (showerColor == "#FFFFFF") {
+        $("#shown-title").css("color","#474747");
+    } else {
+        $("#shown-title").css("color","#FFFFFF");
+    }
     $("#close-shown").css("color", showerColor);
     let title = showerName+ " SHOWED " + suggestedName;
     if (myPlayerID == suggestedID) {
@@ -97,7 +103,15 @@ function showSuggestedCardPopup(card, suggestedID, showerID) {
         title = "YOU SHOWED " + suggestedName;
         $(`#${card}-shown-card`).show();
         $("#shown-card").css("background-color", suggestedColor);
-        $("#close-shown").css("color", suggestedColor);
+        if (suggestedColor == "#FFFFFF") {
+            $("#shown-title").css("color","#474747");
+            $("#close-shown").css("color", "#FFFFFF");
+            $("#close-shown").css("background-color", "#474747");
+        } else {
+            $("#shown-title").css("color","#FFFFFF");
+            $("#close-shown").css("color", suggestedColor);
+            $("#close-shown").css("background-color", "#FFFFFF");
+        }
     } else {
         $("no-show").show();
     }
