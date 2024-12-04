@@ -176,7 +176,7 @@ function setupLobby(code, currentPlayerID, players) {
 
   let currentPlayer = $("#lobby > div").eq(currentPlayerIndex);
   currentPlayer.find(".edit").show();
-  if (currentPlayerIndex != 1) currentPlayer.find(".exit").show();
+  if (currentPlayerIndex != 0) currentPlayer.find(".exit").show();
   $("#code-input input").val(code);
   $("#lobby").css("display", "flex");
   $("#code-input input").attr("readonly", true);
