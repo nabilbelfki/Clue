@@ -3,7 +3,7 @@
 redis-server --save "" &
 
 # Activate virtual environment
-source /app/Clue/venv/bin/activate
+source /app/Clue/clue/venv/bin/activate
 
 # Navigate to Django project directory
 cd /app/Clue/clue
