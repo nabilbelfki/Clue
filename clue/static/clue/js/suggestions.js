@@ -10,7 +10,9 @@ $(document).ready(function(event) {
     });
 
     $("#weapons-choice > div").click(function(event) {
+
         if ($(this).hasClass("weapon-selected")) {
+        
             $(this).removeClass("weapon-selected");
         } else {
             $("#weapons-choice > div").removeClass("weapon-selected");
@@ -42,6 +44,7 @@ $(document).ready(function(event) {
     });
 
     $("#choose").click(function(event){
+        $("#pop-sound")[0].play();
         if ($("#suggest").attr("data-page") == "confirmation") {
             if ($("#suggest").attr("data-type") == "assumption") {
                 makeAssumption();
@@ -59,12 +62,14 @@ $(document).ready(function(event) {
     })
 
     $("#cancel").click(function(event){
+        $("#pop-sound")[0].play();
         collapseDetectiveNotes()
         $("#suggest").hide();
     });
 
     $("#suggestion").click(function(event){
         if (chosenPlayer == rotation[turn] && rooms.hasOwnProperty(players[rotation[turn]])) {
+            $("#pop-sound")[0].play();
             $("#selections").css("display", "flex");
             changeSuggestionPage("suspects")
             $("#confirmation-title").hide();

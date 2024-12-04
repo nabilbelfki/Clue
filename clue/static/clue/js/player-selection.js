@@ -1,6 +1,7 @@
 $(document).ready(function(event) {
     $("#choose-player-button").click(function(event) {
         if (myTurnToSelectPlayer) {
+            $("#pop-sound")[0].play();
             $("#choose-player-button").hide();
             let playerChosen;
             let isPlayerChosen = false;

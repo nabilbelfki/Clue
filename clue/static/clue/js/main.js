@@ -350,7 +350,7 @@ function playerMovedTo(playerID, id) {
   moves--;
   $("#moves").text(moves);
   if (moves == 0) {
-    if (!rooms.hasOwnProperty(rotation[turn])) {
+    if (!rooms.hasOwnProperty(players[rotation[turn]])) {
       changeTurn();
     } else {
       $("#moves").hide();
