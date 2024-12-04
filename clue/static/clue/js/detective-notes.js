@@ -11,6 +11,9 @@ $(document).ready(function() {
 })
 
 function markDetectiveNotes(id, color) {
+    if (color == "#FFFFFF") {
+        color = "#474747"
+    }
     $(`#${id}-checkbox`).css("fill", color);
     $(`#${id}-checkbox`).show();
 }
