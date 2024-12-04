@@ -241,6 +241,8 @@ function changeTurn() {
     myTurnToSelectPlayer = true;
     $("#dice-roll div, #dice-roll p").css("opacity", "1");
     $("#six-cube, #four-cube").css("opacity", "1");
+    $("#six-cube").css("opacity", "1");
+    $("#four-cube").css("opacity", "1");
     $("#dice-roll").css("cursor", "pointer");
   } else {
     $("#dice-roll div, #dice-roll p").css("opacity", "0.6");
