@@ -488,6 +488,7 @@ function lostGame(playerID) {
       $("#won-or-lost").fadeOut();
     }, 3000);
   }
+  changeTurn();
 }
 
 function nextTurn() {
