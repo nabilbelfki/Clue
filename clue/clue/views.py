@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from .utils import create_game, generate_random_code, get_game, create_player, generate_clue, rename_player, show_players, insert_card, show_cards, select_player, insert_die, get_position, get_turn, insert_move, change_turn, make_suggestion, assume, shown_card
+from .utils import *
 
 def create_lobby(request):
     if request.method == 'POST':
@@ -63,6 +63,35 @@ def join_lobby(request):
         )
 
         return JsonResponse({'Status': True, 'game_id': game_id, 'game_code': code, 'player_id': player_id, 'player_name': player_name, 'players': players})
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+def leave_lobby(request):
+    if request.method == 'POST': 
+        game_id = request.session.get('game_id')
+        code = request.session.get('game_code')
+        player_id = request.session.get('player_id')
+
+        if not player_id: 
+            return JsonResponse({'error': 'Player ID not found in session'}, status=400)
+
+        status, players = leave_game(game_id, player_id)
+
+        if status:
+
+            # Clear all session variables
+            request.session.flush()
+
+            # Send the message to the group using the helper function
+            send_group_message(
+                f'lobby_{code}',  # Group name
+                'PlayerLeft', # Action
+                {'Players': json.loads(players)}
+            )
+        
+            return JsonResponse({'Status': True})
+        else:         
+            return JsonResponse({'Status': False, 'Reason': "Can't leave game has already started."})
+        
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 def home(request):
@@ -134,6 +163,10 @@ def start_game(request):
             
             # Get the players for the game
             players = show_players(game_id)
+
+            # Check if the count of players is greater than 1
+            if len(players) < 2:
+                return JsonResponse({'Status': "Can't start game with only one player"})
             
             # Convert players to a list of dictionaries (id, name)
             players_data = [{'id': player[0], 'order': player[3], 'name': player[4]} for player in players]
@@ -171,7 +204,7 @@ def start_game(request):
                 {'Players': players_data}  # Body of the message
             )
             
-            return JsonResponse({'status': 'Game started and cards dealt'})
+            return JsonResponse({'Status': 'Game started and cards dealt'})
     
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 

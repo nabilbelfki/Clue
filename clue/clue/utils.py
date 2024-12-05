@@ -23,6 +23,17 @@ def get_game(code):
         game_id = result[0]
     return game_id
 
+def leave_game(game_id, player_id):
+    with connection.cursor() as cursor:
+        cursor.callproc('leftGame', [game_id, player_id])
+        result = cursor.fetchone()
+        if result is None:
+            raise ValueError("Player not added")
+        
+        status = result[0]
+        players = result[1]
+    return status == "True", players
+
 def create_player(game_id, is_admin):
     with connection.cursor() as cursor:
         cursor.callproc('addPlayer', [game_id, is_admin])
