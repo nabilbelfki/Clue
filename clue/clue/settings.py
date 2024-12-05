@@ -1,4 +1,8 @@
+import os
 from pathlib import Path
+
+# Import the database configuration
+from .database import DATABASES
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -66,31 +70,6 @@ CHANNEL_LAYERS = {
         },
     },
 }
-
-
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Clue',
-        'USER': 'clue',
-        'PASSWORD': 'Myfriendisdn1!',
-        'HOST': '52.15.107.92',
-        'PORT': '3306',
-    }
-}
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'clue',
-#         'USER': 'root',
-#         'PASSWORD': '',
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#     }
-# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

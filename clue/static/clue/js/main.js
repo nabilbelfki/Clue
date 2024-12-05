@@ -35,46 +35,16 @@ const gamePlayers = {
 };
 
 const rooms = {
-  study: {
-    width: 0,
-    height: 0,
-  },
-  lounge: {
-    width: 0,
-    height: 0,
-  },
-  library: {
-    width: 0,
-    height: 0,
-  },
-  kitchen: {
-    width: 0,
-    height: 0,
-  },
-  "dining-room": {
-    width: 0,
-    height: 0,
-  },
-  assumption: {
-    width: 0,
-    height: 0,
-  },
-  conservatory: {
-    width: 0,
-    height: 0,
-  },
-  "billiard-room": {
-    width: 0,
-    height: 0,
-  },
-  ballroom: {
-    width: 0,
-    height: 0,
-  },
-  hall: {
-    width: 0,
-    height: 0,
-  },
+  study: true,
+  lounge: true,
+  library: true,
+  kitchen: true,
+  "dining-room": true,
+  assumption: true,
+  conservatory: true,
+  "billiard-room": true,
+  ballroom: true,
+  hall: true
 };
 
 const startingPositions = {
@@ -85,6 +55,13 @@ const startingPositions = {
   "miss-scarlet-start": true,
   "colonel-mustard-start": true,
 };
+
+const secretPassages = {
+  study: "kitchen",
+  lounge: "conservatory",
+  kitchen: "study",
+  conservatory: "lounge"
+}
 
 var turn = 0;
 var moves = 0;
@@ -124,20 +101,17 @@ $(document).ready(function () {
     },
   });
 
-  $(".room").each(function (event) {
-    let room = $(this).attr("id");
-    var bbox = document.getElementById(room).getBBox();
-    // console.log("Width: " + bbox.width);
-    // console.log("Height: " + bbox.height);
-    rooms[room]["height"] = bbox.height;
-    rooms[room]["width"] = bbox.width;
-  });
-
-  $("#gameplay").on("load", function () {
-    for (const slug in characters) {
-      position("#" + slug, ".start." + slug);
-    }
-  });
+  
+  // $("#gameplay").on("load", function () {
+  //   $(".room").each(function (event) {
+  //     let room = $(this).attr("id");
+  //     var bbox = document.getElementById(room).getBBox();
+  //     // console.log("Width: " + bbox.width);
+  //     // console.log("Height: " + bbox.height);
+  //     rooms[room]["height"] = bbox.height;
+  //     rooms[room]["width"] = bbox.width;
+  //   });
+  // });
 
   $(document).keydown(function (event) {
     switch (event.which) {
@@ -194,13 +168,15 @@ function position(player, tile) {
   $("#move-sound")[0].play();
   var x = bbox.x;
   var y = bbox.y;
-
+  
   // Check if the pathId corresponds to a room
-  if (rooms.hasOwnProperty(tile)) {
-    var roomHeight = rooms[tile]["height"];
-    var roomWidth = rooms[tile]["width"];
-    x += roomWidth / 2 - bbox.width / 2;
-    y += roomHeight / 2 - bbox.height / 2;
+  let name = tile.replace("#","");
+  if (rooms.hasOwnProperty(name)) {
+    // Center the player within the room
+    x += (bbox.width / 2);
+    y += (bbox.height / 2);
+    console.log(x);
+    console.log(y);
   }
 
   // Set the position of the foreignObject
@@ -254,15 +230,18 @@ function changeTurn() {
     chosenPlayer == rotation[turn] &&
     rooms.hasOwnProperty(players[rotation[turn]])
   ) {
-    $("#suggestion").css({
-      opacity: "1",
-      cursor: "pointer",
-    });
+    toggleOpacity("#suggestion", "1", "pointer");
   } else {
-    $("#suggestion").css({
-      opacity: "0.6",
-      cursor: "default",
-    });
+    toggleOpacity("#suggestion", "0.6", "default");
+  }
+
+  if (
+    chosenPlayer == rotation[turn] &&
+    secretPassages.hasOwnProperty(players[rotation[turn]])
+  ) {
+    toggleOpacity("#secret-passage", "1", "pointer");
+  } else {
+    toggleOpacity("#secret-passage", "0.6", "default");
   }
 }
 
@@ -290,6 +269,7 @@ function startPlaying() {
   $(
     "#boardgame, #suggestion, #avatar, #dice-roll, #secret-passage, #secret-passage, #detective-notes, #cards"
   ).css("display", "flex");
+  initializePlayerPositions();
   $("#spooky-sound")[0].play();
 }
 
@@ -338,15 +318,18 @@ function playerMovedTo(playerID, id) {
     chosenPlayer == rotation[turn] &&
     rooms.hasOwnProperty(players[rotation[turn]])
   ) {
-    $("#suggestion").css({
-      opacity: "1",
-      cursor: "pointer",
-    });
+    toggleOpacity("#suggestion", "1", "pointer");
   } else {
-    $("#suggestion").css({
-      opacity: "0.6",
-      cursor: "default",
-    });
+    toggleOpacity("#suggestion", "0.6", "default");
+  }
+
+  if (
+    chosenPlayer == rotation[turn] &&
+    secretPassages.hasOwnProperty(players[rotation[turn]])
+  ) {
+    toggleOpacity("#secret-passage", "1", "pointer");
+  } else {
+    toggleOpacity("#secret-passage", "0.6", "default");
   }
   highlightPossibleMoves(id);
   moves--;
@@ -360,4 +343,25 @@ function playerMovedTo(playerID, id) {
       $("#dice-text").text("END TURN");
     }
   }
+}
+
+
+function initializePlayerPositions() {
+  console.log(rotation)
+  for (const slug in characters) {
+    position("#" + slug, ".start." + slug);
+    console.log(rotation.includes(slug));
+    if (!rotation.includes(slug)) {
+      $("#" + slug).hide();
+    } else {
+      $("#" + slug).show();
+    }
+  }
+}
+
+function toggleOpacity(selector, opacity, cursor) {
+  $(selector).css({
+    opacity: opacity,
+    cursor: cursor,
+  });
 }

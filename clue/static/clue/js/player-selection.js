@@ -15,10 +15,6 @@ $(document).ready(function(event) {
             
             if (isPlayerChosen) {
                 choosePlayer(playerChosen);
-                // showMyCards();
-                // $("#player-selection").hide();
-                // $("#boardgame").css("display", "flex");
-        
             } else {
                 // Handle the case where no player is chosen
                 alert("Please choose a player.");

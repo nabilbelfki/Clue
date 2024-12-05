@@ -27,7 +27,8 @@
     cursor: pointer;
 }
 
-.choose-player, .choose-player img {
+.choose-player,
+.choose-player img {
     border-radius: 50px;
 }
 
@@ -35,8 +36,8 @@
     opacity: 30%;
 }
 
-.choose-player:not(.player-already-taken):not(.my-chosen-player):hover { 
-    border: 4px solid yellow; 
+.choose-player:not(.player-already-taken):not(.my-chosen-player):hover {
+    border: 4px solid yellow;
 }
 
 .my-chosen-player {
@@ -47,14 +48,14 @@
     border: 4px solid #5BFD0A;
 }
 
-.tooltip { 
+.tooltip {
     position: absolute;
     /* background-color: red; */
     /* color: white; */
     padding: 5px;
     border-radius: 5px;
     display: none;
-    z-index: 1000; 
+    z-index: 1000;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -84,4 +85,5 @@
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     animation: rainbow 20s infinite;
+    display: none;
 }

@@ -88,6 +88,9 @@ function generateRandomCode() {
 }
 
 function timer() {
+  var audio = $("#clock-sound")[0];
+  $("#timer").show();
+  audio.play();
   $("#timer").animate(
     {
       width: "0%",
@@ -97,6 +100,7 @@ function timer() {
       // This function will be called when the animation is complete
       // Check your variable and perform some logic here
       if (chosenPlayer == "") {
+        let playerChosen;
         let isPlayerChosen = false;
         const availablePlayers = [];
         $(".choose-player").each(function (event) {
@@ -105,8 +109,8 @@ function timer() {
           }
           if ($(this).hasClass("my-chosen-player")) {
             isPlayerChosen = true;
-            chosenPlayer = $(this).attr("id").replace("choose-", "");
-            return false; // Exit the loop
+            playerChosen = $(this).attr("id").replace("choose-", "");
+            return false;
           }
         });
 
@@ -114,11 +118,13 @@ function timer() {
           const randomIndex = Math.floor(
             Math.random() * availablePlayers.length
           );
-          chosenPlayer = availablePlayers[randomIndex];
+          playerChosen = availablePlayers[randomIndex];
+          choosePlayer(playerChosen);
         }
-        showMyCards();
-        $("#player-selection").hide();
-        $("#boardgame").css("display", "flex");
+        $("#choose-player-button").hide();
+        audio.pause();
+        // Reset the audio to the beginning
+        audio.currentTime = 0;
       }
     }
   );
@@ -236,6 +242,7 @@ function setupLobby(code, currentPlayerID, players) {
         } else if (body.Next == myPlayerID) {
           myTurnToSelectPlayer = true;
           $("#choose-player-button").css("display", "flex");
+          timer();
         }
       }
 
@@ -405,6 +412,7 @@ function startGame() {
         alert(response.Status);
       } else {
         $("#start-menu").hide();
+        initializePlayerPositions();
         $("#player-selection").css("display", "flex");
         myTurnToSelectPlayer = true;
         $("#choose-player-button").css("display", "flex");
@@ -430,7 +438,6 @@ function getCards() {
       myCards = response.Cards;
       $("#start-menu").hide();
       $("#player-selection").css("display", "flex");
-      timer();
     },
     error: function (xhr, status, error) {
       console.error("Error generating code and creating game:", error);
