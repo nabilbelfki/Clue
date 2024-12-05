@@ -39,6 +39,11 @@ $(document).ready(function () {
     $(this).hide();
   });
 
+  $(".exit").click(function (event) {
+    console.log("Leaving")
+    leaveGame();
+  });
+
   $(".save").click(function (event) {
     const $player = $(this).parent();
     const $input = $player.find("input");
@@ -208,6 +213,11 @@ function setupLobby(code, currentPlayerID, players) {
         updatePlayerList(players);
       }
 
+      if (action == "PlayerLeft") {
+        const players = body.Players;
+        updatePlayerList(players);
+      }
+
       if (action === "PlayerNameUpdated") {
         const id = body.ID;
         const newName = body.PlayerName;
@@ -345,6 +355,10 @@ function setupLobby(code, currentPlayerID, players) {
 
 function updatePlayerList(players) {
   console.log(players);
+  $("#lobby > div").each(function(event) {
+    $(this).attr("data-id", "");
+    $(this).find("input").val("");
+  });
   players.forEach(function (player, index) {
     const $playerElement = $("#lobby > div").eq(index);
     $playerElement.attr("data-id", player.ID);
@@ -387,11 +401,16 @@ function startGame() {
     },
     success: function (response) {
       console.log(response);
-      $("#start-menu").hide();
-      $("#player-selection").css("display", "flex");
-      myTurnToSelectPlayer = true;
-      $("#choose-player-button").css("display", "flex");
-      timer();
+      if (response.Status == "Can't start game with only one player") {
+        alert(response.Status);
+      } else {
+        $("#start-menu").hide();
+        $("#player-selection").css("display", "flex");
+        myTurnToSelectPlayer = true;
+        $("#choose-player-button").css("display", "flex");
+        // Make this time slight shorter than server-side timer, incase they disable this client side one.
+        timer();
+      }
     },
     error: function (xhr, status, error) {
       console.error("Error generating code and creating game:", error);
@@ -500,6 +519,31 @@ function nextTurn() {
     },
     success: function (response) {
       console.log(response);
+    },
+    error: function (xhr, status, error) {
+      console.error("Error generating code and creating game:", error);
+    },
+  });
+}
+
+function leaveGame() {
+  $.ajax({
+    url: "/game/leave/",
+    type: "POST",
+    data: {
+      csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+    },
+    success: function (response) {
+      console.log(response);
+      if (response.Status) {
+        $("#code-input input").val("");
+        $("#lobby").hide();
+        $("#code-input input").attr("readonly", false);
+        $("#action-button-inner").text("CREATE GAME");
+        $(this).data("action", "create");
+      } else {
+        alert(response.Reason)
+      }
     },
     error: function (xhr, status, error) {
       console.error("Error generating code and creating game:", error);
