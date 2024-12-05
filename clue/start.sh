@@ -1,6 +1,6 @@
 #!/bin/bash
 # Start Redis
-redis-server --save "" &
+#redis-server --save "" &
 
 # Activate virtual environment
 source /app/Clue/clue/venv/bin/activate
