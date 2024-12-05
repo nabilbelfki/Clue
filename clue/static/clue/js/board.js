@@ -906,15 +906,18 @@ const board = {
     },
     study: {
       UP: "58",
+      SECRET: "kitchen"
     },
     lounge: {
       UP: "6",
+      SECRET: "conservatory"
     },
     library: {
       LEFT: "74",
     },
     kitchen: {
       DOWN: "140",
+      SECRET: "study"
     },
     "dining-room": {
       DOWN: "4",
@@ -927,6 +930,7 @@ const board = {
     },
     conservatory: {
       DOWN: "109",
+      SECRET: "lounge"
     },
     "billiard-room": {
       LEFT: "97",

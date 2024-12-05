@@ -1,2 +1,3 @@
 clue/staticfiles
 clue/venv
+clue/clue/config.py

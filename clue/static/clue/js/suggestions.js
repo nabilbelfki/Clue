@@ -94,6 +94,21 @@ $(document).ready(function(event) {
             $("#suggest").css("display", "flex");
         }
     });
+
+    $("#secret-passage").click(function(event) {
+        if (chosenPlayer == rotation[turn] && secretPassages.hasOwnProperty(players[rotation[turn]])) {
+            if (moves == 0) {
+                if ($("#dice-text").text() == "END TURN") {
+                    alert("You don't have enough moves.");
+                } else {
+                    alert("Must roll first");
+                }
+            } else {
+                $("#pop-sound")[0].play();
+                movePlayer("SECRET");
+            }
+        }
+    });
 });
 
 function changeSuggestionPage(page) {
