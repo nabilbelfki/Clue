@@ -108,12 +108,12 @@ $(document).ready(function () {
     if (music) {
       $("#play").hide();
       $("#mute").show();
-      $("#" + playing + "-sound")[0].pause();
+      if (playing != "") $("#" + playing + "-sound")[0].pause();
       music = false;
     } else {
       $("#play").show();
       $("#mute").hide();
-      $("#" + playing + "-sound")[0].play();
+      if (playing != "") $("#" + playing + "-sound")[0].play();
       music = true;
     }
   })
