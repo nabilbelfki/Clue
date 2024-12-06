@@ -1,11 +1,11 @@
 $(document).ready(function() {
     $("#collapse").click(function() {
-        $("#pop-sound")[0].play();
+        if (music) $("#pop-sound")[0].play();
         collapseDetectiveNotes();
     });
 
     $("#expand").click(function() {
-        $("#pop-sound")[0].play();
+        if (music) $("#pop-sound")[0].play();
         expandDetectiveNotes();
     });
 })

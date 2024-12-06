@@ -18,11 +18,11 @@ $(document).ready(function() {
     $diceRoll.click(function(event) {
         if (chosenPlayer == rotation[turn]) { 
             if ($("#dice-text").text() == "END TURN") {
-                $("#pop-sound")[0].play();
+                if (music) $("#pop-sound")[0].play();
                 nextTurn();
             } else {
                 if ($(this).hasClass("rollable")) {
-                    $("#pop-sound")[0].play();
+                    if (music) $("#pop-sound")[0].play();
                     $("#dice-roll").css("cursor", "default");
                     $(this).removeClass("rollable");
                     getDiceRoll()
@@ -46,7 +46,7 @@ function rollDice(playerID, Dice) {
         $("#dice-2 ." + secondDie + "-die").show(); 
     } 
    // Call roll function multiple times within 3-5 seconds
-   $("#dice-roll-sound")[0].play();
+   if (music) $("#dice-roll-sound")[0].play();
    const interval = setInterval(roll, 100); // Roll every 100 milliseconds 
    // Stop rolling after 3-5 seconds 
    setTimeout(function() { 
