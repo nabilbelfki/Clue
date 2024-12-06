@@ -57,7 +57,7 @@ $(document).ready(function () {
   $("#action-button").click(function (event) {
     const action = $(this).attr("data-action");
     if (action == "create") {
-      $("#arcade")[0].play();
+      if (music) $("#arcade")[0].play();
       createGame();
       $(this).attr("data-action", "start");
     } else if (action == "start") {
@@ -69,7 +69,7 @@ $(document).ready(function () {
       if (code.length < 4) {
         $("#code-validator").css("display", "flex");
       } else {
-        $("#arcade")[0].play();
+        if (music) $("#arcade")[0].play();
         $(this).attr("data-action", "start");
         joinGame(code);
       }
@@ -90,7 +90,8 @@ function generateRandomCode() {
 function timer() {
   var audio = $("#clock-sound")[0];
   $("#timer").show();
-  audio.play();
+  playing = "clock";
+  if (music) audio.play();
   $("#timer").animate(
     {
       width: "0%",
@@ -123,6 +124,7 @@ function timer() {
         }
         $("#choose-player-button").hide();
         audio.pause();
+        playing = "";
         // Reset the audio to the beginning
         audio.currentTime = 0;
       }

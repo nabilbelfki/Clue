@@ -1,7 +1,7 @@
 $(document).ready(function(event) {
     $("#choose-player-button").click(function(event) {
         if (myTurnToSelectPlayer) {
-            $("#pop-sound")[0].play();
+            if (music) $("#pop-sound")[0].play();
             $("#choose-player-button").hide();
             let playerChosen;
             let isPlayerChosen = false;
@@ -88,6 +88,9 @@ function choosePlayer(player) {
         success: function(response) {
             console.log(response);
             if (response.Status) {
+                var audio = $("#clock-sound")[0];
+                audio.pause();
+                $("#timer").hide();
                 chosenPlayer = player;
                 showMyCards();
                 showSelectedPlayer(myPlayerID, myPlayerName, player)

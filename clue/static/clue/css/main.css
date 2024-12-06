@@ -721,3 +721,29 @@ body {
     width: 200px;
     border-radius: 20px;
 }
+
+#volume {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 100000;
+    background-color: #979797;
+    height: 50px;
+    width: 50px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#volume g {
+    fill: #E7E4E4;
+    height: 95%;
+    width: 95%;
+}
+
+#mute {
+    display: none;
+}

@@ -44,7 +44,7 @@ $(document).ready(function(event) {
     });
 
     $("#choose").click(function(event){
-        $("#pop-sound")[0].play();
+        if (music) $("#pop-sound")[0].play();
         if ($("#suggest").attr("data-page") == "confirmation") {
             if ($("#suggest").attr("data-type") == "assumption") {
                 makeAssumption();
@@ -62,14 +62,14 @@ $(document).ready(function(event) {
     })
 
     $("#cancel").click(function(event){
-        $("#pop-sound")[0].play();
+        if (music) $("#pop-sound")[0].play();
         collapseDetectiveNotes()
         $("#suggest").hide();
     });
 
     $("#suggestion").click(function(event){
         if (chosenPlayer == rotation[turn] && rooms.hasOwnProperty(players[rotation[turn]])) {
-            $("#pop-sound")[0].play();
+            if (music) $("#pop-sound")[0].play();
             $("#selections").css("display", "flex");
             changeSuggestionPage("suspects")
             $("#confirmation-title").hide();
@@ -104,7 +104,7 @@ $(document).ready(function(event) {
                     alert("Must roll first");
                 }
             } else {
-                $("#pop-sound")[0].play();
+                if (music) $("#pop-sound")[0].play();
                 movePlayer("SECRET");
             }
         }

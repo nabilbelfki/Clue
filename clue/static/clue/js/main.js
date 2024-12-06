@@ -71,6 +71,8 @@ let previous = 0;
 let chosenPlayer = "";
 
 let myTurnToSelectPlayer = false;
+let music = true;
+let playing = "";
 $(document).ready(function () {
   function getCookie(name) {
     let cookieValue = null;
@@ -101,6 +103,20 @@ $(document).ready(function () {
     },
   });
 
+  $("#spooky-sound")[0].volume = 0.5
+  $("#volume").click(function(event) {
+    if (music) {
+      $("#play").hide();
+      $("#mute").show();
+      $("#" + playing + "-sound")[0].pause();
+      music = false;
+    } else {
+      $("#play").show();
+      $("#mute").hide();
+      $("#" + playing + "-sound")[0].play();
+      music = true;
+    }
+  })
   
   // $("#gameplay").on("load", function () {
   //   $(".room").each(function (event) {
@@ -165,7 +181,7 @@ function position(player, tile) {
   var $playerElement = $(player);
 
   var bbox = $pathElement[0].getBBox(); // Get the bounding box of the path
-  $("#move-sound")[0].play();
+  if (music) $("#move-sound")[0].play();
   var x = bbox.x;
   var y = bbox.y;
   
@@ -214,6 +230,7 @@ function changeTurn() {
   console.log("Chosen Player ", chosenPlayer);
   console.log("Turn ", rotation[turn]);
   if (chosenPlayer == rotation[turn]) {
+    $("#your-turn-sound")[0].play();
     myTurnToSelectPlayer = true;
     $("#dice-roll div, #dice-roll p").css("opacity", "1");
     $("#six-cube, #four-cube").css("opacity", "1");
@@ -221,6 +238,7 @@ function changeTurn() {
     $("#four-cube").css("opacity", "1");
     $("#dice-roll").css("cursor", "pointer");
   } else {
+    $("#other-turn-sound")[0].play();
     $("#dice-roll div, #dice-roll p").css("opacity", "0.6");
     $("#six-cube, #four-cube").css("opacity", "0.6");
     $("#dice-roll").css("cursor", "default");
@@ -270,7 +288,8 @@ function startPlaying() {
     "#boardgame, #suggestion, #avatar, #dice-roll, #secret-passage, #secret-passage, #detective-notes, #cards"
   ).css("display", "flex");
   initializePlayerPositions();
-  $("#spooky-sound")[0].play();
+  if (music) $("#spooky-sound")[0].play();
+  playing = "spooky";
 }
 
 function changeAvatar(slug) {
