@@ -427,7 +427,8 @@ def show_card(request):
             return JsonResponse({'error': 'Player ID not found in session'}, status=400)
         
         status, suggested_player = shown_card(game_id, player_id, card)
-
+        if status == "Not Suggested":
+            return JsonResponse({'Status': False, 'Reason': "That's not one of the suggested cards"})
         if status == "Not Turn":
             return JsonResponse({'Status': False, 'Reason': 'Not your turn'})
         if status == "No Show":

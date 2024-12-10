@@ -72,4 +72,4 @@ Feel free to reach out if you need further assistance!
 # Play the Game
 I have the game hosted on a server, if you want to access it and play it you can go to this website:
 
-`http://18.222.100.95/`
+`https://clue.nabilbelfki.com/`
