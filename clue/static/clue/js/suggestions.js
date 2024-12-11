@@ -215,6 +215,9 @@ function makeSuggestion() {
         },
         success: function(response) {
             console.log(response);
+            if (!response.Status) {
+                alert(response.Reason);
+            }
         },
         error: function(xhr, status, error) {
             console.error("Error generating code and creating game:", error);
