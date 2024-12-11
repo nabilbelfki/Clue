@@ -200,7 +200,7 @@ function setupLobby(code, currentPlayerID, players) {
   // Establish WebSocket connection
   const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
   const lobbySocket = new WebSocket(
-    `${protocol}//${window.location.hostname}:8001/ws/lobby/${code}/`
+    `${protocol}//${window.location.hostname}/ws/lobby/${code}/`
   );
 
   lobbySocket.onopen = function (e) {
