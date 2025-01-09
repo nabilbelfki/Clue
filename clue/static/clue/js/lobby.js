@@ -537,6 +537,7 @@ function lostGame(playerID) {
             }
         });
      });
+    }, 3000);
   }
 }
 
