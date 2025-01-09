@@ -324,6 +324,7 @@ function setupLobby(code, currentPlayerID, players) {
         $("#suspect").attr("data-text", suspect.Name.toUpperCase());
         $("#weapon").attr("data-text", weapon.Name.toUpperCase());
         $("#room").attr("data-text", room.Name.toUpperCase());
+        $("#show-card").hide();
         suggest("suggested");
         $("#suggested").css("display", "flex");
         $("#suggested").fadeIn();
