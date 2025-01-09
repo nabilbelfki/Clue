@@ -514,9 +514,9 @@ function lostGame(playerID) {
     setTimeout(function() {
       rotation = rotation.filter(item => item !== slug);
       $("#won-or-lost").fadeOut();
+      changeTurn();
     }, 3000);
   }
-  changeTurn();
 }
 
 function nextTurn() {
