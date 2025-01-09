@@ -162,7 +162,6 @@ function move(player, direction) {
       for (const playerName in players) {
         console.log(players[playerName]);
         if (id == players[playerName] && !rooms.hasOwnProperty(id)) {
-          console.log(playerBlocking);
           blocked = true;
           break;
         }

@@ -312,6 +312,15 @@ function setupLobby(code, currentPlayerID, players) {
             name = player["name"];
           }
         });
+        if (colors[slug] == "#FFFFFF") {
+          $("#suggested-title").css("color", "#474747");
+          $(".suggested-label").css("color", "#474747");
+          $("#show-card").css("background-color", "#474747");
+        } else {
+          $("#suggested-title").css("color", "#FFFFFF");
+          $(".suggested-label").css("color", colors[slug]);
+          $("#show-card").css("background-color", "#FFFFFF");
+        }
         $("#suggested-title").text(name + " SUGGESTED");
         $("#suggested").css("background-color", colors[slug]);
         $(".suggested-label").css("color", colors[slug]);
@@ -324,6 +333,7 @@ function setupLobby(code, currentPlayerID, players) {
         $("#suspect").attr("data-text", suspect.Name.toUpperCase());
         $("#weapon").attr("data-text", weapon.Name.toUpperCase());
         $("#room").attr("data-text", room.Name.toUpperCase());
+        $("#show-card").hide();
         suggest("suggested");
         $("#suggested").css("display", "flex");
         $("#suggested").fadeIn();
@@ -514,9 +524,19 @@ function lostGame(playerID) {
     setTimeout(function() {
       rotation = rotation.filter(item => item !== slug);
       $("#won-or-lost").fadeOut();
+      changeTurn();
+    }, 3000);
+  } else {
+    setTimeout(function() {
+      rotation = rotation.filter(item => item !== slug);
+      $("#won-or-lost").fadeOut();
+      playersOfLobby.forEach(function(player) {
+        if (player.character == rotation[0]) {
+          wonGame(player.id);
+        }
+      });
     }, 3000);
   }
-  changeTurn();
 }
 
 function nextTurn() {
