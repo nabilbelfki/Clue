@@ -517,6 +517,16 @@ function lostGame(playerID) {
       turn--;
       changeTurn();
     }, 3000);
+  } else {
+    setTimeout(function() {
+      rotation = rotation.filter(item => item !== slug);
+      $("#won-or-lost").fadeOut();
+      playersOfLobby.forEach(function(player) {
+        if (player.character == rotation[0]) {
+          wonGame(player.id);
+        }
+      });
+    }, 3000);
   }
 }
 
