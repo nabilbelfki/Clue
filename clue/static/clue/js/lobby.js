@@ -312,6 +312,15 @@ function setupLobby(code, currentPlayerID, players) {
             name = player["name"];
           }
         });
+        if (colors[slug] == "#FFFFFF") {
+          $("#suggested-title").css("color", "#474747");
+          $(".suggested-label").css("color", "#474747");
+          $("#show-card").css("background-color", "#474747");
+        } else {
+          $("#suggested-title").css("color", "#FFFFFF");
+          $(".suggested-label").css("color", colors[slug]);
+          $("#show-card").css("background-color", "#FFFFFF");
+        }
         $("#suggested-title").text(name + " SUGGESTED");
         $("#suggested").css("background-color", colors[slug]);
         $(".suggested-label").css("color", colors[slug]);
