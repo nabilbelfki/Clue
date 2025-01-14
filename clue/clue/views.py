@@ -2,7 +2,7 @@ import json
 import random
 import traceback
 from .board import board
-from .rooms import rooms
+#from .rooms import rooms
 from .suggestions import suggestions
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -88,6 +88,15 @@ def leave_lobby(request):
                 {'Players': json.loads(players)}
             )
         
+             # Send a disconnect message to the specific WebSocket consumer
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.send)(
+                channel_name,
+                {
+                    'type': 'disconnect',
+                }
+            )
+
             return JsonResponse({'Status': True})
         else:         
             return JsonResponse({'Status': False, 'Reason': "Can't leave game has already started."})
@@ -317,13 +326,12 @@ def move(request):
 
         if not player_id: 
             return JsonResponse({'error': 'Player ID not found in session'}, status=400)
-        
+
         turn_id = get_turn(game_id)
 
-        status, position =  get_position(game_id, player_id, turn_id)
-        
-        if status:
+        status, position = get_position(game_id, player_id, turn_id)
 
+        if status:
             if position.isdigit(): 
                 position = int(position)
 
@@ -332,8 +340,20 @@ def move(request):
 
                 moves -= 1
 
-                request.session['moves'] = moves
+                rooms = {
+                    "study": True,
+                    "lounge": True,
+                    "library": True,
+                    "kitchen": True,
+                    "dining-room": True,
+                    "assumption": True,
+                    "conservatory": True,
+                    "billiard-room": True,
+                    "ballroom": True,
+                    "hall": True
+                }
 
+                request.session['moves'] = moves
                 if moves == 0 and board[position][direction] not in rooms:
                     change_turn(game_id)
 
@@ -341,13 +361,13 @@ def move(request):
                 send_group_message(
                     f'lobby_{code}',  # Group name
                     'Move', # Action
-                    {'ID': player_id,'Position': board[position][direction], 'Moves': moves}
+                    {'ID': player_id, 'Position': board[position][direction], 'Moves': moves, 'Room': board[position][direction] not in rooms}
                 )
-            
+
                 return JsonResponse({'Status': True})
         else:         
             return JsonResponse({'Status': False, 'Reason': 'Not Your Turn'})
-        
+
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 def suggest(request):
@@ -397,18 +417,36 @@ def assumption(request):
         if not player_id: 
             return JsonResponse({'error': 'Player ID not found in session'}, status=400)
         
-        result = assume(game_id, player_id, suspect, weapon, room)
+        result, players_left = assume(game_id, player_id, suspect, weapon, room)
 
         if result == "Not Turn":
             return JsonResponse({'Status': False, 'Reason': 'Not Your Turn'})
 
         change_turn(game_id)
 
+        response =  {'ID': player_id, 'Suspect': suggestions[suspect], 'Weapon': suggestions[weapon], 'Room': suggestions[room], 'Correct': result == "True", "PlayersLeft": players_left}
+
+        if result == "True":
+            game_statistics = get_statistics(game_id)
+            players_cards = get_all_cards(game_id)
+            response["Statistics"] = game_statistics
+            response["Cards"] = players_cards
+
+        if players_left == 1:
+            game_statistics = get_statistics(game_id)
+            players_cards = get_all_cards(game_id)
+            response["Statistics"] = game_statistics
+            response["Cards"] = players_cards
+            winning_suspect, winning_weapon, winning_room = get_murder(game_id)
+            response["WinningSuspect"] = winning_suspect
+            response["WinningWeapon"] = winning_weapon
+            response["WinningRoom"] = winning_room
+        
         # Send the message to the group using the helper function
         send_group_message(
             f'lobby_{code}',  # Group name
             'Assumption', # Action
-            {'ID': player_id, 'Suspect': suggestions[suspect], 'Weapon': suggestions[weapon], 'Room': suggestions[room], 'Correct': result == "True"}
+            response
         )
         
         return JsonResponse({'Status': True, 'Correct': result})

@@ -229,10 +229,10 @@ function changeTurn() {
   console.log("Chosen Player ", chosenPlayer);
   console.log("Turn ", rotation[turn]);
   if (chosenPlayer == rotation[turn]) {
+    console.log("Its my turn")
     $("#your-turn-sound")[0].play();
     myTurnToSelectPlayer = true;
     $("#dice-roll div, #dice-roll p").css("opacity", "1");
-    $("#six-cube, #four-cube").css("opacity", "1");
     $("#six-cube").css("opacity", "1");
     $("#four-cube").css("opacity", "1");
     $("#dice-roll").css("cursor", "pointer");

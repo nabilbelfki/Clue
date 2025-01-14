@@ -3,10 +3,10 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    height: 60vh;
+    height: 100vh;
     background-color: white;
-    width: 90%;
-    border-radius: 25px;
+    width: 100vw;
+    /* border-radius: 25px; */
     gap: 60px;
     padding: 10px;
     position: relative;

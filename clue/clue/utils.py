@@ -145,7 +145,8 @@ def assume(game_id, player_id, suspect, weapon, room):
             raise ValueError("Suggestion didn't work")
         
         status = result[0]
-    return status
+        players_left = int(result[1])
+    return status, players_left
 
 def shown_card(game_id, player_id, card):
     with connection.cursor() as cursor:
@@ -158,6 +159,39 @@ def shown_card(game_id, player_id, card):
         suggested_player = result[1]
     return status, suggested_player
 
+def get_statistics(game_id):
+    with connection.cursor() as cursor:
+        cursor.callproc('getGameStatistics', [game_id])
+        result = cursor.fetchall()  # Fetch all rows returned by the procedure
+        
+        if not result:
+            raise ValueError("No players found for this game.")
+        
+    return result
+
+def get_all_cards(game_id):
+    with connection.cursor() as cursor:
+        cursor.callproc('getAllPlayersCards', [game_id])
+        result = cursor.fetchall()  # Fetch all rows returned by the procedure
+        
+        if not result:
+            raise ValueError("No players found for this game.")
+        
+    return result
+
+def get_murder(game_id):
+    with connection.cursor() as cursor:
+        cursor.callproc('getWinningCards', [game_id])
+        result = cursor.fetchone()  # Fetch all rows returned by the procedure
+        
+        if not result:
+            raise ValueError("No game found.")
+        
+        suspect = result[0]
+        weapon = result[1]
+        room = result[2]
+    return suspect, weapon, room
+
 colors = {
     "Chef White": "#FFFFFF"
     , "Mayor Green": "#618547"
@@ -169,7 +203,7 @@ colors = {
 
 murder_weapons = ["candlestick", "knife", "lead-pipe", "revolver", "rope", "wrench"]
 murderers = ["mrs-white", "mr-green", "mrs-peacock", "professor-plum", "miss-scarlet", "colonel-mustard"]
-rooms = ["kitchen", "ballroom", "conservartory", "billiard-room", "library", "study", "hall", "lounge", "dining-room"]
+rooms = ["kitchen", "ballroom", "conservatory", "billiard-room", "library", "study", "hall", "lounge", "dining-room"]
 
 def generate_clue():
     weapon = random.choice(murder_weapons)

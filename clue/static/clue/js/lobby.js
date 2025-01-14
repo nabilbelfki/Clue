@@ -1,6 +1,8 @@
 var playersOfLobby = [];
 var myPlayerID;
 var myPlayerName;
+var lobbySocket;
+let winningScreenEnded = false;
 $(document).ready(function () {
   $("input").on("input", function () {
     this.value = this.value.toUpperCase();
@@ -199,9 +201,12 @@ function setupLobby(code, currentPlayerID, players) {
   console.log(code);
   // Establish WebSocket connection
   const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-  const lobbySocket = new WebSocket(
-    `${protocol}//${window.location.hostname}:8001/ws/lobby/${code}/`
-  );
+  const hostname = window.location.hostname;
+  if (hostname === "localhost") {
+    lobbySocket = new WebSocket(`${protocol}//${hostname}:8001/ws/lobby/${code}/`);
+  } else {
+    lobbySocket = new WebSocket(`${protocol}//${hostname}/ws/lobby/${code}/`);
+  }
 
   lobbySocket.onopen = function (e) {
     console.log("WebSocket connection opened:", e);
@@ -341,11 +346,14 @@ function setupLobby(code, currentPlayerID, players) {
         setTimeout(function() {
           $("#suggested").fadeOut();
           if (body.Correct) {
-              wonGame(body.ID);
+              wonGame(body.ID, {"Suspect": suspect.Slug, "Weapon": weapon.Slug, "Room": room.Slug}, body.Cards, body.Statistics);
           } else {
-              lostGame(body.ID);
+              let winningSuspect = body.hasOwnProperty("WinningSuspect") ? body.WinningSuspect : "";
+              let winningWeapon = body.hasOwnProperty("WinningWeapon") ? body.WinningWeapon : "";
+              let winningRoom = body.hasOwnProperty("WinningRoom") ? body.WinningRoom : "";
+              lostGame(body.ID, {"Suspect": winningSuspect, "Weapon": winningWeapon, "Room": winningRoom}, body.Cards, body.Statistics);
           }
-        }, 3000); // 3000 milliseconds = 3 seconds
+        }, 3000);
       }
 
       if (action == "CardShown") {
@@ -457,7 +465,7 @@ function getCards() {
   });
 }
 
-function wonGame(playerID) {
+function wonGame(playerID, winningCards, playersCards, statistics) {
   let slug;
   let playerName;
   playersOfLobby.forEach(function(player) {
@@ -473,10 +481,13 @@ function wonGame(playerID) {
     resultText = "YOU WON"
   }
 
-  $("#won-or-lost-text").text("THE WINNER IS").css("color", "#474747");
+  $("#won-or-lost-text").text(resultText).css("color", "#474747");
   $("#won-or-lost").css({
     "background-color": "#FF4B4B",
-    "animation": "rainbow 20s infinite"
+    "animation": "rainbow 20s infinite",
+    "width": "100vw",
+    "height": "100vh",
+    "border-radius": "0px"
   });
 
   $(".result-picture").each(function(event) {
@@ -488,10 +499,11 @@ function wonGame(playerID) {
   });
   $("#won-or-lost-name").text(playerName);
   $("#won-or-lost").css("display", "flex");
-  $("#won-or-lost").fadeIn();
+
+  cycleWinningScreen(winningCards, playersCards, statistics, 10000);
 }
 
-function lostGame(playerID) {
+function lostGame(playerID, winningCards, playersCards, statistics) {
   let slug;
   let playerName;
   playersOfLobby.forEach(function(player) {
@@ -518,22 +530,29 @@ function lostGame(playerID) {
     }
   });
   $("#won-or-lost-name").text(playerName);
-  $("#won-or-lost").css("display", "flex");
+  $("#won-or-lost").css({
+    "display": "flex",
+    "width": "700px",
+    "height": "550px",
+    "border-radius": "25px"
+  });
   $("#won-or-lost").fadeIn();
   if (rotation.length > 2) {
     setTimeout(function() {
       rotation = rotation.filter(item => item !== slug);
       $("#won-or-lost").fadeOut();
+      turn--;
       changeTurn();
     }, 3000);
   } else {
     setTimeout(function() {
       rotation = rotation.filter(item => item !== slug);
-      $("#won-or-lost").fadeOut();
-      playersOfLobby.forEach(function(player) {
-        if (player.character == rotation[0]) {
-          wonGame(player.id);
-        }
+      $("#won-or-lost").fadeOut(function() {
+        playersOfLobby.forEach(function(player) {
+            if (player.character == rotation[0]) {
+                wonGame(player.id, winningCards, playersCards, statistics);
+            }
+        });
       });
     }, 3000);
   }
@@ -565,6 +584,8 @@ function leaveGame() {
     success: function (response) {
       console.log(response);
       if (response.Status) {
+        closeSocket();
+        $("#action-button").removeClass("is-not-admin");
         $("#code-input input").val("");
         $("#lobby").hide();
         $("#code-input input").attr("readonly", false);
@@ -578,4 +599,89 @@ function leaveGame() {
       console.error("Error generating code and creating game:", error);
     },
   });
+}
+
+function closeSocket() {
+  if (lobbySocket && lobbySocket.readyState === WebSocket.OPEN) {
+    lobbySocket.close();
+    console.log("WebSocket connection closed");
+  } else {
+    console.log("No open WebSocket connection to close");
+  }
+}
+
+function cycleWinningScreen(winningCards, playersCards, statistics, time) {
+  $("#game-statistics").hide();
+  $("#won-or-lost-logo").show();
+  $("#won-or-lost-result").fadeIn();
+  setTimeout(function() {
+    $("#" + winningCards["Suspect"] + "-winning-card").show();
+    $("#" + winningCards["Weapon"] + "-winning-card").show();
+    $("#" + winningCards["Room"] + "-winning-card").show();
+    $("#won-or-lost-result").fadeOut(function() {
+      $("#winning-cards").fadeIn();
+      setTimeout(function() {
+        $("#winning-cards").fadeOut(function() {
+          $("#players-cards").css("display", "flex").hide().fadeIn();
+          let delay = 0;
+          console.log(playersCards);
+          $("#won-or-lost-logo").hide();
+          playersCards.forEach(function(playerCards) {
+            console.log(playerCards);
+            playersOfLobby.forEach(function(player) {
+              if (player.id == playerCards[0]) {
+                setTimeout(function() {
+                  console.log("Player: " + player.character + " has card " + playerCards[1]);
+                  $("#players-cards-avatar img").hide();
+                  $("#" + player.character + "-players-cards-avatar").show();
+                  $("#players-cards-title").text(player.name + "'S CARDS");
+                  $("#players-cards-display img").hide();
+                  JSON.parse(playerCards[1]).forEach(function(card) {
+                    $("#" + card.Slug + "-player-card").show();
+                  });
+                }, delay);
+                delay += time;
+              }
+            });
+          });
+          statistics.forEach(function(statistic) {
+            setTimeout(function() {
+              $("#won-or-lost-logo").show();
+              $("#players-cards").fadeOut(function() {
+                $("#game-statistics-image img").hide();
+                if (statistic[0] == "MostSuggestions") {
+                  $("#game-statistics-title").text("MOST SUGGESTIONS");
+                  $("#most-suggestions").show();
+                }
+                if (statistic[0] == "MostMoves") {
+                  $("#game-statistics-title").text("MOST MOVES");
+                  $("#most-moves").show();
+                }
+                if (statistic[0] == "MostShows") {
+                  $("#game-statistics-title").text("MOST CARDS SHOWN");
+                  $("#most-cards-shown").show();
+                }
+    
+                playersOfLobby.forEach(function(player) {
+                  if (player.id == statistic[1]) {
+                    $("#game-statistics-player").text(player.name);
+                  }
+                });
+
+                if (!$("#game-statistics").is(":visible")) {
+                  $("#game-statistics").css("display", "flex").hide().fadeIn();
+                }
+                
+              });
+            }, delay);
+            delay += time;
+          });
+
+          if (!winningScreenEnded) setTimeout(function() {
+            cycleWinningScreen(winningCards, playersCards, statistics, time);
+          }, delay);
+        });
+      }, time);
+    });
+  }, time);
 }

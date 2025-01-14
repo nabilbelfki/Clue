@@ -1,4 +1,9 @@
 clue/staticfiles
 clue/venv
+<<<<<<< HEAD
+clue/clue/__pycache__
+clue/clue/database.py
+=======
 clue/clue/database.py
 clue/clue/__pycache__/
+>>>>>>> bffab4ea1b841b3afd940a78e63cdb4020df1758
