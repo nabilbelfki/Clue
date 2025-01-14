@@ -352,7 +352,7 @@ def move(request):
                 send_group_message(
                     f'lobby_{code}',  # Group name
                     'Move', # Action
-                    {'ID': player_id, 'Position': board[position][direction], 'Moves': moves, 'Room': board[position][direction] not in rooms}
+                    {'ID': player_id, 'Position': board[position][direction], 'Moves': moves}
                 )
 
                 return JsonResponse({'Status': True})

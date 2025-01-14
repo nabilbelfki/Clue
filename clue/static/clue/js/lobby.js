@@ -1,6 +1,7 @@
 var playersOfLobby = [];
 var myPlayerID;
 var myPlayerName;
+var lobbySocket;
 $(document).ready(function () {
   $("input").on("input", function () {
     this.value = this.value.toUpperCase();
@@ -567,7 +568,9 @@ function leaveGame() {
     success: function (response) {
       console.log(response);
       if (response.Status) {
-        $("#code-input input").val("");
+	closeSocket();
+        $("#action-button").removeClass("is-not-admin");
+	$("#code-input input").val("");
         $("#lobby").hide();
         $("#code-input input").attr("readonly", false);
         $("#action-button-inner").text("CREATE GAME");
@@ -581,3 +584,22 @@ function leaveGame() {
     },
   });
 }
+
+function closeSocket() {
+  if (lobbySocket) {
+    lobbySocket.onopen = null;
+    lobbySocket.onmessage = null;
+    lobbySocket.onclose = null;
+    lobbySocket.onerror = null;
+
+    if (lobbySocket.readyState === WebSocket.OPEN) {
+      lobbySocket.close();
+      console.log("WebSocket connection closed");
+    } else {
+      console.log("No open WebSocket connection to close");
+    }
+
+    lobbySocket = null;
+  }
+}
+
