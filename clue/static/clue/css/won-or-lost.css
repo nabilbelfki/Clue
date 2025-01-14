@@ -18,7 +18,7 @@
     /* Add a background color for better visibility */
     padding: 20px;
     /* Add some padding for better spacing */
-    z-index: 1000;
+    z-index: 10001;
     /* Ensure it appears above other elements */
     width: 700px;
     height: 550px;
@@ -51,5 +51,71 @@
 #won-or-lost-name {
     font-size: 32px;
     font-weight: 600;
+    color: #FFFFFF;
+}
+
+#winning-cards {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+#winning-cards img {
+    height: 200px;
+    width: auto;
+    display: none;
+}
+
+#players-cards {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#players-cards-avatar img {
+    height: 200px;
+    width: auto;
+    display: none;
+    border-radius: 25px;
+}
+
+#players-cards-title {
+    font-size: 32px;
+    font-weight: 600;
+    color: #FFFFFF;
+}
+
+#players-cards-display {
+    display: flex;
+}
+
+#players-cards-display img {
+    height: 200px;
+    width: auto;
+    display: none;
+}
+
+#game-statistics {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px
+}
+
+#game-statistics-title {
+    font-weight: 600;
+}
+
+#game-statistics-image img {
+    height: 150px;
+    display: none;
+}
+
+#game-statistics-player {
+    font-size: 48px;
     color: #FFFFFF;
 }

@@ -124,6 +124,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_TRUSTED_ORIGINS = [
     'https://clue.nabilbelfki.com',
+    "http://localhost:8000",  # Add your local development URL if needed
 ]
 
 CORS_ALLOWED_ORIGINS = [
