@@ -282,9 +282,20 @@ function startPlaying() {
   }
 
   $("#player-selection").hide();
-  // $("#boardgame").css("display", "flex");
+
+  // Get the current local time
+  var currentTime = new Date();
+  var hours = currentTime.getHours().toString().padStart(2, '0');
+  var minutes = currentTime.getMinutes().toString().padStart(2, '0');
+
+  // Create the message
+  var message = "GAME STARTED AT " + hours + ":" + minutes;
+
+  // Append the message to the #messages div
+  $("#messages").append("<div class='simple'>" + message + "</div>");
+
   $(
-    "#boardgame, #suggestion, #avatar, #dice-roll, #secret-passage, #secret-passage, #detective-notes, #cards"
+    "#boardgame, #suggestion, #avatar, #dice-roll, #secret-passage, #secret-passage, #detective-notes, #cards, #chat"
   ).css("display", "flex");
   initializePlayerPositions();
   if (music) $("#spooky-sound")[0].play();

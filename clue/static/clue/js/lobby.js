@@ -270,6 +270,9 @@ function setupLobby(code, currentPlayerID, players) {
             name = player["name"];
           }
         });
+
+        appendSuggestionNotification(name);
+        
         if (colors[slug] == "#FFFFFF") {
           $("#suggested-title").css("color", "#474747");
           $(".suggested-label").css("color", "#474747");
@@ -366,6 +369,11 @@ function setupLobby(code, currentPlayerID, players) {
       if (action == "TurnEnded") {
         changeTurn();
       }
+
+      if (action == "Message") {
+        appendMessage(body.Player, body.Message);
+      }
+
     } catch (err) {
       console.error("Error processing WebSocket message:", err);
     }

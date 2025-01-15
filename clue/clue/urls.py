@@ -19,4 +19,5 @@ urlpatterns = [
     path('move/', views.move, name='move'),
     path('suggest/', views.suggest, name='suggest'),
     path('assume/', views.assumption, name='assumption'),
+    path('message/', views.player_message, name='player_message')
 ]

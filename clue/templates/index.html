@@ -17,6 +17,7 @@
     <script src="{% static 'clue/js/detective-notes.js' %}"></script>
     <script src="{% static 'clue/js/suggestions.js' %}"></script>
     <script src="{% static 'clue/js/player-selection.js' %}"></script>
+    <script src="{% static 'clue/js/chat.js' %}"></script>
     <!-- Link to the SVG favicon -->
     <link rel="icon" href="{% static 'clue/images/favicon.svg' %}" type="image/svg+xml">
     <!-- Fallback to the ICO favicon -->
@@ -69,6 +70,7 @@
     <audio id="pop-sound" src="{% static 'clue/sounds/pop.mp3' %}" type="audio/mpeg"></audio>
     <audio id="your-turn-sound" src="{% static 'clue/sounds/your-turn.mp3' %}" type="audio/mpeg"></audio>
     <audio id="other-turn-sound" src="{% static 'clue/sounds/other-turn.mp3' %}" type="audio/mpeg"></audio>
+    <audio id="message-sound" src="{% static 'clue/sounds/message.mp3' %}" type="audio/mpeg"></audio>
     <div id="boardgame">
         <img id="board" src="{% static 'clue/images/Board.png' %}" alt="Board">
         <svg id="gameplay" width="1978" height="1986" viewBox="0 0 1978 1986" fill="none"
@@ -1255,6 +1257,25 @@
                     stroke="black" stroke-width="2" />
             </svg>
         </div>
+    </div>
+    <div id="chat">
+        <div id="messages">
+
+        </div>
+        <textarea id="type" placeholder="Type in chat..."></textarea>
+        <div id="expand-or-collapse-chat">
+            <svg id="collapse-chat" width="29" height="57" viewBox="0 0 29 57" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M27.5 1.32196L2.36236 27.0908C1.60455 27.8677 1.60455 29.1071 2.36236 29.884L27.5 55.6528"
+                    stroke="white" stroke-width="3" />
+            </svg>
+            <svg id="expand-chat" width="30" height="63" viewBox="0 0 30 63" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 62.0244L27.361 32.8236C28.0143 32.0714 28.0143 30.953 27.361 30.2007L2 1" stroke="white"
+                    stroke-width="3" />
+            </svg>
+        </div>
+        <div id="new-notification-indicator"></div>
     </div>
     <div id="dice-roll" class="unselectable rollable">
         <div id="dice">

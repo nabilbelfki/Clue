@@ -507,6 +507,28 @@ def next_turn(request):
         
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
+def player_message(request):
+    if request.method == 'POST': 
+        code = request.session.get('game_code')
+        player_id = request.session.get('player_id')
+        message = request.POST.get('message')
+
+        if not player_id: 
+            return JsonResponse({'error': 'Player ID not found in session'}, status=400)
+        
+        add_message(player_id, message)
+
+        # Send the message to the group using the helper function
+        send_group_message(
+            f'lobby_{code}',  # Group name
+            'Message', # Action
+            {'Player': player_id, 'Message': message}
+        )
+        
+        return JsonResponse({'Status': True})
+        
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
 # Helper function to send a message to a WebSocket group
 def send_group_message(group_name, action, body):
     try:

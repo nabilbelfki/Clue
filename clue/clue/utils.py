@@ -192,6 +192,11 @@ def get_murder(game_id):
         room = result[2]
     return suspect, weapon, room
 
+def add_message(player_id, message):
+    with connection.cursor() as cursor:
+        cursor.callproc('addMessage', [player_id, message])
+    return
+
 colors = {
     "Chef White": "#FFFFFF"
     , "Mayor Green": "#618547"
