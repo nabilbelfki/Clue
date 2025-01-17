@@ -73,6 +73,7 @@ let chosenPlayer = "";
 let myTurnToSelectPlayer = false;
 let music = true;
 let playing = "";
+let animation;
 $(document).ready(function () {
   function getCookie(name) {
     let cookieValue = null;
@@ -213,6 +214,7 @@ function highlightPossibleMoves(id) {
 }
 
 function changeTurn() {
+  stopClock();
   $("#moves").hide();
   $("#dice-text").text("MOVES");
   $("#dice-text").text("ROLL DICE");
@@ -236,6 +238,7 @@ function changeTurn() {
     $("#six-cube").css("opacity", "1");
     $("#four-cube").css("opacity", "1");
     $("#dice-roll").css("cursor", "pointer");
+    startClock();
   } else {
     $("#other-turn-sound")[0].play();
     $("#dice-roll div, #dice-roll p").css("opacity", "0.6");
@@ -276,6 +279,7 @@ function startPlaying() {
   if (chosenPlayer == rotation[turn]) {
     $("#dice-roll div, #dice-roll p").css("opacity", "1");
     $("#dice-roll").css("cursor", "pointer");
+    startClock();
   } else {
     $("#dice-roll div, #dice-roll p").css("opacity", "0.6");
     $("#dice-roll").css("cursor", "default");
@@ -365,6 +369,7 @@ function playerMovedTo(playerID, id) {
   $("#moves").text(moves);
   if (moves == 0) {
     if (!rooms.hasOwnProperty(players[rotation[turn]])) {
+      
       changeTurn();
     } else {
       $("#moves").hide();
@@ -393,4 +398,21 @@ function toggleOpacity(selector, opacity, cursor) {
     opacity: opacity,
     cursor: cursor,
   });
+}
+
+function startClock() {
+  $('#time').css("width", "100%");
+  $("#clock").show();
+  animation = $('#time').animate({
+    width: "0%",
+  }, 120000, function () {
+    $("#clock").hide();
+  });
+}
+
+function stopClock() {
+  if (animation) {
+    animation.stop();
+    $("#clock").hide();
+  }
 }

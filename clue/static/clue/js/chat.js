@@ -97,6 +97,6 @@ function appendSuggestionNotification(playerName) {
     var minutes = currentTime.getMinutes().toString().padStart(2, '0');
 
     let timestamp = `${hours}:${minutes}`;
-    $("#messages").append("<div class='simple'>" + playerName + " SUGGESTED AT" + timestamp + "</div>");
+    $("#messages").append("<div class='simple'>" + playerName + " SUGGESTED AT " + timestamp + "</div>");
     if ($("#expand-chat").is(":visible")) $("#new-notification-indicator").show();
 }
