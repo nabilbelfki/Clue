@@ -1,6 +1,9 @@
 import json
 import random
 import traceback
+import threading
+import time
+import uuid
 from .board import board
 #from .rooms import rooms
 from .suggestions import suggestions
@@ -20,7 +23,14 @@ def create_lobby(request):
         request.session['suspect'] = murderer
         request.session['weapon'] = weapon
         request.session['room'] = room
-        player_id, player_name, players = create_player(game_id, "True")
+
+        # Get the IP address
+        ip_address = get_client_ip(request)
+
+        # Get the User Agent
+        user_agent = request.META.get('HTTP_USER_AGENT')
+
+        player_id, player_name, players = create_player(game_id, ip_address, user_agent, "True")
 
         request.session['player_id'] = player_id
         request.session['player_name'] = player_name
@@ -45,7 +55,14 @@ def join_lobby(request):
         game_id = get_game(code)
         request.session['game_id'] = game_id
         request.session['game_code'] = code
-        player_id, player_name, players = create_player(game_id, "False")
+
+        # Get the IP address
+        ip_address = get_client_ip(request)
+
+        # Get the User Agent
+        user_agent = request.META.get('HTTP_USER_AGENT')
+
+        player_id, player_name, players = create_player(game_id, ip_address, user_agent, "False")
 
         if player_id is None:
             return JsonResponse({'Status': False, 'Message': player_name})
@@ -89,12 +106,43 @@ def leave_lobby(request):
             )
         
              # Send a disconnect message to the specific WebSocket consumer
-            channel_layer = get_channel_layer()
-            async_to_sync(channel_layer.send)(
-                channel_name,
-                {
-                    'type': 'disconnect',
-                }
+            # channel_layer = get_channel_layer()
+            # async_to_sync(channel_layer.send)(
+            #     channel_name,
+            #     {
+            #         'type': 'disconnect',
+            #     }
+            # )
+
+            return JsonResponse({'Status': True})
+        else:         
+            return JsonResponse({'Status': False, 'Reason': "Can't leave game has already started."})
+        
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+def kick_player(request):
+    if request.method == 'POST': 
+        game_id = request.session.get('game_id')
+        code = request.session.get('game_code')
+        player_id = request.POST.get('player_id')
+
+        if not player_id: 
+            return JsonResponse({'error': 'Player ID not found in session'}, status=400)
+
+        admin = is_admin(request.session.get('player_id'))
+        
+        if not admin:
+            return JsonResponse({'Status': False, 'Reason': "You're not the admin."})
+
+        status, players = kick(game_id, player_id)
+
+        if status:
+
+            # Send the message to the group using the helper function
+            send_group_message(
+                f'lobby_{code}',  # Group name
+                'PlayerKicked', # Action
+                {'PlayerID': player_id, 'Players': json.loads(players)}
             )
 
             return JsonResponse({'Status': True})
@@ -102,6 +150,42 @@ def leave_lobby(request):
             return JsonResponse({'Status': False, 'Reason': "Can't leave game has already started."})
         
     return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+def ban_player(request):
+    if request.method == 'POST': 
+        game_id = request.session.get('game_id')
+        code = request.session.get('game_code')
+        player_id = request.POST.get('player_id')
+
+        if not player_id: 
+            return JsonResponse({'error': 'Player ID not found in session'}, status=400)
+        
+        admin = is_admin(request.session.get('player_id'))
+        
+        if not admin:
+            return JsonResponse({'Status': False, 'Reason': "You're not the admin."})
+
+        status, players = ban(game_id, player_id)
+
+        if status:
+
+            # Send the message to the group using the helper function
+            send_group_message(
+                f'lobby_{code}',  # Group name
+                'PlayerBanned', # Action
+                {'PlayerID': player_id, 'Players': json.loads(players)}
+            )
+
+            return JsonResponse({'Status': True})
+        else:         
+            return JsonResponse({'Status': False, 'Reason': "Can't leave game has already started."})
+        
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+def flush_session(request):
+    if request.method == 'POST': 
+        # Clear all session variables
+            request.session.flush()
 
 def home(request):
     return render(request, 'index.html')
@@ -265,7 +349,7 @@ def choose_player(request):
             return JsonResponse({'error': 'Player ID not found in session'}, status=400)
         
         status, next_player = select_player(player_id, game_id, character)
-
+        
         if status:
 
             # Send the message to the group using the helper function
@@ -274,6 +358,10 @@ def choose_player(request):
                 'PlayerChosen',     # Action
                 {'ID': player_id, 'Name': player_name, 'Slug': character, 'Next': next_player}
             )
+
+            if next_player is None:
+                current_turn_id = get_turn(game_id)
+                threading.Thread(target=check_turn_and_send_message, args=(game_id, current_turn_id, code)).start()
         else:         
             return JsonResponse({'Status': False})
         
@@ -355,7 +443,7 @@ def move(request):
 
                 request.session['moves'] = moves
                 if moves == 0 and board[position][direction] not in rooms:
-                    change_turn(game_id)
+                    current_turn_id, next_player = change_turn(game_id)
 
                 # Send the message to the group using the helper function
                 send_group_message(
@@ -364,6 +452,9 @@ def move(request):
                     {'ID': player_id, 'Position': board[position][direction], 'Moves': moves}
                 )
 
+                if moves == 0 and board[position][direction] not in rooms:
+                    threading.Thread(target=check_turn_and_send_message, args=(game_id, current_turn_id, code)).start()
+                
                 return JsonResponse({'Status': True})
         else:         
             return JsonResponse({'Status': False, 'Reason': 'Not Your Turn'})
@@ -388,15 +479,18 @@ def suggest(request):
         status, player_to_show_card = make_suggestion(game_id, turn_id, player_id, suspect, weapon, room)
 
         if status:
-
-            change_turn(game_id)
+            current_turn_id, next_player = change_turn(game_id)
 
             # Send the message to the group using the helper function
             send_group_message(
                 f'lobby_{code}',  # Group name
-                'Suggestion', # Action
+                'Suggestion',     # Action
                 {'ID': player_id, 'Suspect': suggestions[suspect], 'Weapon': suggestions[weapon], 'Room': suggestions[room], 'Shower': player_to_show_card}
             )
+
+            # Start a new thread to handle the timer
+            if not is_int_string(player_to_show_card):
+                threading.Thread(target=check_turn_and_send_message, args=(game_id, current_turn_id, code)).start()
         
             return JsonResponse({'Status': True})
         else:         
@@ -422,7 +516,7 @@ def assumption(request):
         if result == "Not Turn":
             return JsonResponse({'Status': False, 'Reason': 'Not Your Turn'})
 
-        change_turn(game_id)
+        current_turn_id, next_player = change_turn(game_id)
 
         response =  {'ID': player_id, 'Suspect': suggestions[suspect], 'Weapon': suggestions[weapon], 'Room': suggestions[room], 'Correct': result == "True", "PlayersLeft": players_left}
 
@@ -448,6 +542,8 @@ def assumption(request):
             'Assumption', # Action
             response
         )
+        
+        threading.Thread(target=check_turn_and_send_message, args=(game_id, current_turn_id, code)).start()
         
         return JsonResponse({'Status': True, 'Correct': result})
         
@@ -481,6 +577,10 @@ def show_card(request):
             {'ID': player_id, 'SuggestedPlayer': suggested_player, 'Card': card}
         )
         
+        current_turn_id = get_turn(game_id)
+
+        threading.Thread(target=check_turn_and_send_message, args=(game_id, current_turn_id, code)).start()
+
         return JsonResponse({'Status': True})
         
     return JsonResponse({'error': 'Invalid request method'}, status=400)
@@ -494,13 +594,38 @@ def next_turn(request):
         if not player_id: 
             return JsonResponse({'error': 'Player ID not found in session'}, status=400)
         
-        change_turn(game_id)
+        
+        current_turn_id, next_player = change_turn(game_id)
 
         # Send the message to the group using the helper function
         send_group_message(
             f'lobby_{code}',  # Group name
             'TurnEnded', # Action
             {'ID': player_id}
+        )
+        
+        threading.Thread(target=check_turn_and_send_message, args=(game_id, current_turn_id, code)).start()
+        
+        return JsonResponse({'Status': True})
+        
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+def player_message(request):
+    if request.method == 'POST': 
+        code = request.session.get('game_code')
+        player_id = request.session.get('player_id')
+        message = request.POST.get('message')
+
+        if not player_id: 
+            return JsonResponse({'error': 'Player ID not found in session'}, status=400)
+        
+        add_message(player_id, message)
+
+        # Send the message to the group using the helper function
+        send_group_message(
+            f'lobby_{code}',  # Group name
+            'Message', # Action
+            {'Player': player_id, 'Message': message}
         )
         
         return JsonResponse({'Status': True})
@@ -545,3 +670,38 @@ def send_group_message(group_name, action, body):
         print(f"Exception message: {str(e)}")
         # Optionally log the stack trace
         traceback.print_exc()
+
+def check_turn_and_send_message(game_id, current_turn_id, code):
+    while True:
+        # Wait for 2 minutes and 5 seconds (125 seconds)
+        time.sleep(125)
+
+        new_turn_id = get_turn(game_id)
+        
+        # Check if the new turn ID is different from the current turn ID
+        if new_turn_id != current_turn_id:
+            break
+        
+        current_turn_id, next_player = change_turn(game_id)
+
+        # Send the message to the group using the helper function
+        send_group_message(
+            f'lobby_{code}',  # Group name
+            'TurnEnded',      # Action
+            {'ID': next_player} # Message content
+        )
+
+def is_int_string(value):
+    try:
+        int(value)
+        return True
+    except ValueError:
+        return False
+    
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip

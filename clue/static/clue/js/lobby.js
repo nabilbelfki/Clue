@@ -2,6 +2,7 @@ var playersOfLobby = [];
 var myPlayerID;
 var myPlayerName;
 var lobbySocket;
+let isAdmin = false;
 let winningScreenEnded = false;
 $(document).ready(function () {
   $("input").on("input", function () {
@@ -33,6 +34,12 @@ $(document).ready(function () {
     $(this).val(inputVal);
   });
 
+  $("#lobby > div > input").on("keypress", function (e) {
+    if (e.which === 13) { // 13 is the Enter key
+        $(this).parent().find(".save").click();
+    }
+});
+
   $(".edit").click(function (event) {
     const $player = $(this).parent();
     $player.find("input").attr("readonly", false);
@@ -43,6 +50,7 @@ $(document).ready(function () {
 
   $(".exit").click(function (event) {
     console.log("Leaving")
+    $(".exit").hide();
     leaveGame();
   });
 
@@ -56,7 +64,19 @@ $(document).ready(function () {
     $(this).hide();
   });
 
+  $(".kick").click(function (event) {
+    // const $player = $(this).parent();
+    const PlayerID = $(this).parent().attr("data-id");
+    kickPlayer(PlayerID);
+  });
+
+  $(".ban").click(function (event) {
+    const PlayerID = $(this).parent().attr("data-id");
+    banPlayer(PlayerID);
+  });
+
   $("#action-button").click(function (event) {
+    $(".exit").show();
     const action = $(this).attr("data-action");
     if (action == "create") {
       if (music) $("#arcade")[0].play();
@@ -146,6 +166,7 @@ function createGame() {
       myPlayerID = response.player_id;
       myPlayerName = response.player_name;
       let players = JSON.parse(response.players);
+      isAdmin = true;
       setupLobby(code, myPlayerID, players);
     },
     error: function (xhr, status, error) {
@@ -168,6 +189,7 @@ function joinGame(code) {
         myPlayerName = response.player_name;
         let players = JSON.parse(response.players);
         $("#action-button").addClass("is-not-admin");
+        isAdmin = false;
         setupLobby(code, myPlayerID, players);
       } else {
         alert(response.Message);
@@ -181,7 +203,7 @@ function joinGame(code) {
 
 function setupLobby(code, currentPlayerID, players) {
   let currentPlayerIndex;
-
+  console.log(isAdmin)
   players.forEach(function (player, index) {
     if (player.ID == currentPlayerID) currentPlayerIndex = index;
     const $playerElement = $("#lobby > div").eq(index);
@@ -191,7 +213,13 @@ function setupLobby(code, currentPlayerID, players) {
 
   let currentPlayer = $("#lobby > div").eq(currentPlayerIndex);
   currentPlayer.find(".edit").show();
-  if (currentPlayerIndex != 0) currentPlayer.find(".exit").show();
+  // if (currentPlayerIndex != 0) currentPlayer.find(".exit").show();
+  if (isAdmin) {
+    $("#lobby input").css("width", "475px");
+  } else {
+    $("#lobby input").css("width", "500px");
+  }
+
   $("#code-input input").val(code);
   $("#lobby").css("display", "flex");
   $("#code-input input").attr("readonly", true);
@@ -227,6 +255,36 @@ function setupLobby(code, currentPlayerID, players) {
       }
 
       if (action == "PlayerLeft") {
+        const players = body.Players;
+        updatePlayerList(players);
+      }
+
+      if (action == "PlayerKicked") {
+        if (body.PlayerID == myPlayerID) {
+          closeSocket();
+          flushSession();
+          $("#action-button").removeClass("is-not-admin");
+          $("#code-input input").val("");
+          $("#lobby").hide();
+          $("#code-input input").attr("readonly", false);
+          $("#action-button-inner").text("CREATE GAME");
+          $(this).data("action", "create");
+        }
+        const players = body.Players;
+        updatePlayerList(players);
+      }
+
+      if (action == "PlayerBanned") {
+        if (body.PlayerID == myPlayerID) {
+          closeSocket();
+          flushSession();
+          $("#action-button").removeClass("is-not-admin");
+          $("#code-input input").val("");
+          $("#lobby").hide();
+          $("#code-input input").attr("readonly", false);
+          $("#action-button-inner").text("CREATE GAME");
+          $(this).data("action", "create");
+        }
         const players = body.Players;
         updatePlayerList(players);
       }
@@ -270,6 +328,9 @@ function setupLobby(code, currentPlayerID, players) {
             name = player["name"];
           }
         });
+
+        appendSuggestionNotification(name);
+        
         if (colors[slug] == "#FFFFFF") {
           $("#suggested-title").css("color", "#474747");
           $(".suggested-label").css("color", "#474747");
@@ -298,7 +359,7 @@ function setupLobby(code, currentPlayerID, players) {
         } else {
           $("#show-card").hide();
         }
-        $("#suggested").css("display", "flex");
+        $("#suggested").css("display", "flex").css("opacity","1");
         $("#suggested").fadeIn();
         if (!body.Shower) {
           setTimeout(function() {
@@ -340,7 +401,7 @@ function setupLobby(code, currentPlayerID, players) {
         $("#room").attr("data-text", room.Name.toUpperCase());
         $("#show-card").hide();
         suggest("suggested");
-        $("#suggested").css("display", "flex");
+        $("#suggested").css("display", "flex").css("opacity","1");
         $("#suggested").fadeIn();
 
         setTimeout(function() {
@@ -366,6 +427,11 @@ function setupLobby(code, currentPlayerID, players) {
       if (action == "TurnEnded") {
         changeTurn();
       }
+
+      if (action == "Message") {
+        appendMessage(body.Player, body.Message);
+      }
+
     } catch (err) {
       console.error("Error processing WebSocket message:", err);
     }
@@ -385,11 +451,19 @@ function updatePlayerList(players) {
   $("#lobby > div").each(function(event) {
     $(this).attr("data-id", "");
     $(this).find("input").val("");
+    if (isAdmin) {
+      $(this).find(".kick").hide();
+      $(this).find(".ban").hide();
+    }
   });
   players.forEach(function (player, index) {
     const $playerElement = $("#lobby > div").eq(index);
     $playerElement.attr("data-id", player.ID);
     $playerElement.find("input").val(player.Name);
+    if (isAdmin) {
+      $playerElement.find(".kick").show();
+      $playerElement.find(".ban").show();
+    }
   });
 }
 
@@ -594,6 +668,62 @@ function leaveGame() {
       } else {
         alert(response.Reason)
       }
+    },
+    error: function (xhr, status, error) {
+      console.error("Error generating code and creating game:", error);
+    },
+  });
+}
+
+function kickPlayer(PlayerID) {
+  $.ajax({
+    url: "/player/kick/",
+    type: "POST",
+    data: {
+      csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+      player_id: PlayerID
+    },
+    success: function (response) {
+      console.log(response);
+      if (!response.Status) { 
+        alert(response.Reason);
+      }
+    },
+    error: function (xhr, status, error) {
+      console.error("Error generating code and creating game:", error);
+    },
+  });
+}
+
+function banPlayer(PlayerID) {
+  $.ajax({
+    url: "/player/ban/",
+    type: "POST",
+    data: {
+      csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+      player_id: PlayerID
+    },
+    success: function (response) {
+      console.log(response);
+      if (!response.Status) { 
+        alert(response.Reason);
+      }
+    },
+    error: function (xhr, status, error) {
+      console.error("Error generating code and creating game:", error);
+    },
+  });
+}
+
+function flushSession() {
+  $.ajax({
+    url: "/session/flush/",
+    type: "POST",
+    data: {
+      csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+    },
+    success: function (response) {
+      console.log(response);
     },
     error: function (xhr, status, error) {
       console.error("Error generating code and creating game:", error);

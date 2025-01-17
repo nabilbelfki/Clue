@@ -52,10 +52,7 @@ $(document).ready(function(event) {
                 makeSuggestion()
             }
             $("#suggest").fadeOut();
-            // suggest("suggested");
-            // $("#suggest").fadeOut(function(event) {
-            //     $("#suggested").fadeIn();
-            // })
+            collapseDetectiveNotes();
         } else {
             select($("#suggest").attr("data-page"));
         }
@@ -185,6 +182,7 @@ function select(option) {
 }
 
 function suggest(view) {
+    console.log("Suggested: " + view);
     let suspect = $("#suspect").attr("data-choice");
     let weapon = $("#weapon").attr("data-choice");
     let room = $("#room").attr("data-choice");

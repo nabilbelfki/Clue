@@ -34,9 +34,41 @@ def leave_game(game_id, player_id):
         players = result[1]
     return status == "True", players
 
-def create_player(game_id, is_admin):
+def is_admin(player_id):
     with connection.cursor() as cursor:
-        cursor.callproc('addPlayer', [game_id, is_admin])
+        cursor.callproc('isAdmin', [player_id])
+        result = cursor.fetchone()
+        if result is None:
+            raise ValueError("Position Not Found")
+        
+        status = result[0]
+    return status == "True"
+
+def kick(game_id, player_id):
+    with connection.cursor() as cursor:
+        cursor.callproc('kickPlayer', [game_id, player_id])
+        result = cursor.fetchone()
+        if result is None:
+            raise ValueError("Player not added")
+        
+        status = result[0]
+        players = result[1]
+    return status == "True", players
+
+def ban(game_id, player_id):
+    with connection.cursor() as cursor:
+        cursor.callproc('banPlayer', [game_id, player_id])
+        result = cursor.fetchone()
+        if result is None:
+            raise ValueError("Player not added")
+        
+        status = result[0]
+        players = result[1]
+    return status == "True", players
+
+def create_player(game_id, ip_address, user_agent, is_admin):
+    with connection.cursor() as cursor:
+        cursor.callproc('addPlayerV2', [game_id, ip_address, user_agent, is_admin])
         result = cursor.fetchone()
         if result is None:
             raise ValueError("Player not added")
@@ -124,7 +156,12 @@ def insert_move(turn_id, position_id):
 def change_turn(game_id):
     with connection.cursor() as cursor:
         cursor.callproc('changeTurn', [game_id])
-    return
+        result = cursor.fetchone()
+        if result is None:
+            raise ValueError("Change Turn didn't work")
+        new_turn_id = result[0]
+        next_player = result[1]
+    return new_turn_id, next_player
 
 def make_suggestion(game_id, turn_id, player_id, suspect, weapon, room):
     with connection.cursor() as cursor:
@@ -191,6 +228,11 @@ def get_murder(game_id):
         weapon = result[1]
         room = result[2]
     return suspect, weapon, room
+
+def add_message(player_id, message):
+    with connection.cursor() as cursor:
+        cursor.callproc('addMessage', [player_id, message])
+    return
 
 colors = {
     "Chef White": "#FFFFFF"
