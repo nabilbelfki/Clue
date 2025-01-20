@@ -16,7 +16,7 @@ SECRET_KEY = 'django-insecure-7xora1rg(dxj!wb#dpkrneg@*#y##klu7x3$(i7pr$m147_br(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['52.15.107.92', 'clue.nabilbelfki.com', 'localhost']
+ALLOWED_HOSTS = ['52.15.107.92', 'clue.nabilbelfki.com', 'www.clue.nabilbelfki.com', 'localhost']
 
 # Application definition
 
@@ -124,10 +124,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_TRUSTED_ORIGINS = [
     'https://clue.nabilbelfki.com',
+    'https://www.clue.nabilbelfki.com',
     "http://localhost:8000",  # Add your local development URL if needed
 ]
 
 CORS_ALLOWED_ORIGINS = [
     "https://clue.nabilbelfki.com",
+    'https://www.clue.nabilbelfki.com',
     "http://localhost:8000",  # Add your local development URL if needed
 ]

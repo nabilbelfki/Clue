@@ -172,7 +172,18 @@ def make_suggestion(game_id, turn_id, player_id, suspect, weapon, room):
         
         status = result[0]
         player_id = result[1]
-    return status == "True", player_id
+        last_suggestion = result[2]
+    return status == "True", player_id, last_suggestion
+
+def check_suggestion_id(suggestion_id):
+    with connection.cursor() as cursor:
+        cursor.callproc('checkSuggestion', [suggestion_id])
+        result = cursor.fetchone()
+        if result is None:
+            raise ValueError("Suggestion check didn't work")
+        
+        status = result[0]
+    return status == "True"
 
 def assume(game_id, player_id, suspect, weapon, room):
     with connection.cursor() as cursor:
@@ -195,6 +206,17 @@ def shown_card(game_id, player_id, card):
         status = result[0]
         suggested_player = result[1]
     return status, suggested_player
+
+def get_random_card_to_show(suggestion_id, player_id):
+    with connection.cursor() as cursor:
+        cursor.callproc('chooseRandomCardToShow', [suggestion_id, player_id])
+        result = cursor.fetchone()
+        if result is None:
+            raise ValueError("Couldn't show card")
+        
+        status = result[0]
+        card = result[1]
+    return status == "True", card
 
 def get_statistics(game_id):
     with connection.cursor() as cursor:
@@ -228,6 +250,17 @@ def get_murder(game_id):
         weapon = result[1]
         room = result[2]
     return suspect, weapon, room
+
+def get_game_state(game_id, player_id):
+    with connection.cursor() as cursor:
+        cursor.callproc('getGameState', [game_id, player_id])
+        result = cursor.fetchone()  # Fetch all rows returned by the procedure
+        
+        if not result:
+            raise ValueError("No game found.")
+        
+        json = result[0]
+    return json
 
 def add_message(player_id, message):
     with connection.cursor() as cursor:

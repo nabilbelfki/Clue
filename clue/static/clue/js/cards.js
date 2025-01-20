@@ -42,7 +42,7 @@ $(document).ready(function() {
 function showMyCards() {
     console.log(myCards);
     myCards.forEach(function(card) {
-        let slug = card["slug"];
+        let slug = card["Slug"];
         $("#"+slug+"-card").show();
         markDetectiveNotes(slug, colors[chosenPlayer]);
     })

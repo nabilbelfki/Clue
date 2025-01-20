@@ -104,6 +104,10 @@ $(document).ready(function () {
     },
   });
 
+  if ($("body").attr("data-game")) {
+      getGame();
+  }
+
   $("#spooky-sound")[0].volume = 0.5
   $("#volume").click(function(event) {
     if (music) {
@@ -129,6 +133,11 @@ $(document).ready(function () {
   //     rooms[room]["width"] = bbox.width;
   //   });
   // });
+  $(document).keyup(function (event) {
+    if (event.which === 9) { // tab key
+        $("#player-menu").fadeOut();
+    }
+  });
 
   $(document).keydown(function (event) {
     switch (event.which) {
@@ -148,8 +157,11 @@ $(document).ready(function () {
         move(rotation[turn], "DOWN");
         // Add your code here
         break;
+      case 9: // tab key
+        $("#player-menu").css("display","flex").fadeIn();
+        break;
       default:
-        return; // exit this handler for other keys
+        return; // exit this handler for other
     }
     event.preventDefault(); // prevent the default action (scroll / move caret)
   });
@@ -238,7 +250,6 @@ function changeTurn() {
     $("#six-cube").css("opacity", "1");
     $("#four-cube").css("opacity", "1");
     $("#dice-roll").css("cursor", "pointer");
-    startClock();
   } else {
     $("#other-turn-sound")[0].play();
     $("#dice-roll div, #dice-roll p").css("opacity", "0.6");
@@ -246,6 +257,9 @@ function changeTurn() {
     $("#dice-roll").css("cursor", "default");
   }
 
+  $(".player-in-game").css("opacity", "0.6");
+  $("#player-" + rotation[turn]).css("opacity", "1");
+  
   if (
     chosenPlayer == rotation[turn] &&
     rooms.hasOwnProperty(players[rotation[turn]])
@@ -254,7 +268,7 @@ function changeTurn() {
   } else {
     toggleOpacity("#suggestion", "0.6", "default");
   }
-
+  
   if (
     chosenPlayer == rotation[turn] &&
     secretPassages.hasOwnProperty(players[rotation[turn]])
@@ -263,6 +277,8 @@ function changeTurn() {
   } else {
     toggleOpacity("#secret-passage", "0.6", "default");
   }
+
+  startClock(120000);
 }
 
 function startPlaying() {
@@ -271,39 +287,8 @@ function startPlaying() {
   playersOfLobby.forEach(function (player) {
     rotation.push(player["character"]);
   });
-
-  let character = rotation[turn];
-
-  changeAvatar(character);
-
-  if (chosenPlayer == rotation[turn]) {
-    $("#dice-roll div, #dice-roll p").css("opacity", "1");
-    $("#dice-roll").css("cursor", "pointer");
-    startClock();
-  } else {
-    $("#dice-roll div, #dice-roll p").css("opacity", "0.6");
-    $("#dice-roll").css("cursor", "default");
-  }
-
-  $("#player-selection").hide();
-
-  // Get the current local time
-  var currentTime = new Date();
-  var hours = currentTime.getHours().toString().padStart(2, '0');
-  var minutes = currentTime.getMinutes().toString().padStart(2, '0');
-
-  // Create the message
-  var message = "GAME STARTED AT " + hours + ":" + minutes;
-
-  // Append the message to the #messages div
-  $("#messages").append("<div class='simple'>" + message + "</div>");
-
-  $(
-    "#boardgame, #suggestion, #avatar, #dice-roll, #secret-passage, #secret-passage, #detective-notes, #cards, #chat"
-  ).css("display", "flex");
-  initializePlayerPositions();
-  if (music) $("#spooky-sound")[0].play();
-  playing = "spooky";
+  
+  showGame("");
 }
 
 function changeAvatar(slug) {
@@ -341,6 +326,21 @@ function movePlayer(direction) {
 }
 
 function playerMovedTo(playerID, id) {
+  goToPosition(playerID, id)
+  moves--;
+  $("#moves").text(moves);
+  if (moves == 0) {
+    if (!rooms.hasOwnProperty(players[rotation[turn]])) {
+      changeTurn();
+    } else {
+      $("#moves").hide();
+      $("#dice-roll").css("cursor", "pointer");
+      $("#dice-text").text("END TURN");
+    }
+  }
+}
+
+function goToPosition(playerID, id) {
   let slug;
   playersOfLobby.forEach(function (player) {
     if (player["id"] == playerID) slug = player["character"];
@@ -365,18 +365,6 @@ function playerMovedTo(playerID, id) {
     toggleOpacity("#secret-passage", "0.6", "default");
   }
   highlightPossibleMoves(id);
-  moves--;
-  $("#moves").text(moves);
-  if (moves == 0) {
-    if (!rooms.hasOwnProperty(players[rotation[turn]])) {
-      
-      changeTurn();
-    } else {
-      $("#moves").hide();
-      $("#dice-roll").css("cursor", "pointer");
-      $("#dice-text").text("END TURN");
-    }
-  }
 }
 
 
@@ -400,12 +388,13 @@ function toggleOpacity(selector, opacity, cursor) {
   });
 }
 
-function startClock() {
+function startClock(time) {
+  console.log("Time: " + time);
   $('#time').css("width", "100%");
   $("#clock").show();
   animation = $('#time').animate({
     width: "0%",
-  }, 120000, function () {
+  }, time, function () {
     $("#clock").hide();
   });
 }
@@ -415,4 +404,94 @@ function stopClock() {
     animation.stop();
     $("#clock").hide();
   }
+}
+
+
+function getGame() {
+  $.ajax({
+    url: "/game/",
+    type: "GET",
+    data: {
+      csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val()
+    },
+    success: function (response) {
+      console.log(response);
+      if (response.hasOwnProperty("Game")) {
+        $(".exit").show();
+        const game = response.Game;
+        let code = game.Code;
+        playersOfLobby = game.Players
+        playersOfLobby.forEach(function (player, index) {
+          if (player.lost == 'False') rotation.push(player["character"]);
+          if (game.Turn == player.id) turn = index;
+        });
+        myCards = game.Cards;
+        isAdmin = game.Admin == "True";
+        setupLobby(code, game.Turn, game.Players);
+        myPlayerID = game.PlayerID;
+        myPlayerName = game.PlayerName;
+        chosenPlayer = game.PlayerCharacter;
+        showMyCards();
+        showGame(game.Created);
+        game.Positions.forEach(function(position) {
+          goToPosition(position.PlayerID, position.Position)
+        });
+        if (game.hasOwnProperty("Chat"))
+          game.Chat.forEach(function(message) {
+            appendMessage(message.Player, message.Message, message.Created);
+          })
+      }
+    },
+    error: function (xhr, status, error) {
+      console.error("Error generating code and creating game:", error);
+    },
+  });
+}
+
+function showGame(time) {
+  createPlayerMenu();
+
+  let character = rotation[turn];
+
+  changeAvatar(character);
+
+  if (chosenPlayer == rotation[turn]) {
+    $("#dice-roll div, #dice-roll p").css("opacity", "1");
+    $("#dice-roll").css("cursor", "pointer");
+  } else {
+    $("#dice-roll div, #dice-roll p").css("opacity", "0.6");
+    $("#dice-roll").css("cursor", "default");
+  }
+  
+  $("#start-menu").hide();
+  $("#player-selection").hide();
+  
+  // Get the current local time
+  let message = "GAME STARTED AT ";
+  if (time == "") {
+    let currentTime = new Date();
+    let hours = currentTime.getHours().toString().padStart(2, '0');
+    let minutes = currentTime.getMinutes().toString().padStart(2, '0');
+    message += hours + ":" + minutes;
+  } else {
+    [hours, minutes, seconds] = time.split(" ")[1].split(":");
+    message += hours + ":" + minutes;
+  }
+  
+  // Create the message
+  
+  // Append the message to the #messages div
+  $("#messages").append("<div class='simple'>" + message + "</div>");
+  
+  $(
+    "#boardgame, #suggestion, #avatar, #dice-roll, #secret-passage, #secret-passage, #detective-notes, #cards, #chat"
+  ).css("display", "flex");
+  initializePlayerPositions();
+  if (music) $("#spooky-sound")[0].play();
+  playing = "spooky";
+  startClock(120000);
+  setTimeout(function() {
+    collapseDetectiveNotes();
+    collapseChat();
+  }, 1500);
 }
