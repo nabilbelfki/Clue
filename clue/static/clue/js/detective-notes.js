@@ -18,26 +18,28 @@ $(document).ready(function() {
 
 function markDetectiveNotes(id, color) {
     if (color == "#000000") {
-        if ($(`#${id}-checkbox`).css('fill')) {
+        if ($(`#${id}-checkbox`).css('fill') != 'none') {
+            console.log("Has fill")
             if ($(`#${id}-checkbox`).css('fill') == "rgb(0, 0, 0)" || $(`#${id}-checkbox`).css('fill') == "#000000") {
+                console.log("is black")
                 $(`#${id}-checkbox`).css("fill", "");
                 $(`#${id}-checkbox`).siblings('rect').css('stroke', "");
                 $(`#${id}-checkbox`).show();
             }
         } else {
+            console.log("doesn't have fill")
             $(`#${id}-checkbox`).css("fill", color);
             $(`#${id}-checkbox`).siblings('rect').css('stroke', color);
             $(`#${id}-checkbox`).show();
         }
     } else {
-
+        if (color == "#FFFFFF") {
+            color = "#474747"
+        }
+        $(`#${id}-checkbox`).css("fill", color);
+        $(`#${id}-checkbox`).siblings('rect').css('stroke', color);
+        $(`#${id}-checkbox`).show();
     }
-    if (color == "#FFFFFF") {
-        color = "#474747"
-    }
-    $(`#${id}-checkbox`).css("fill", color);
-    $(`#${id}-checkbox`).siblings('rect').css('stroke', color);
-    $(`#${id}-checkbox`).show();
 }
 
 function collapseDetectiveNotes() {

@@ -1,0 +1,121 @@
+#player-menu {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #FF4B4B;
+    gap: 20px;
+    padding: 40px;
+    animation: rainbow 20s infinite;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+    border-radius: 25px;
+    z-index: 1000;
+}
+
+#player-menu-logo {
+    height: 160px;
+}
+
+#player-menu-code {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#player-menu-code-input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#player-menu-code-validator {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    color: #FFFFFF;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+#player-menu-code-label {
+    font-weight: 600;
+    font-size: 44;
+}
+
+#player-menu-code-input>input {
+    outline: none;
+    border: none;
+    height: 70px;
+    width: 220px;
+    border-radius: 15px;
+    font-size: 32px;
+    text-align: center;
+    font-weight: 800;
+    color: #474747
+}
+
+#players-in-game {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px;
+    background-color: #979797;
+    border-radius: 10px;
+}
+
+.player-in-game {
+    display: flex;
+    padding: 5px;
+    gap: 5px;
+}
+
+.character-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.character-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    background-color: #FFFFFF;
+    border-radius: 5px;
+}
+
+.player-menu-avatar {
+    width: 50px;
+    height: auto;
+    border-radius: 5px;
+}
+
+.character-name-and-turn {
+    width: 300px;
+    height: 60px;
+    background-color: #FFFFFF;
+    border-radius: 5px;
+
+}
+
+.character-name {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 5px;
+    font-size: 24px;
+    font-weight: 700;
+    height: 100%;
+}

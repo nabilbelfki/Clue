@@ -64,13 +64,19 @@ function chat(message) {
       });
 }
 
-function appendMessage(PlayerID, message) {
+function appendMessage(PlayerID, message, time = "") {
+    console.log(time);
+    let timestamp;
+    if (time == "") {
+        var currentTime = new Date();
+        var hours = currentTime.getHours().toString().padStart(2, '0');
+        var minutes = currentTime.getMinutes().toString().padStart(2, '0');
+        timestamp = `${hours}:${minutes}`;
+    } else {
+        [hours, minutes, seconds] = time.split(" ")[1].split(":");
+        timestamp = `${hours}:${minutes}`;
+    }
 
-    var currentTime = new Date();
-    var hours = currentTime.getHours().toString().padStart(2, '0');
-    var minutes = currentTime.getMinutes().toString().padStart(2, '0');
-
-    let timestamp = `${hours}:${minutes}`;
     let hasTimeStamp = false;
     $(".simple").each(function(){
         if ($(this).text().trim() == timestamp) hasTimeStamp = true;

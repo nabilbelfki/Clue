@@ -8,6 +8,13 @@ $(document).ready(function () {
   $("input").on("input", function () {
     this.value = this.value.toUpperCase();
   });
+
+  $("#code-input > input").on("keypress", function (e) {
+    if (e.which === 13) { // 13 is the Enter key
+        $("#action-button").click();
+    }
+  });
+
   $("#code-input > input").on("input", function () {
     var inputVal = $(this)
       .val()
@@ -38,7 +45,7 @@ $(document).ready(function () {
     if (e.which === 13) { // 13 is the Enter key
         $(this).parent().find(".save").click();
     }
-});
+  });
 
   $(".edit").click(function (event) {
     const $player = $(this).parent();
@@ -204,11 +211,16 @@ function joinGame(code) {
 function setupLobby(code, currentPlayerID, players) {
   let currentPlayerIndex;
   console.log(isAdmin)
+
+  $("#player-menu-code-input-value").prop("readonly", false).val(code).prop("readonly", true);
+
   players.forEach(function (player, index) {
-    if (player.ID == currentPlayerID) currentPlayerIndex = index;
+    let ID = player.hasOwnProperty("ID") ? "ID" : "id";
+    let Name = player.hasOwnProperty("Name") ? "Name" : "name";
+    if (player[ID] == currentPlayerID) currentPlayerIndex = index;
     const $playerElement = $("#lobby > div").eq(index);
-    $playerElement.attr("data-id", player.ID);
-    $playerElement.find("input").val(player.Name);
+    $playerElement.attr("data-id", player[ID]);
+    $playerElement.find("input").val(player[Name]);
   });
 
   let currentPlayer = $("#lobby > div").eq(currentPlayerIndex);
@@ -328,8 +340,6 @@ function setupLobby(code, currentPlayerID, players) {
             name = player["name"];
           }
         });
-
-        appendSuggestionNotification(name);
         
         if (colors[slug] == "#FFFFFF") {
           $("#suggested-title").css("color", "#474747");
@@ -359,8 +369,10 @@ function setupLobby(code, currentPlayerID, players) {
         } else {
           $("#show-card").hide();
         }
+        stopClock();
         $("#suggested").css("display", "flex").css("opacity","1");
         $("#suggested").fadeIn();
+        startClock(60000);
         if (!body.Shower) {
           setTimeout(function() {
             $("#suggested").fadeOut();

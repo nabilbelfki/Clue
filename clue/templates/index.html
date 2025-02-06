@@ -14,17 +14,21 @@
     <script src="{% static 'clue/js/lobby.js' %}"></script>
     <script src="{% static 'clue/js/dice.js' %}"></script>
     <script src="{% static 'clue/js/cards.js' %}"></script>
+    <script src="{% static 'clue/js/player-menu.js' %}"></script>
     <script src="{% static 'clue/js/detective-notes.js' %}"></script>
     <script src="{% static 'clue/js/suggestions.js' %}"></script>
     <script src="{% static 'clue/js/player-selection.js' %}"></script>
     <script src="{% static 'clue/js/chat.js' %}"></script>
+    <script type="text/javascript">
+        var staticUrl = "{% static 'clue/' %}";
+    </script>
     <!-- Link to the SVG favicon -->
     <link rel="icon" href="{% static 'clue/images/favicon.svg' %}" type="image/svg+xml">
     <!-- Fallback to the ICO favicon -->
     <link rel="icon" href="{% static 'clue/images/favicon.ico' %}" type="image/x-icon">
 </head>
 
-<body>
+<body {% if request.session.game_id %} data-game="true" {% endif %}>
     <input type="hidden" id="game_code"
         value="{% if request.session.game_code %}{{ request.session.game_code }}{% else %}{% endif %}">
     <div id="volume">
@@ -345,6 +349,71 @@
                 <div xmlns="http://www.w3.org/1999/xhtml" style="width: 100%; height: 100%;"></div>
             </foreignObject>
         </svg>
+        <div id="player-menu">
+            <div id="player-menu-code">
+                <div id="player-menu-code-input">
+                    <input id="player-menu-code-input-value" type="text" placeholder="ABCD" readonly>
+                </div>
+            </div>
+            <div id="players-in-game" class="unselectable">
+                <div class="player-in-game">
+                    <div class="character-display">
+                        <div class="character-container">
+                            <img class="colonel-mustard-avatar"
+                                src="{% static 'clue/images/Avatars/colonel-mustard.jpg' %}"
+                                alt="Colonel Mustard Avatar">
+                        </div>
+                    </div>
+                    <div class="character-name-and-turn">
+                        <div class="character-name">
+                            NABIL
+                        </div>
+                    </div>
+                </div>
+                <div class="player-in-game">
+                    <div class="character-display">
+                        <div class="character-container">
+                            <img class="colonel-mustard-avatar"
+                                src="{% static 'clue/images/Avatars/colonel-mustard.jpg' %}"
+                                alt="Colonel Mustard Avatar">
+                        </div>
+                    </div>
+                    <div class="character-name-and-turn">
+                        <div class="character-name">
+                            LAYLA
+                        </div>
+                    </div>
+                </div>
+                <div class="player-in-game">
+                    <div class="character-display">
+                        <div class="character-container">
+                            <img class="colonel-mustard-avatar"
+                                src="{% static 'clue/images/Avatars/colonel-mustard.jpg' %}"
+                                alt="Colonel Mustard Avatar">
+                        </div>
+                    </div>
+                    <div class="character-name-and-turn">
+                        <div class="character-name">
+                            KRISTALLIA
+                        </div>
+                    </div>
+                </div>
+                <div class="player-in-game">
+                    <div class="character-display">
+                        <div class="character-container">
+                            <img class="colonel-mustard-avatar"
+                                src="{% static 'clue/images/Avatars/colonel-mustard.jpg' %}"
+                                alt="Colonel Mustard Avatar">
+                        </div>
+                    </div>
+                    <div class="character-name-and-turn">
+                        <div class="character-name">
+                            GERASIMOS
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="legend">
             LAYLA IS SHOWING
         </div>
@@ -907,7 +976,7 @@
                             d="M367.055 98.9448H778.5V762.603H3.48242V3.45693L267.926 3.45697C272.378 3.45697 276.624 3.44767 280.673 3.4388C299.247 3.39813 313.697 3.36649 325.034 4.2823C338.882 5.40101 347.434 7.90489 352.975 12.9803C358.48 18.0227 361.49 26.0529 363.022 39.5472C364.551 53.0197 364.555 71.3377 364.555 96.4448V98.9448H367.055Z"
                             fill="white" stroke="#044210" stroke-width="5" />
                     </svg>
-                    <div class="folder-label">SUSPECTS</div>
+                    <div class="folder-label unselectable">SUSPECTS</div>
                     <div id="suspects-checkboxes">
                         <div class="checkbox">
                             <div class="check">
@@ -921,7 +990,7 @@
                                         fill="white" />
                                 </svg>
                             </div>
-                            <div class="checkbox-label">COLONEL MUSTARD</div>
+                            <div class="checkbox-label unselectable">COLONEL MUSTARD</div>
                         </div>
                         <div class="checkbox">
                             <div class="check">
@@ -935,7 +1004,7 @@
                                         fill="white" />
                                 </svg>
                             </div>
-                            <div class="checkbox-label">PROFESSOR PLUM</div>
+                            <div class="checkbox-label unselectable">PROFESSOR PLUM</div>
                         </div>
                         <div class="checkbox">
                             <div class="check">
@@ -949,7 +1018,7 @@
                                         fill="white" />
                                 </svg>
                             </div>
-                            <div class="checkbox-label">MR. GREEN</div>
+                            <div class="checkbox-label unselectable">MR. GREEN</div>
                         </div>
                         <div class="checkbox">
                             <div class="check">
@@ -963,7 +1032,7 @@
                                         fill="white" />
                                 </svg>
                             </div>
-                            <div class="checkbox-label">MRS. PEACOCK</div>
+                            <div class="checkbox-label unselectable">MRS. PEACOCK</div>
                         </div>
                         <div class="checkbox">
                             <div class="check">
@@ -977,7 +1046,7 @@
                                         fill="white" />
                                 </svg>
                             </div>
-                            <div class="checkbox-label">MISS SCARLET</div>
+                            <div class="checkbox-label unselectable">MISS SCARLET</div>
                         </div>
                         <div class="checkbox">
                             <div class="check">
@@ -991,7 +1060,7 @@
                                         fill="white" />
                                 </svg>
                             </div>
-                            <div class="checkbox-label">MRS. WHITE</div>
+                            <div class="checkbox-label unselectable">MRS. WHITE</div>
                         </div>
                     </div>
                 </div>
@@ -1003,7 +1072,7 @@
                             d="M367.055 98.9448H778.5V762.603H3.48242V3.45693L267.926 3.45697C272.378 3.45697 276.624 3.44767 280.673 3.4388C299.247 3.39813 313.697 3.36649 325.034 4.2823C338.882 5.40101 347.434 7.90489 352.975 12.9803C358.48 18.0227 361.49 26.0529 363.022 39.5472C364.551 53.0197 364.555 71.3377 364.555 96.4448V98.9448H367.055Z"
                             fill="white" stroke="#044210" stroke-width="5" />
                     </svg>
-                    <div class="folder-label">WEAPONS</div>
+                    <div class="folder-label unselectable">WEAPONS</div>
                     <div id="weapons-checkboxes">
                         <div class="checkbox">
                             <div class="check">
@@ -1017,7 +1086,7 @@
                                         fill="white" />
                                 </svg>
                             </div>
-                            <div class="checkbox-label">KNIFE</div>
+                            <div class="checkbox-label unselectable">KNIFE</div>
                         </div>
                         <div class="checkbox">
                             <div class="check">
@@ -1031,7 +1100,7 @@
                                         fill="white" />
                                 </svg>
                             </div>
-                            <div class="checkbox-label">CANDLESTICK</div>
+                            <div class="checkbox-label unselectable">CANDLESTICK</div>
                         </div>
                         <div class="checkbox">
                             <div class="check">
@@ -1045,7 +1114,7 @@
                                         fill="white" />
                                 </svg>
                             </div>
-                            <div class="checkbox-label">REVOLVER</div>
+                            <div class="checkbox-label unselectable">REVOLVER</div>
                         </div>
                         <div class="checkbox">
                             <div class="check">
@@ -1059,7 +1128,7 @@
                                         fill="white" />
                                 </svg>
                             </div>
-                            <div class="checkbox-label">ROPE</div>
+                            <div class="checkbox-label unselectable">ROPE</div>
                         </div>
                         <div class="checkbox">
                             <div class="check">
@@ -1073,7 +1142,7 @@
                                         fill="white" />
                                 </svg>
                             </div>
-                            <div class="checkbox-label">LEAD PIPE</div>
+                            <div class="checkbox-label unselectable">LEAD PIPE</div>
                         </div>
                         <div class="checkbox">
                             <div class="check">
@@ -1087,7 +1156,7 @@
                                         fill="white" />
                                 </svg>
                             </div>
-                            <div class="checkbox-label">WRENCH</div>
+                            <div class="checkbox-label unselectable">WRENCH</div>
                         </div>
                     </div>
                 </div>
@@ -1099,7 +1168,7 @@
                             d="M366.064 110.999H777.5V865.5H2.5V2.53884L266.938 2.53889C271.393 2.53889 275.641 2.52834 279.691 2.51827C298.264 2.47213 312.696 2.43627 324.017 3.47512C337.817 4.74143 346.327 7.56611 351.871 13.3341C357.449 19.1388 360.489 28.4012 362.028 43.8002C363.561 59.1474 363.564 79.9977 363.564 108.499V110.999H366.064Z"
                             fill="white" stroke="#044210" stroke-width="5" />
                     </svg>
-                    <div class="folder-label">ROOMS</div>
+                    <div class="folder-label unselectable">ROOMS</div>
                     <div id="rooms-checkboxes">
                         <div class="checkbox">
                             <div class="check">
@@ -1113,7 +1182,7 @@
                                         fill="white" />
                                 </svg>
                             </div>
-                            <div class="checkbox-label">HALL</div>
+                            <div class="checkbox-label unselectable">HALL</div>
                         </div>
                         <div class="checkbox">
                             <div class="check">
@@ -1127,7 +1196,7 @@
                                         fill="white" />
                                 </svg>
                             </div>
-                            <div class="checkbox-label">LOUNGE</div>
+                            <div class="checkbox-label unselectable">LOUNGE</div>
                         </div>
                         <div class="checkbox">
                             <div class="check">
@@ -1141,7 +1210,7 @@
                                         fill="white" />
                                 </svg>
                             </div>
-                            <div class="checkbox-label">DINING ROOM</div>
+                            <div class="checkbox-label unselectable">DINING ROOM</div>
                         </div>
                         <div class="checkbox">
                             <div class="check">
@@ -1155,7 +1224,7 @@
                                         fill="white" />
                                 </svg>
                             </div>
-                            <div class="checkbox-label">KITCHEN</div>
+                            <div class="checkbox-label unselectable">KITCHEN</div>
                         </div>
                         <div class="checkbox">
                             <div class="check">
@@ -1169,7 +1238,7 @@
                                         fill="white" />
                                 </svg>
                             </div>
-                            <div class="checkbox-label">BALLROOM</div>
+                            <div class="checkbox-label unselectable">BALLROOM</div>
                         </div>
                         <div class="checkbox">
                             <div class="check">
@@ -1183,7 +1252,7 @@
                                         fill="white" />
                                 </svg>
                             </div>
-                            <div class="checkbox-label">CONSERVATORY</div>
+                            <div class="checkbox-label unselectable">CONSERVATORY</div>
                         </div>
                         <div class="checkbox">
                             <div class="check">
@@ -1197,7 +1266,7 @@
                                         fill="white" />
                                 </svg>
                             </div>
-                            <div class="checkbox-label">BILLIARD ROOM</div>
+                            <div class="checkbox-label unselectable">BILLIARD ROOM</div>
                         </div>
                         <div class="checkbox">
                             <div class="check">
@@ -1211,7 +1280,7 @@
                                         fill="white" />
                                 </svg>
                             </div>
-                            <div class="checkbox-label">LIBRARY</div>
+                            <div class="checkbox-label unselectable">LIBRARY</div>
                         </div>
                         <div class="checkbox">
                             <div class="check">
@@ -1225,7 +1294,7 @@
                                         fill="white" />
                                 </svg>
                             </div>
-                            <div class="checkbox-label">STUDY</div>
+                            <div class="checkbox-label unselectable">STUDY</div>
                         </div>
                     </div>
                 </div>

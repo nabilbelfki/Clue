@@ -13,6 +13,9 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from .utils import *
 
+def home(request):
+    return render(request, 'index.html')
+
 def create_lobby(request):
     if request.method == 'POST':
         code = generate_random_code()
@@ -187,9 +190,6 @@ def flush_session(request):
         # Clear all session variables
             request.session.flush()
 
-def home(request):
-    return render(request, 'index.html')
-
 def update_player(request):
     if request.method == 'POST':
         player_id = request.session.get('player_id') 
@@ -316,9 +316,9 @@ def get_cards(request):
             cards_data = []
             for card in cards:
                 card_data = {
-                    'slug': card[2],  # Assuming the first column is the slug
-                    'name': card[3],  # Assuming the second column is the card name
-                    'type': card[4]   # Assuming the third column is the card type
+                    'Slug': card[2],  # Assuming the first column is the slug
+                    'Name': card[3],  # Assuming the second column is the card name
+                    'Type': card[4]   # Assuming the third column is the card type
                 }
                 cards_data.append(card_data)
 
@@ -476,7 +476,7 @@ def suggest(request):
         
         turn_id = get_turn(game_id)
 
-        status, player_to_show_card = make_suggestion(game_id, turn_id, player_id, suspect, weapon, room)
+        status, player_to_show_card, suggestion_id = make_suggestion(game_id, turn_id, player_id, suspect, weapon, room)
 
         if status:
             current_turn_id, next_player = change_turn(game_id)
@@ -489,7 +489,9 @@ def suggest(request):
             )
 
             # Start a new thread to handle the timer
-            if not is_int_string(player_to_show_card):
+            if is_int_string(player_to_show_card):
+                threading.Thread(target=check_card_show_and_send_message, args=(game_id, player_to_show_card, suggestion_id, code)).start()
+            else:
                 threading.Thread(target=check_turn_and_send_message, args=(game_id, current_turn_id, code)).start()
         
             return JsonResponse({'Status': True})
@@ -576,7 +578,7 @@ def show_card(request):
             'CardShown', # Action
             {'ID': player_id, 'SuggestedPlayer': suggested_player, 'Card': card}
         )
-        
+
         current_turn_id = get_turn(game_id)
 
         threading.Thread(target=check_turn_and_send_message, args=(game_id, current_turn_id, code)).start()
@@ -629,6 +631,20 @@ def player_message(request):
         )
         
         return JsonResponse({'Status': True})
+        
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+def get_game(request):
+    if request.method == 'GET': 
+        game_id = request.session.get('game_id')
+        player_id = request.session.get('player_id')
+
+        if not player_id: 
+            return JsonResponse({'error': 'Player ID not found in session'}, status=400)
+        
+        game = get_game_state(game_id, player_id)
+        
+        return JsonResponse({'Game': json.loads(game)})
         
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
@@ -690,6 +706,41 @@ def check_turn_and_send_message(game_id, current_turn_id, code):
             'TurnEnded',      # Action
             {'ID': next_player} # Message content
         )
+
+def check_card_show_and_send_message(game_id, player_id, suggestion_id, code):
+        # Wait for 2 minutes and 5 seconds (125 seconds)
+        time.sleep(65)
+
+        was_card_shown = check_suggestion_id(suggestion_id)
+        
+        # Check if the new turn ID is different from the current turn ID
+        if not was_card_shown:
+        
+            status, card = get_random_card_to_show(suggestion_id, player_id)
+
+            if status:
+
+                status, suggested_player = shown_card(game_id, player_id, card)
+                
+                if status == "Not Suggested":
+                    return
+                if status == "Not Turn":
+                    return
+                if status == "No Show":
+                    return
+                if status == "Already Shown":
+                    return
+                
+                # Send the message to the group using the helper function
+                send_group_message(
+                    f'lobby_{code}',  # Group name
+                    'CardShown', # Action
+                    {'ID': player_id, 'SuggestedPlayer': suggested_player, 'Card': card}
+                )
+            
+                current_turn_id = get_turn(game_id)
+
+                threading.Thread(target=check_turn_and_send_message, args=(game_id, current_turn_id, code)).start()
 
 def is_int_string(value):
     try:
