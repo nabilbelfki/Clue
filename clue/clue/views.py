@@ -97,25 +97,17 @@ def leave_lobby(request):
         status, players = leave_game(game_id, player_id)
 
         if status:
-
             # Clear all session variables
             request.session.flush()
 
-            # Send the message to the group using the helper function
-            send_group_message(
-                f'lobby_{code}',  # Group name
-                'PlayerLeft', # Action
-                {'Players': json.loads(players)}
-            )
-        
-             # Send a disconnect message to the specific WebSocket consumer
-            # channel_layer = get_channel_layer()
-            # async_to_sync(channel_layer.send)(
-            #     channel_name,
-            #     {
-            #         'type': 'disconnect',
-            #     }
-            # )
+            # Check if players is not None before using json.loads
+            if players is not None:
+                # Send the message to the group using the helper function
+                send_group_message(
+                    f'lobby_{code}',  # Group name
+                    'PlayerLeft',     # Action
+                    {'Players': json.loads(players)}
+                )
 
             return JsonResponse({'Status': True})
         else:         
