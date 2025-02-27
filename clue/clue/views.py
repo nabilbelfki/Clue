@@ -55,7 +55,7 @@ def create_lobby(request):
 def join_lobby(request):
     if request.method == 'POST':
         code = request.POST.get('code')
-        game_id = get_game(code)
+        game_id = get_game_info(code)
         request.session['game_id'] = game_id
         request.session['game_code'] = code
 

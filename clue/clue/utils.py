@@ -14,7 +14,7 @@ def create_game(code, suspect, weapon, room):
         game_id = result[0]
     return game_id
 
-def get_game(code):
+def get_game_info(code):
     with connection.cursor() as cursor:
         cursor.callproc('getGame', [code])
         result = cursor.fetchone()
